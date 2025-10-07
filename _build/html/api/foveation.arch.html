@@ -1,0 +1,477 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.arch package &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.arch.alexnet" href="foveation.arch.alexnet.html" />
+    <link rel="prev" title="foveation.sensing.samplers" href="foveation.sensing.samplers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">foveation.arch package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.alexnet.html">foveation.arch.alexnet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html">foveation.arch.architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html">foveation.arch.convnextv2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.dinov3.html">foveation.arch.dinov3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html">foveation.arch.knn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnalexnet.html">foveation.arch.knnalexnet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html">foveation.arch.knnconvnextv2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnresnet.html">foveation.arch.knnresnet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnvit.html">foveation.arch.knnvit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.mlp.html">foveation.arch.mlp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.norm.html">foveation.arch.norm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.polar.html">foveation.arch.polar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html">foveation.arch.resnet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html">foveation.arch.vit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.wrapper.html">foveation.arch.wrapper</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">foveation.arch package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.arch.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.arch">
+<span id="foveation-arch-package"></span><h1>foveation.arch package<a class="headerlink" href="#module-foveation.arch" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.alexnet.html">foveation.arch.alexnet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.alexnet.html#foveation.arch.alexnet.ConvBlock"><code class="docutils literal notranslate"><span class="pre">ConvBlock</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.alexnet.html#foveation.arch.alexnet.ConvBlock.__init__"><code class="docutils literal notranslate"><span class="pre">ConvBlock.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.alexnet.html#foveation.arch.alexnet.get_backbone"><code class="docutils literal notranslate"><span class="pre">get_backbone()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.alexnet.html#foveation.arch.alexnet.get_repr_size"><code class="docutils literal notranslate"><span class="pre">get_repr_size()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.alexnet.html#foveation.arch.alexnet.build_model"><code class="docutils literal notranslate"><span class="pre">build_model()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.alexnet.html#foveation.arch.alexnet.alexnet2023_baseline"><code class="docutils literal notranslate"><span class="pre">alexnet2023_baseline()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.architectures.html">foveation.arch.architectures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_alexnet2023_baseline"><code class="docutils literal notranslate"><span class="pre">saccadenet_alexnet2023_baseline()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_alexnet2023_knn"><code class="docutils literal notranslate"><span class="pre">saccadenet_alexnet2023_knn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_resnet18_baseline"><code class="docutils literal notranslate"><span class="pre">saccadenet_resnet18_baseline()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_resnet34_baseline"><code class="docutils literal notranslate"><span class="pre">saccadenet_resnet34_baseline()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_resnet50_baseline"><code class="docutils literal notranslate"><span class="pre">saccadenet_resnet50_baseline()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnresnet()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet9"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnresnet9()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet9_lowres"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnresnet9_lowres()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet18"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnresnet18()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet18_lowres"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnresnet18_lowres()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet9_dwsep"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnresnet9_dwsep()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet9_dwsep_lowres"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnresnet9_dwsep_lowres()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet18_dwsep"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnresnet18_dwsep()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet18_dwsep_lowres"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnresnet18_dwsep_lowres()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnvit"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnvit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnvit_base"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnvit_base()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnvit_small"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnvit_small()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnvit_tiny"><code class="docutils literal notranslate"><span class="pre">saccadenet_knnvit_tiny()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_vit"><code class="docutils literal notranslate"><span class="pre">saccadenet_vit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_vit_base"><code class="docutils literal notranslate"><span class="pre">saccadenet_vit_base()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_vit_small"><code class="docutils literal notranslate"><span class="pre">saccadenet_vit_small()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_vit_tiny"><code class="docutils literal notranslate"><span class="pre">saccadenet_vit_tiny()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_dinov3"><code class="docutils literal notranslate"><span class="pre">saccadenet_dinov3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.architectures.html#foveation.arch.architectures.arch_wrapper"><code class="docutils literal notranslate"><span class="pre">arch_wrapper()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.convnextv2.html">foveation.arch.convnextv2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.LayerNorm"><code class="docutils literal notranslate"><span class="pre">LayerNorm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.LayerNorm.__init__"><code class="docutils literal notranslate"><span class="pre">LayerNorm.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.LayerNorm.forward"><code class="docutils literal notranslate"><span class="pre">LayerNorm.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.GRN"><code class="docutils literal notranslate"><span class="pre">GRN</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.GRN.__init__"><code class="docutils literal notranslate"><span class="pre">GRN.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.GRN.forward"><code class="docutils literal notranslate"><span class="pre">GRN.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.Block"><code class="docutils literal notranslate"><span class="pre">Block</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.Block.__init__"><code class="docutils literal notranslate"><span class="pre">Block.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.Block.forward"><code class="docutils literal notranslate"><span class="pre">Block.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.ConvNeXtV2"><code class="docutils literal notranslate"><span class="pre">ConvNeXtV2</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.ConvNeXtV2.__init__"><code class="docutils literal notranslate"><span class="pre">ConvNeXtV2.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.ConvNeXtV2.forward_features"><code class="docutils literal notranslate"><span class="pre">ConvNeXtV2.forward_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.ConvNeXtV2.forward"><code class="docutils literal notranslate"><span class="pre">ConvNeXtV2.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnextv2_atto"><code class="docutils literal notranslate"><span class="pre">convnextv2_atto()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnextv2_femto"><code class="docutils literal notranslate"><span class="pre">convnextv2_femto()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnext_pico"><code class="docutils literal notranslate"><span class="pre">convnext_pico()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnextv2_nano"><code class="docutils literal notranslate"><span class="pre">convnextv2_nano()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnextv2_tiny"><code class="docutils literal notranslate"><span class="pre">convnextv2_tiny()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnextv2_base"><code class="docutils literal notranslate"><span class="pre">convnextv2_base()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnextv2_large"><code class="docutils literal notranslate"><span class="pre">convnextv2_large()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnextv2_huge"><code class="docutils literal notranslate"><span class="pre">convnextv2_huge()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.dinov3.html">foveation.arch.dinov3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.dinov3.html#foveation.arch.dinov3.load_dinov3"><code class="docutils literal notranslate"><span class="pre">load_dinov3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.dinov3.html#foveation.arch.dinov3.build_dinov3"><code class="docutils literal notranslate"><span class="pre">build_dinov3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.dinov3.html#foveation.arch.dinov3.prep_dinov3_finetuning"><code class="docutils literal notranslate"><span class="pre">prep_dinov3_finetuning()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.dinov3.html#foveation.arch.dinov3.resample_patch_embed_conv"><code class="docutils literal notranslate"><span class="pre">resample_patch_embed_conv()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.knn.html">foveation.arch.knn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_distances"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_distances()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer"><code class="docutils literal notranslate"><span class="pre">KNNPoolingLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer.__init__"><code class="docutils literal notranslate"><span class="pre">KNNPoolingLayer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer._compute_gaussian_weights"><code class="docutils literal notranslate"><span class="pre">KNNPoolingLayer._compute_gaussian_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer.forward"><code class="docutils literal notranslate"><span class="pre">KNNPoolingLayer.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer"><code class="docutils literal notranslate"><span class="pre">KNNConvLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer.__init__"><code class="docutils literal notranslate"><span class="pre">KNNConvLayer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer._init_conv_like"><code class="docutils literal notranslate"><span class="pre">KNNConvLayer._init_conv_like()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer._pad_and_gather_knns"><code class="docutils literal notranslate"><span class="pre">KNNConvLayer._pad_and_gather_knns()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer._apply_local_rf"><code class="docutils literal notranslate"><span class="pre">KNNConvLayer._apply_local_rf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer._apply_local_rf_to_weights"><code class="docutils literal notranslate"><span class="pre">KNNConvLayer._apply_local_rf_to_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer.forward"><code class="docutils literal notranslate"><span class="pre">KNNConvLayer.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer.compute_reference_coords"><code class="docutils literal notranslate"><span class="pre">KNNConvLayer.compute_reference_coords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer.compute_local_rf"><code class="docutils literal notranslate"><span class="pre">KNNConvLayer.compute_local_rf()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseSeparableConvLayer"><code class="docutils literal notranslate"><span class="pre">KNNDepthwiseSeparableConvLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseSeparableConvLayer.__init__"><code class="docutils literal notranslate"><span class="pre">KNNDepthwiseSeparableConvLayer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseSeparableConvLayer._init_depthwise_separable_conv_like"><code class="docutils literal notranslate"><span class="pre">KNNDepthwiseSeparableConvLayer._init_depthwise_separable_conv_like()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseSeparableConvLayer.forward"><code class="docutils literal notranslate"><span class="pre">KNNDepthwiseSeparableConvLayer.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseConvLayer"><code class="docutils literal notranslate"><span class="pre">KNNDepthwiseConvLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseConvLayer.__init__"><code class="docutils literal notranslate"><span class="pre">KNNDepthwiseConvLayer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseConvLayer._init_depthwise_conv_like"><code class="docutils literal notranslate"><span class="pre">KNNDepthwiseConvLayer._init_depthwise_conv_like()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseConvLayer.forward"><code class="docutils literal notranslate"><span class="pre">KNNDepthwiseConvLayer.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.compute_receptive_field"><code class="docutils literal notranslate"><span class="pre">compute_receptive_field()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.compute_binary_receptive_field"><code class="docutils literal notranslate"><span class="pre">compute_binary_receptive_field()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.get_in_out_coords"><code class="docutils literal notranslate"><span class="pre">get_in_out_coords()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.knnalexnet.html">foveation.arch.knnalexnet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNetBlock"><code class="docutils literal notranslate"><span class="pre">KNNAlexNetBlock</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNetBlock.__init__"><code class="docutils literal notranslate"><span class="pre">KNNAlexNetBlock.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNetBlock.forward"><code class="docutils literal notranslate"><span class="pre">KNNAlexNetBlock.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNet"><code class="docutils literal notranslate"><span class="pre">KNNAlexNet</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNet.__init__"><code class="docutils literal notranslate"><span class="pre">KNNAlexNet.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNet.forward"><code class="docutils literal notranslate"><span class="pre">KNNAlexNet.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.knnconvnextv2.html">foveation.arch.knnconvnextv2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.GRN"><code class="docutils literal notranslate"><span class="pre">GRN</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.GRN.__init__"><code class="docutils literal notranslate"><span class="pre">GRN.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.GRN.forward"><code class="docutils literal notranslate"><span class="pre">GRN.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.LayerNorm"><code class="docutils literal notranslate"><span class="pre">LayerNorm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.LayerNorm.__init__"><code class="docutils literal notranslate"><span class="pre">LayerNorm.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.LayerNorm.forward"><code class="docutils literal notranslate"><span class="pre">LayerNorm.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.Block"><code class="docutils literal notranslate"><span class="pre">Block</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.Block.__init__"><code class="docutils literal notranslate"><span class="pre">Block.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.Block.forward"><code class="docutils literal notranslate"><span class="pre">Block.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.ConvNeXtV2"><code class="docutils literal notranslate"><span class="pre">ConvNeXtV2</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.ConvNeXtV2.__init__"><code class="docutils literal notranslate"><span class="pre">ConvNeXtV2.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.ConvNeXtV2.forward_features"><code class="docutils literal notranslate"><span class="pre">ConvNeXtV2.forward_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.ConvNeXtV2.forward"><code class="docutils literal notranslate"><span class="pre">ConvNeXtV2.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_atto"><code class="docutils literal notranslate"><span class="pre">knnconvnextv2_atto()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_femto"><code class="docutils literal notranslate"><span class="pre">knnconvnextv2_femto()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_pico"><code class="docutils literal notranslate"><span class="pre">knnconvnextv2_pico()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_nano"><code class="docutils literal notranslate"><span class="pre">knnconvnextv2_nano()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_tiny"><code class="docutils literal notranslate"><span class="pre">knnconvnextv2_tiny()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_base"><code class="docutils literal notranslate"><span class="pre">knnconvnextv2_base()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_large"><code class="docutils literal notranslate"><span class="pre">knnconvnextv2_large()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_huge"><code class="docutils literal notranslate"><span class="pre">knnconvnextv2_huge()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.knnresnet.html">foveation.arch.knnresnet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnresnet.html#foveation.arch.knnresnet.KNNResNetBasicBlock"><code class="docutils literal notranslate"><span class="pre">KNNResNetBasicBlock</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnresnet.html#foveation.arch.knnresnet.KNNResNetBasicBlock.__init__"><code class="docutils literal notranslate"><span class="pre">KNNResNetBasicBlock.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnresnet.html#foveation.arch.knnresnet.KNNResNetBasicBlock.forward"><code class="docutils literal notranslate"><span class="pre">KNNResNetBasicBlock.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnresnet.html#foveation.arch.knnresnet.KNNResNet"><code class="docutils literal notranslate"><span class="pre">KNNResNet</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnresnet.html#foveation.arch.knnresnet.KNNResNet.__init__"><code class="docutils literal notranslate"><span class="pre">KNNResNet.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnresnet.html#foveation.arch.knnresnet.KNNResNet.forward"><code class="docutils literal notranslate"><span class="pre">KNNResNet.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.knnvit.html">foveation.arch.knnvit</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding"><code class="docutils literal notranslate"><span class="pre">KNNPatchEmbedding</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding.__init__"><code class="docutils literal notranslate"><span class="pre">KNNPatchEmbedding.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding.forward"><code class="docutils literal notranslate"><span class="pre">KNNPatchEmbedding.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding.load_weights"><code class="docutils literal notranslate"><span class="pre">KNNPatchEmbedding.load_weights()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.PartitioningPatchEmbedding"><code class="docutils literal notranslate"><span class="pre">PartitioningPatchEmbedding</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.PartitioningPatchEmbedding.__init__"><code class="docutils literal notranslate"><span class="pre">PartitioningPatchEmbedding.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPartitioningPatchEmbedding"><code class="docutils literal notranslate"><span class="pre">KNNPartitioningPatchEmbedding</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPartitioningPatchEmbedding.__init__"><code class="docutils literal notranslate"><span class="pre">KNNPartitioningPatchEmbedding.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.KNNViT"><code class="docutils literal notranslate"><span class="pre">KNNViT</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.KNNViT.__init__"><code class="docutils literal notranslate"><span class="pre">KNNViT.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.KNNViT.forward"><code class="docutils literal notranslate"><span class="pre">KNNViT.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.DinoV3RoPE"><code class="docutils literal notranslate"><span class="pre">DinoV3RoPE</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.DinoV3RoPE.inv_freq"><code class="docutils literal notranslate"><span class="pre">DinoV3RoPE.inv_freq</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.DinoV3RoPE.__init__"><code class="docutils literal notranslate"><span class="pre">DinoV3RoPE.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knnvit.html#foveation.arch.knnvit.DinoV3RoPE.forward"><code class="docutils literal notranslate"><span class="pre">DinoV3RoPE.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.mlp.html">foveation.arch.mlp</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.mlp.html#foveation.arch.mlp.LayerBlock"><code class="docutils literal notranslate"><span class="pre">LayerBlock</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.mlp.html#foveation.arch.mlp.LayerBlock.__init__"><code class="docutils literal notranslate"><span class="pre">LayerBlock.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.mlp.html#foveation.arch.mlp.get_mlp"><code class="docutils literal notranslate"><span class="pre">get_mlp()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.mlp.html#foveation.arch.mlp.MLPWrapper"><code class="docutils literal notranslate"><span class="pre">MLPWrapper</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.mlp.html#foveation.arch.mlp.MLPWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">MLPWrapper.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.mlp.html#foveation.arch.mlp.MLPWrapper.forward"><code class="docutils literal notranslate"><span class="pre">MLPWrapper.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.norm.html">foveation.arch.norm</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNChannelNorm"><code class="docutils literal notranslate"><span class="pre">KNNChannelNorm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNChannelNorm.__init__"><code class="docutils literal notranslate"><span class="pre">KNNChannelNorm.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNChannelNorm.forward"><code class="docutils literal notranslate"><span class="pre">KNNChannelNorm.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNBatchNorm"><code class="docutils literal notranslate"><span class="pre">KNNBatchNorm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNBatchNorm.__init__"><code class="docutils literal notranslate"><span class="pre">KNNBatchNorm.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNCoordNorm"><code class="docutils literal notranslate"><span class="pre">KNNCoordNorm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNCoordNorm.__init__"><code class="docutils literal notranslate"><span class="pre">KNNCoordNorm.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNLayerNorm"><code class="docutils literal notranslate"><span class="pre">KNNLayerNorm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNLayerNorm.__init__"><code class="docutils literal notranslate"><span class="pre">KNNLayerNorm.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNGroupNorm"><code class="docutils literal notranslate"><span class="pre">KNNGroupNorm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.KNNGroupNorm.__init__"><code class="docutils literal notranslate"><span class="pre">KNNGroupNorm.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.find_valid_num_groups"><code class="docutils literal notranslate"><span class="pre">find_valid_num_groups()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.norm.html#foveation.arch.norm.get_norm"><code class="docutils literal notranslate"><span class="pre">get_norm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.polar.html">foveation.arch.polar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.polar.html#foveation.arch.polar.PolarPadder"><code class="docutils literal notranslate"><span class="pre">PolarPadder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.polar.html#foveation.arch.polar.PolarPadder.__init__"><code class="docutils literal notranslate"><span class="pre">PolarPadder.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.polar.html#foveation.arch.polar.PolarPadder.forward"><code class="docutils literal notranslate"><span class="pre">PolarPadder.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.polar.html#foveation.arch.polar.convert_model_to_polar"><code class="docutils literal notranslate"><span class="pre">convert_model_to_polar()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.resnet.html">foveation.arch.resnet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.conv3x3_polar"><code class="docutils literal notranslate"><span class="pre">conv3x3_polar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.conv_polar"><code class="docutils literal notranslate"><span class="pre">conv_polar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.BasicBlockPolar"><code class="docutils literal notranslate"><span class="pre">BasicBlockPolar</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.BasicBlockPolar.expansion"><code class="docutils literal notranslate"><span class="pre">BasicBlockPolar.expansion</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.BasicBlockPolar.__init__"><code class="docutils literal notranslate"><span class="pre">BasicBlockPolar.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.BasicBlockPolar.forward"><code class="docutils literal notranslate"><span class="pre">BasicBlockPolar.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.BottleneckPolar"><code class="docutils literal notranslate"><span class="pre">BottleneckPolar</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.BottleneckPolar.expansion"><code class="docutils literal notranslate"><span class="pre">BottleneckPolar.expansion</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.BottleneckPolar.__init__"><code class="docutils literal notranslate"><span class="pre">BottleneckPolar.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.BottleneckPolar.forward"><code class="docutils literal notranslate"><span class="pre">BottleneckPolar.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.ResNet"><code class="docutils literal notranslate"><span class="pre">ResNet</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.ResNet.__init__"><code class="docutils literal notranslate"><span class="pre">ResNet.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.resnet18"><code class="docutils literal notranslate"><span class="pre">resnet18()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.resnet34"><code class="docutils literal notranslate"><span class="pre">resnet34()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.resnet50"><code class="docutils literal notranslate"><span class="pre">resnet50()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.resnet101"><code class="docutils literal notranslate"><span class="pre">resnet101()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.get_repr_size"><code class="docutils literal notranslate"><span class="pre">get_repr_size()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.resnet.html#foveation.arch.resnet.resnet_ssl"><code class="docutils literal notranslate"><span class="pre">resnet_ssl()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.vit.html">foveation.arch.vit</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.apply_2d_rotary_pos_emb"><code class="docutils literal notranslate"><span class="pre">apply_2d_rotary_pos_emb()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.PositionalEncoding"><code class="docutils literal notranslate"><span class="pre">PositionalEncoding</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.PositionalEncoding.__init__"><code class="docutils literal notranslate"><span class="pre">PositionalEncoding.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.PositionalEncoding.forward"><code class="docutils literal notranslate"><span class="pre">PositionalEncoding.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.RoPEPositionalEncoding"><code class="docutils literal notranslate"><span class="pre">RoPEPositionalEncoding</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.RoPEPositionalEncoding.__init__"><code class="docutils literal notranslate"><span class="pre">RoPEPositionalEncoding.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.RoPEPositionalEncoding.forward"><code class="docutils literal notranslate"><span class="pre">RoPEPositionalEncoding.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.PatchEmbedding"><code class="docutils literal notranslate"><span class="pre">PatchEmbedding</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.PatchEmbedding.__init__"><code class="docutils literal notranslate"><span class="pre">PatchEmbedding.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.PatchEmbedding.forward"><code class="docutils literal notranslate"><span class="pre">PatchEmbedding.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.MultiHeadSelfAttention"><code class="docutils literal notranslate"><span class="pre">MultiHeadSelfAttention</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.MultiHeadSelfAttention.__init__"><code class="docutils literal notranslate"><span class="pre">MultiHeadSelfAttention.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.MultiHeadSelfAttention.forward"><code class="docutils literal notranslate"><span class="pre">MultiHeadSelfAttention.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.RoPEMultiHeadSelfAttention"><code class="docutils literal notranslate"><span class="pre">RoPEMultiHeadSelfAttention</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.RoPEMultiHeadSelfAttention.__init__"><code class="docutils literal notranslate"><span class="pre">RoPEMultiHeadSelfAttention.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.RoPEMultiHeadSelfAttention.forward"><code class="docutils literal notranslate"><span class="pre">RoPEMultiHeadSelfAttention.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.TransformerBlock"><code class="docutils literal notranslate"><span class="pre">TransformerBlock</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.TransformerBlock.__init__"><code class="docutils literal notranslate"><span class="pre">TransformerBlock.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.TransformerBlock.forward"><code class="docutils literal notranslate"><span class="pre">TransformerBlock.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.RoPETransformerBlock"><code class="docutils literal notranslate"><span class="pre">RoPETransformerBlock</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.RoPETransformerBlock.__init__"><code class="docutils literal notranslate"><span class="pre">RoPETransformerBlock.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.VisionTransformer"><code class="docutils literal notranslate"><span class="pre">VisionTransformer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.VisionTransformer.__init__"><code class="docutils literal notranslate"><span class="pre">VisionTransformer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.VisionTransformer._init_weights"><code class="docutils literal notranslate"><span class="pre">VisionTransformer._init_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.vit.html#foveation.arch.vit.VisionTransformer.forward"><code class="docutils literal notranslate"><span class="pre">VisionTransformer.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.wrapper.html">foveation.arch.wrapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.arch.wrapper.html#foveation.arch.wrapper.BackboneProjectorWrapper"><code class="docutils literal notranslate"><span class="pre">BackboneProjectorWrapper</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.wrapper.html#foveation.arch.wrapper.BackboneProjectorWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">BackboneProjectorWrapper.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.wrapper.html#foveation.arch.wrapper.BackboneProjectorWrapper.forward"><code class="docutils literal notranslate"><span class="pre">BackboneProjectorWrapper.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="foveation.sensing.samplers.html" class="btn btn-neutral float-left" title="foveation.sensing.samplers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.arch.alexnet.html" class="btn btn-neutral float-right" title="foveation.arch.alexnet" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

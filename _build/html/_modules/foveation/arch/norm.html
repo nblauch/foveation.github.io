@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.arch.norm &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.arch.norm</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.arch.norm</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_all</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   KNN normalization layers always take both num_coords and num_channels, even if one of these is irrelevant.  </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="KNNChannelNorm">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNChannelNorm">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNChannelNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple wrapper to perform normalization over the channel dimension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="KNNChannelNorm.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNChannelNorm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="n">num_channels</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="KNNChannelNorm.forward">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNChannelNorm.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;LayerNorm&#39;</span><span class="p">,</span> <span class="s1">&#39;KNNChannelNorm&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="KNNBatchNorm">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNBatchNorm">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNBatchNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple wrapper to perform normalization over the batch dimension</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="KNNBatchNorm.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNBatchNorm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;BatchNorm1d&#39;</span><span class="p">,</span> <span class="s1">&#39;KNNBatchNorm&#39;</span><span class="p">)</span></div>
+
+
+    
+<div class="viewcode-block" id="KNNCoordNorm">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNCoordNorm">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNCoordNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple wrapper to perform normalization over the coordinate dimension</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="KNNCoordNorm.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNCoordNorm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="n">num_coords</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;LayerNorm&#39;</span><span class="p">,</span> <span class="s1">&#39;KNNCoordNorm&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="KNNLayerNorm">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNLayerNorm">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNLayerNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple wrapper to perform normalization over both coordinate and channel dimensions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="KNNLayerNorm.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNLayerNorm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="n">num_channels</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;LayerNorm&#39;</span><span class="p">,</span> <span class="s1">&#39;KNNLayerNorm&#39;</span><span class="p">)</span></div>
+
+
+    
+<div class="viewcode-block" id="KNNGroupNorm">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNGroupNorm">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNGroupNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">):</span>
+<div class="viewcode-block" id="KNNGroupNorm.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.KNNGroupNorm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">base_groups</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">min_channels_per_group</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">find_valid_num_groups</span><span class="p">(</span><span class="n">num_channels</span><span class="p">,</span> <span class="n">base_groups</span><span class="p">,</span> <span class="n">min_channels_per_group</span><span class="o">=</span><span class="n">min_channels_per_group</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;GroupNorm&#39;</span><span class="p">,</span> <span class="s1">&#39;KNNGroupNorm&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="find_valid_num_groups">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.find_valid_num_groups">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_valid_num_groups</span><span class="p">(</span><span class="n">num_channels</span><span class="p">,</span> <span class="n">base_groups</span><span class="p">,</span> <span class="n">min_channels_per_group</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="c1"># ensure there are at least min_channels_per_group per group</span>
+    <span class="n">max_groups</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">num_channels</span> <span class="o">//</span> <span class="n">min_channels_per_group</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">desired_groups</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">max_groups</span><span class="p">,</span> <span class="n">base_groups</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">num_groups</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">desired_groups</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num_channels</span> <span class="o">%</span> <span class="n">num_groups</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">num_groups</span>
+    <span class="k">return</span> <span class="mi">1</span>  <span class="c1"># If no smaller divisor is found, default to 1 group</span></div>
+
+
+
+<div class="viewcode-block" id="get_norm">
+<a class="viewcode-back" href="../../../api/foveation.arch.norm.html#foveation.arch.norm.get_norm">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_norm</span><span class="p">(</span><span class="n">norm_type</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">base_groups</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">min_channels_per_group</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a normalization for a KNN layer with shape (batch, num_channels, num_coords)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">norm_type</span> <span class="o">==</span> <span class="s1">&#39;layer_chan&#39;</span> <span class="ow">or</span> <span class="n">norm_type</span><span class="o">==</span><span class="s1">&#39;channel&#39;</span><span class="p">:</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">KNNChannelNorm</span><span class="p">(</span><span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">norm_type</span> <span class="o">==</span> <span class="s1">&#39;layer_space&#39;</span> <span class="ow">or</span> <span class="n">norm_type</span><span class="o">==</span><span class="s1">&#39;coord&#39;</span><span class="p">:</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">KNNCoordNorm</span><span class="p">(</span><span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">norm_type</span> <span class="o">==</span> <span class="s1">&#39;layer_all&#39;</span> <span class="ow">or</span> <span class="n">norm_type</span><span class="o">==</span><span class="s1">&#39;layer&#39;</span><span class="p">:</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">KNNLayerNorm</span><span class="p">(</span><span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">norm_type</span> <span class="o">==</span> <span class="s1">&#39;group&#39;</span><span class="p">:</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">KNNGroupNorm</span><span class="p">(</span><span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">base_groups</span><span class="p">,</span> <span class="n">min_channels_per_group</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">&#39;batch&#39;</span> <span class="ow">in</span> <span class="n">norm_type</span><span class="p">:</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">KNNBatchNorm</span><span class="p">(</span><span class="n">num_coords</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">norm_type</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;norm_type </span><span class="si">{</span><span class="n">norm_type</span><span class="si">}</span><span class="s1"> not implemented&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">norm</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,532 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.utils.losses &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.utils.lr_scheduling" href="foveation.utils.lr_scheduling.html" />
+    <link rel="prev" title="foveation.utils.lora" href="foveation.utils.lora.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="foveation.utils.html">foveation.utils package</a></li>
+      <li class="breadcrumb-item active">foveation.utils.losses</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.utils.losses.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.utils.losses">
+<span id="foveation-utils-losses"></span><h1>foveation.utils.losses<a class="headerlink" href="#module-foveation.utils.losses" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.losses.</span></span><span class="sig-name descname"><span class="pre">SimCLRLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gpu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs_per_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#SimCLRLoss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>SimCLR (Simple Framework for Contrastive Learning of Visual Representations) Loss.</p>
+<p>This loss function is used for self-supervised learning of visual representations.
+It encourages the model to learn similar representations for different augmented
+views of the same image, while pushing apart representations of different images.</p>
+<p>The loss is computed using a contrastive learning approach:
+1. For each image in a batch, two augmented views are created.
+2. These views are passed through an encoder network to get embeddings.
+3. The similarity between positive pairs (two views of the same image) is maximized.
+4. The similarity between negative pairs (views from different images) is minimized.</p>
+<p>The loss uses a temperature-scaled softmax function to compute the probability
+of identifying the correct positive sample among the negative samples.</p>
+<p>Key Components:
+- Cosine similarity is used as the similarity metric between embeddings.
+- A mask is used to identify and exclude self-comparisons from the negative samples.
+- The loss is computed using cross-entropy between the similarity scores and the true labels.</p>
+<p>Optimization Notes:
+When using a batch size of 2048, use LARS as optimizer with a base learning rate of 0.5,
+weight decay of 1e-6 and a temperature of 0.15.
+When using a batch size of 256, use LARS as optimizer with base learning rate of 1.0,
+weight decay of 1e-6 and a temperature of 0.15.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gpu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs_per_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#SimCLRLoss.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the SimCLRLoss module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of samples in each batch.</p></li>
+<li><p><strong>world_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of distributed processes.</p></li>
+<li><p><strong>gpu</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.8)"><em>torch.device</em></a>) – The GPU device to use.</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – A scaling factor for the cosine similarity.</p></li>
+<li><p><strong>pairs_per_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of augmented pairs per sample. Defaults to 1.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.batch_size">
+<span class="sig-name descname"><span class="pre">batch_size</span></span><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.batch_size" title="Link to this definition"></a></dt>
+<dd><p>The number of samples in each batch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.temperature">
+<span class="sig-name descname"><span class="pre">temperature</span></span><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.temperature" title="Link to this definition"></a></dt>
+<dd><p>A scaling factor for the cosine similarity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.world_size">
+<span class="sig-name descname"><span class="pre">world_size</span></span><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.world_size" title="Link to this definition"></a></dt>
+<dd><p>The number of distributed processes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.pairs_per_sample">
+<span class="sig-name descname"><span class="pre">pairs_per_sample</span></span><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.pairs_per_sample" title="Link to this definition"></a></dt>
+<dd><p>Number of augmented pairs per sample.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.mask">
+<span class="sig-name descname"><span class="pre">mask</span></span><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.mask" title="Link to this definition"></a></dt>
+<dd><p>A boolean mask to exclude self-comparisons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.criterion">
+<span class="sig-name descname"><span class="pre">criterion</span></span><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.criterion" title="Link to this definition"></a></dt>
+<dd><p>The loss function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.CrossEntropyLoss</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.similarity_f">
+<span class="sig-name descname"><span class="pre">similarity_f</span></span><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.similarity_f" title="Link to this definition"></a></dt>
+<dd><p>The similarity function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.CosineSimilarity</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.mask_correlated_samples">
+<span class="sig-name descname"><span class="pre">mask_correlated_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs_per_sample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#SimCLRLoss.mask_correlated_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.mask_correlated_samples" title="Link to this definition"></a></dt>
+<dd><p>Create a mask to identify and exclude self-comparisons from negative samples.</p>
+<p>This method generates a boolean mask that is used to exclude self-comparisons
+and comparisons between augmented views of the same image when computing the
+SimCLR loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of samples in each batch.</p></li>
+<li><p><strong>world_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of distributed processes.</p></li>
+<li><p><strong>pairs_per_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of augmented pairs per sample.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A boolean mask of shape (N, N), where N = 2 * pairs_per_sample * batch_size * world_size.</dt><dd><p>True values indicate valid comparisons, while False values indicate
+self-comparisons or comparisons between augmented views of the same image.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The resulting mask is structured such that it can be used directly in the
+SimCLR loss computation to select valid negative samples.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.compute_logits">
+<span class="sig-name descname"><span class="pre">compute_logits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_j</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#SimCLRLoss.compute_logits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.compute_logits" title="Link to this definition"></a></dt>
+<dd><p>Compute the logits for the SimCLR loss.</p>
+<p>This method calculates the similarity matrix between the two sets of feature vectors
+(z_i and z_j) and prepares the logits for the contrastive loss computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_i</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – The first set of feature vectors.</p></li>
+<li><p><strong>z_j</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – The second set of feature vectors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tensor of shape (N, N+1) containing the logits for each sample.</dt><dd><p>The first column contains the similarity with the positive sample,
+and the remaining columns contain similarities with negative samples.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method handles distributed training by gathering tensors across processes
+when world_size &gt; 1.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#SimCLRLoss.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.forward" title="Link to this definition"></a></dt>
+<dd><p>Compute the SimCLR loss for the given feature representations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_i</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – The first set of feature representations.</p></li>
+<li><p><strong>z_j</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – The second set of feature representations.</p></li>
+<li><p><strong>logits</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a><em>, </em><em>optional</em>) – Pre-computed logits. If None,
+they will be computed using
+the <cite>compute_logits</cite> method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>num_sim (float): The numerator term of the loss, representing</dt><dd><p>the similarity between positive pairs.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>num_entropy (float): The denominator term of the loss,</dt><dd><p>representing the entropy of the similarity
+distribution.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This implementation treats all augmented examples within a minibatch,
+except for the positive pair, as negative examples. This approach is
+similar to that described in (Chen et al., 2017).</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.losses.SimCLRLoss.accuracy">
+<span class="sig-name descname"><span class="pre">accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#SimCLRLoss.accuracy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.SimCLRLoss.accuracy" title="Link to this definition"></a></dt>
+<dd><p>similar to forward, but compute accuracy rather than loss, where accuracy is the number of
+positive pairs that have a higher similarity than all negative pairs for a given image</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.losses.VicRegLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.losses.</span></span><span class="sig-name descname"><span class="pre">VicRegLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_coeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_coeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_coeff</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#VicRegLoss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.VicRegLoss" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Implements the VICReg (Variance-Invariance-Covariance Regularization) loss.</p>
+<p>VICReg is a self-supervised learning method that learns representations by
+enforcing invariance, variance, and covariance constraints on the embeddings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.VicRegLoss.sim_coeff">
+<span class="sig-name descname"><span class="pre">sim_coeff</span></span><a class="headerlink" href="#foveation.utils.losses.VicRegLoss.sim_coeff" title="Link to this definition"></a></dt>
+<dd><p>Coefficient for the invariance (similarity) term.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.VicRegLoss.std_coeff">
+<span class="sig-name descname"><span class="pre">std_coeff</span></span><a class="headerlink" href="#foveation.utils.losses.VicRegLoss.std_coeff" title="Link to this definition"></a></dt>
+<dd><p>Coefficient for the variance (standard deviation) term.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.VicRegLoss.cov_coeff">
+<span class="sig-name descname"><span class="pre">cov_coeff</span></span><a class="headerlink" href="#foveation.utils.losses.VicRegLoss.cov_coeff" title="Link to this definition"></a></dt>
+<dd><p>Coefficient for the covariance term.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Recommended hyperparameters:
+- For batch size 2048: LARS optimizer, base learning rate 0.5, weight decay 1e-4,</p>
+<blockquote>
+<div><p>sim_coeff and std_coeff 25, cov_coeff 1.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>For batch size 256: LARS optimizer, base learning rate 1.5, weight decay 1e-4,
+sim_coeff and std_coeff 25, cov_coeff 1.</p></li>
+</ul>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.losses.VicRegLoss.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_coeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_coeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_coeff</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#VicRegLoss.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.VicRegLoss.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.losses.VicRegLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_only_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#VicRegLoss.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.VicRegLoss.forward" title="Link to this definition"></a></dt>
+<dd><p>Compute the VICReg loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_i</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – First set of embeddings.</p></li>
+<li><p><strong>z_j</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Second set of embeddings.</p></li>
+<li><p><strong>return_only_loss</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, return only the total loss.
+If False, return individual loss components.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>torch.Tensor: The total VICReg loss.
+If return_only_loss is False:</p>
+<blockquote>
+<div><p>tuple: (total_loss, repr_loss, std_loss, cov_loss)</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If return_only_loss is True</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.losses.BarlowTwinsLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.losses.</span></span><span class="sig-name descname"><span class="pre">BarlowTwinsLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#BarlowTwinsLoss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.BarlowTwinsLoss" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Implements the Barlow Twins loss for self-supervised learning.</p>
+<p>Barlow Twins aims to learn representations by maximizing the similarity between
+distorted versions of a sample while reducing the redundancy between the components
+of the representation vector.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.BarlowTwinsLoss.bn">
+<span class="sig-name descname"><span class="pre">bn</span></span><a class="headerlink" href="#foveation.utils.losses.BarlowTwinsLoss.bn" title="Link to this definition"></a></dt>
+<dd><p>Batch normalization layer for the embeddings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.BatchNorm1d</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.BarlowTwinsLoss.lambd">
+<span class="sig-name descname"><span class="pre">lambd</span></span><a class="headerlink" href="#foveation.utils.losses.BarlowTwinsLoss.lambd" title="Link to this definition"></a></dt>
+<dd><p>Trade-off parameter for the off-diagonal elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.BarlowTwinsLoss.batch_size">
+<span class="sig-name descname"><span class="pre">batch_size</span></span><a class="headerlink" href="#foveation.utils.losses.BarlowTwinsLoss.batch_size" title="Link to this definition"></a></dt>
+<dd><p>Batch size used in training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="foveation.utils.losses.BarlowTwinsLoss.world_size">
+<span class="sig-name descname"><span class="pre">world_size</span></span><a class="headerlink" href="#foveation.utils.losses.BarlowTwinsLoss.world_size" title="Link to this definition"></a></dt>
+<dd><p>Number of processes in distributed training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.losses.BarlowTwinsLoss.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#BarlowTwinsLoss.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.BarlowTwinsLoss.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.losses.BarlowTwinsLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/losses.html#BarlowTwinsLoss.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.losses.BarlowTwinsLoss.forward" title="Link to this definition"></a></dt>
+<dd><p>Compute the Barlow Twins loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z1</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – First set of embeddings.</p></li>
+<li><p><strong>z2</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Second set of embeddings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The computed Barlow Twins loss.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="foveation.utils.lora.html" class="btn btn-neutral float-left" title="foveation.utils.lora" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.utils.lr_scheduling.html" class="btn btn-neutral float-right" title="foveation.utils.lr_scheduling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

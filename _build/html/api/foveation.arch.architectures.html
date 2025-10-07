@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.arch.architectures &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.arch.convnextv2" href="foveation.arch.convnextv2.html" />
+    <link rel="prev" title="foveation.arch.alexnet" href="foveation.arch.alexnet.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="foveation.arch.html">foveation.arch package</a></li>
+      <li class="breadcrumb-item active">foveation.arch.architectures</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.arch.architectures.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.arch.architectures">
+<span id="foveation-arch-architectures"></span><h1>foveation.arch.architectures<a class="headerlink" href="#module-foveation.arch.architectures" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_alexnet2023_baseline">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_alexnet2023_baseline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_alexnet2023_baseline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_alexnet2023_baseline" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_alexnet2023_knn">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_alexnet2023_knn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_alexnet2023_knn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_alexnet2023_knn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_resnet18_baseline">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_resnet18_baseline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_resnet18_baseline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_resnet18_baseline" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_resnet34_baseline">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_resnet34_baseline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_resnet34_baseline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_resnet34_baseline" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_resnet50_baseline">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_resnet50_baseline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_resnet50_baseline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_resnet50_baseline" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnresnet">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnresnet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_conv_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pool_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depthwise_sep_conv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnresnet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnresnet" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnresnet9">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnresnet9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnresnet9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnresnet9" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnresnet9_lowres">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnresnet9_lowres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnresnet9_lowres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnresnet9_lowres" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnresnet18">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnresnet18</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnresnet18"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnresnet18" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnresnet18_lowres">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnresnet18_lowres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnresnet18_lowres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnresnet18_lowres" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnresnet9_dwsep">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnresnet9_dwsep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnresnet9_dwsep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnresnet9_dwsep" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnresnet9_dwsep_lowres">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnresnet9_dwsep_lowres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnresnet9_dwsep_lowres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnresnet9_dwsep_lowres" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnresnet18_dwsep">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnresnet18_dwsep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnresnet18_dwsep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnresnet18_dwsep" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnresnet18_dwsep_lowres">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnresnet18_dwsep_lowres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnresnet18_dwsep_lowres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnresnet18_dwsep_lowres" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnvit">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnvit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnvit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnvit" title="Link to this definition"></a></dt>
+<dd><p>SaccadeNet with KNNViT backbone.</p>
+<p>This model uses KNN-based tokenization instead of standard patch embedding,
+creating tokens based on spatial relationships in the foveated coordinate system.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnvit_base">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnvit_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnvit_base"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnvit_base" title="Link to this definition"></a></dt>
+<dd><p>KNNViT-Base configuration (l layers, 768 dim, 12 heads)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnvit_small">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnvit_small</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnvit_small"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnvit_small" title="Link to this definition"></a></dt>
+<dd><p>KNNViT-Small configuration (l layers, 384 dim, 6 heads)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_knnvit_tiny">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_knnvit_tiny</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_knnvit_tiny"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_knnvit_tiny" title="Link to this definition"></a></dt>
+<dd><p>KNNViT-Tiny configuration (l layers, 192 dim, 3 heads)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_vit">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_vit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_vit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_vit" title="Link to this definition"></a></dt>
+<dd><p>SaccadeNet with standard Vision Transformer backbone.</p>
+<p>This model uses the classic ViT architecture with patch embedding.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_vit_base">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_vit_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_vit_base"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_vit_base" title="Link to this definition"></a></dt>
+<dd><p>ViT-Base configuration (l layers, 768 dim, 12 heads)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_vit_small">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_vit_small</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_vit_small"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_vit_small" title="Link to this definition"></a></dt>
+<dd><p>ViT-Small configuration (l layers, 384 dim, 6 heads)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_vit_tiny">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_vit_tiny</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_vit_tiny"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_vit_tiny" title="Link to this definition"></a></dt>
+<dd><p>ViT-Tiny configuration (l layers, 192 dim, 3 heads)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.saccadenet_dinov3">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">saccadenet_dinov3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#saccadenet_dinov3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.saccadenet_dinov3" title="Link to this definition"></a></dt>
+<dd><p>pre-trained dinov3 – architectural differences in the dinov3 model are specified via cfg.pretrained_model.path</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.architectures.arch_wrapper">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.architectures.</span></span><span class="sig-name descname"><span class="pre">arch_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backbone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/architectures.html#arch_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.architectures.arch_wrapper" title="Link to this definition"></a></dt>
+<dd><p>Build SaccadeNet-ready architecture from an arbitrary backbone network and configuration</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="foveation.arch.alexnet.html" class="btn btn-neutral float-left" title="foveation.arch.alexnet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.arch.convnextv2.html" class="btn btn-neutral float-right" title="foveation.arch.convnextv2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

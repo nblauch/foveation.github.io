@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.arch.alexnet &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.arch.alexnet</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.arch.alexnet</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.polar</span><span class="w"> </span><span class="kn">import</span> <span class="n">PolarPadder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.mlp</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_mlp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.wrapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackboneProjectorWrapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_all</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;baseline_alexnet_kernels&#39;</span><span class="p">]</span>
+
+<span class="c1"># (out_c, ks, stride, pad, groups)</span>
+<span class="n">baseline_alexnet_kernels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;base_&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="c1"># alexnet baseline architecture; &#39;base&#39; is preferred</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">],</span>
+    <span class="s1">&#39;base&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="c1"># like 0 (baseline), but with padding p=k//2 to ensure no downsampling</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">],</span>
+    <span class="s1">&#39;base_4layer&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="c1"># like 0 (baseline), but with 4 layers, designed for lower res inputs</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">],</span>
+    <span class="s1">&#39;base_lowres&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="c1"># like 1, but with reduced stride in layer 1 for lower-res inputs</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">],</span>          
+    <span class="s1">&#39;4layer_lowres&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="c1"># 4-layer designed for low-res inputs</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">],</span>
+    <span class="s1">&#39;4layer_nostride&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="c1"># designed for even smaller inputs - no strides at all</span>
+        <span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">],</span>
+    <span class="s1">&#39;base_lowres_smallrf&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="c1"># modification of 4 to have smaller RFs</span>
+        <span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="ConvBlock">
+<a class="viewcode-back" href="../../../api/foveation.arch.alexnet.html#foveation.arch.alexnet.ConvBlock">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConvBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">):</span>
+<div class="viewcode-block" id="ConvBlock.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.alexnet.html#foveation.arch.alexnet.ConvBlock.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_c</span><span class="p">,</span> <span class="n">out_c</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">dilation</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">inp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">conv</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">,</span> 
+                 <span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> 
+                 <span class="n">act</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> 
+                 <span class="n">dropout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">pool</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span>
+                 <span class="n">after_pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">polar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        
+        <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># input processing layer</span>
+        <span class="k">if</span> <span class="n">inp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">inp</span><span class="p">()]</span>
+
+        <span class="c1"># add polar padding for conv if necessary</span>
+        <span class="k">if</span> <span class="n">polar</span><span class="p">:</span>
+            <span class="n">conv_pad</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">PolarPadder</span><span class="p">(((</span><span class="n">kernel_size</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dilation</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">conv_pad</span> <span class="o">=</span> <span class="n">padding</span>
+        
+        <span class="c1"># conv layer always included</span>
+        <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span>
+            <span class="n">conv</span><span class="p">(</span><span class="n">in_c</span><span class="p">,</span> <span class="n">out_c</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">conv_pad</span><span class="p">,</span>
+                 <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">dilation</span><span class="o">=</span><span class="n">dilation</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span> <span class="k">if</span> <span class="n">norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">norm</span><span class="p">]</span>
+            <span class="c1">#layers += [norm(out_c)]</span>
+        
+        <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">act</span><span class="p">()]</span>
+        
+        <span class="k">if</span> <span class="n">dropout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">dropout</span><span class="p">()]</span>
+            
+        <span class="k">if</span> <span class="n">pool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># add polar padding for pool if necessary</span>
+            <span class="n">tmp_pool</span> <span class="o">=</span> <span class="n">pool</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">polar</span><span class="p">:</span>
+                <span class="n">pool_pad</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">PolarPadder</span><span class="p">((</span><span class="n">tmp_pool</span><span class="o">.</span><span class="n">kernel_size</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">tmp_pool</span><span class="o">.</span><span class="n">dilation</span><span class="p">)]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pool_pad</span> <span class="o">=</span> <span class="n">tmp_pool</span><span class="o">.</span><span class="n">padding</span>
+            <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">pool</span><span class="p">(</span><span class="n">padding</span><span class="o">=</span><span class="n">pool_pad</span><span class="p">)]</span>
+        
+        <span class="k">if</span> <span class="n">after_pool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">polar</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: after_pool fun </span><span class="si">{</span><span class="n">after_pool</span><span class="si">}</span><span class="s1"> not configured for use with polar coordinates&#39;</span><span class="p">)</span>
+            <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">after_pool</span><span class="p">()]</span>
+        
+        <span class="c1"># output processing layer</span>
+        <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">out</span><span class="p">()]</span>
+            
+        <span class="nb">super</span><span class="p">(</span><span class="n">ConvBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="get_backbone">
+<a class="viewcode-back" href="../../../api/foveation.arch.alexnet.html#foveation.arch.alexnet.get_backbone">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_backbone</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                 <span class="n">kernels</span> <span class="o">=</span> <span class="n">baseline_alexnet_kernels</span><span class="p">[</span><span class="s1">&#39;base&#39;</span><span class="p">],</span>
+                 <span class="n">w</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">preprocess</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">inp</span><span class="o">=</span><span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">conv</span><span class="o">=</span><span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">,</span>
+                 <span class="n">norm</span><span class="o">=</span><span class="k">lambda</span> <span class="n">idx</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                 <span class="n">act</span><span class="o">=</span><span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                 <span class="n">dropout</span><span class="o">=</span><span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">pool</span><span class="o">=</span><span class="k">lambda</span> <span class="n">idx</span><span class="p">,</span><span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">after_pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">out</span><span class="o">=</span><span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">avgpool</span><span class="o">=</span><span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool2d</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)),</span>
+                 <span class="n">polar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">):</span>
+    
+    <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># add a pre-processing layer (e.g., lgn transform, saccadenet fixation)</span>
+    <span class="k">if</span> <span class="n">preprocess</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+         <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;preprocess&#39;</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">()))</span>
+                     
+    <span class="c1"># scale out_channels by `w`</span>
+    <span class="n">kernels</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">int</span><span class="p">(</span><span class="n">out_c</span><span class="o">*</span><span class="n">w</span><span class="p">),</span> <span class="n">ks</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">grps</span><span class="p">)</span> <span class="k">for</span> <span class="n">out_c</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">grps</span> <span class="ow">in</span> <span class="n">kernels</span><span class="p">]</span>
+    
+    <span class="n">in_c</span> <span class="o">=</span> <span class="n">in_channels</span>
+    <span class="k">for</span> <span class="n">args_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kernels</span><span class="p">):</span>
+        <span class="n">idx</span><span class="p">,(</span><span class="n">out_c</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">pad</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span> <span class="o">=</span> <span class="n">args_</span>
+        <span class="n">block_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;conv_block_</span><span class="si">{</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">ConvBlock</span><span class="p">(</span><span class="n">in_c</span><span class="p">,</span> <span class="n">out_c</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">pad</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+                          <span class="n">inp</span><span class="o">=</span><span class="n">inp</span><span class="p">(</span><span class="o">*</span><span class="n">args_</span><span class="p">)</span> <span class="k">if</span> <span class="n">inp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">conv</span><span class="o">=</span><span class="n">conv</span><span class="p">(</span><span class="o">*</span><span class="n">args_</span><span class="p">),</span>
+                          <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">(</span><span class="o">*</span><span class="n">args_</span><span class="p">)</span> <span class="k">if</span> <span class="n">norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">act</span><span class="o">=</span><span class="n">act</span><span class="p">(</span><span class="o">*</span><span class="n">args_</span><span class="p">)</span> <span class="k">if</span> <span class="n">act</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">(</span><span class="o">*</span><span class="n">args_</span><span class="p">)</span> <span class="k">if</span> <span class="n">dropout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">pool</span><span class="o">=</span><span class="n">pool</span><span class="p">(</span><span class="o">*</span><span class="n">args_</span><span class="p">)</span> <span class="k">if</span> <span class="n">pool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">after_pool</span><span class="o">=</span><span class="n">after_pool</span><span class="p">(</span><span class="o">*</span><span class="n">args_</span><span class="p">)</span> <span class="k">if</span> <span class="n">after_pool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">,</span>
+                          <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">(</span><span class="o">*</span><span class="n">args_</span><span class="p">)</span> <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+                         <span class="p">)</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="p">))</span>
+        <span class="n">in_c</span> <span class="o">=</span> <span class="n">out_c</span>
+    
+    <span class="k">if</span> <span class="n">avgpool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;avgpool&#39;</span><span class="p">,</span> <span class="n">avgpool</span><span class="p">(</span><span class="o">*</span><span class="n">args_</span><span class="p">)))</span>
+    
+    <span class="n">backbone</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">OrderedDict</span><span class="p">(</span><span class="n">layers</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">backbone</span>        </div>
+
+
+
+<div class="viewcode-block" id="get_repr_size">
+<a class="viewcode-back" href="../../../api/foveation.arch.alexnet.html#foveation.arch.alexnet.get_repr_size">[docs]</a>
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_repr_size</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="mi">224</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">in_channels</span><span class="p">,</span><span class="n">img_size</span><span class="p">,</span><span class="n">img_size</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+    
+
+<div class="viewcode-block" id="build_model">
+<a class="viewcode-back" href="../../../api/foveation.arch.alexnet.html#foveation.arch.alexnet.build_model">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_model</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                <span class="n">backbone</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mlp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">backbone_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mlp_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">repr_size_in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="mi">224</span><span class="p">):</span>
+    <span class="n">backbone_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">backbone_kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">backbone_kwargs</span>
+    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">mlp_kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mlp_kwargs</span>
+    <span class="n">backbone</span> <span class="o">=</span> <span class="n">get_backbone</span><span class="p">(</span><span class="o">**</span><span class="n">backbone_kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">backbone</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">backbone</span>
+    <span class="n">repr_size</span> <span class="o">=</span> <span class="n">get_repr_size</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">repr_size_in_channels</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="n">img_size</span><span class="p">)</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="n">repr_size</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">mlp</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">BackboneProjectorWrapper</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="n">mlp</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">total_embed_dim</span> <span class="o">=</span> <span class="n">repr_size</span>
+    
+    <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">get_state_dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">,</span> <span class="n">check_hash</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+
+<div class="viewcode-block" id="alexnet2023_baseline">
+<a class="viewcode-back" href="../../../api/foveation.arch.alexnet.html#foveation.arch.alexnet.alexnet2023_baseline">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">alexnet2023_baseline</span><span class="p">(</span><span class="n">mlp_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="mi">224</span><span class="p">,</span> <span class="o">**</span><span class="n">backbone_kwargs</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">build_model</span><span class="p">(</span><span class="n">mlp_kwargs</span><span class="o">=</span><span class="n">mlp_kwargs</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="n">img_size</span><span class="p">,</span> <span class="n">backbone_kwargs</span><span class="o">=</span><span class="n">backbone_kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.saccadenet &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.saccadenet</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.saccadenet</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">einops</span><span class="w"> </span><span class="kn">import</span> <span class="n">rearrange</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.amp</span><span class="w"> </span><span class="kn">import</span> <span class="n">autocast</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sensing.retina</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetinalTransform</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sensing.policies</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiRandomSaccadePolicy</span><span class="p">,</span> <span class="n">NoSaccadePolicy</span><span class="p">,</span> <span class="n">DeepGazeISaccadePolicy</span><span class="p">,</span> <span class="n">NetworkSaliencySaccadePolicy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.probes</span><span class="w"> </span><span class="kn">import</span> <span class="n">SaccadeNetProbe</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils.std_transforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_std_transforms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.arch</span><span class="w"> </span><span class="kn">import</span> <span class="n">architectures</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SaccadeNet&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="SaccadeNet">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SaccadeNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SaccadeNet: A neural network model that simulates saccadic eye movements and foveated vision.</span>
+
+<span class="sd">    Currently, SaccadeNet models operate independently over fixations. We leave saccadic integration for elsewhere. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SaccadeNet.__init__">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">architectures</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch</span><span class="p">](</span><span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>     
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_setting</span> <span class="o">=</span> <span class="s1">&#39;supervised&#39;</span> <span class="k">if</span> <span class="s1">&#39;supervised&#39;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="k">else</span> <span class="s1">&#39;ssl&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixation_size</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fix_agg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ssl_fixation_policy</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">ssl_policy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sup_fixation_policy</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">sup_policy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">n_fixations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amp_dtype</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">amp_dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_dropout</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">num_classes</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">loader_transforms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_transforms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_transforms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_transforms</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span> <span class="o">=</span> <span class="n">RetinalTransform</span><span class="p">(</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="p">,</span> 
+            <span class="n">start_res</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> 
+            <span class="n">fov</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span> 
+            <span class="n">cmf_a</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">,</span> 
+            <span class="n">style</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> 
+            <span class="n">sampler</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">sampler</span><span class="p">,</span> 
+            <span class="n">sigma</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">color_sigma</span><span class="p">,</span> 
+            <span class="n">fixation_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size</span><span class="p">,</span> 
+            <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> 
+            <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> 
+            <span class="n">pre_transforms</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pre_transforms</span><span class="p">,</span> 
+            <span class="n">post_transforms</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">post_transforms</span><span class="p">,</span>
+            <span class="n">no_color_val</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">validation</span><span class="o">.</span><span class="n">no_color</span><span class="p">,</span> 
+            <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">auto_match_cart_resources</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_repr_sizes</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ssl_fixator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_fixation_system</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ssl_fixation_policy</span><span class="p">,</span> <span class="s1">&#39;ssl&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ssl_fixator:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ssl_fixator</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sup_fixator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_fixation_system</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sup_fixation_policy</span><span class="p">,</span> <span class="s1">&#39;supervised&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;sup_fixator:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sup_fixator</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">head_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">SaccadeNetProbe</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mlp_spec</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span><span class="p">,</span> <span class="n">head_outputs</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dropout</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_embed_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">total_embed_dim</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNet.init_fixation_system">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.init_fixation_system">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_fixation_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixation_policy</span><span class="p">,</span> <span class="n">setting</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;ssl&#39;</span><span class="p">,</span> <span class="s1">&#39;supervised&#39;</span><span class="p">]):</span>
+        <span class="n">rand_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">add_aspect_variation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">add_aspect_variation</span><span class="p">,</span> 
+            <span class="n">crop_area_range</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size_min_frac</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size_max_frac</span><span class="p">],</span>
+            <span class="n">val_crop_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size_frac_val</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">fixation_policy</span> <span class="o">==</span> <span class="s1">&#39;multi_random&#39;</span><span class="p">:</span>
+            <span class="n">fixator</span> <span class="o">=</span> <span class="n">MultiRandomSaccadePolicy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">nonrandom_first</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="p">,</span> <span class="s1">&#39;nonrandom_first&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="o">**</span><span class="n">rand_kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fixation_policy</span> <span class="o">==</span> <span class="s1">&#39;multi_random_nearcenter&#39;</span><span class="p">:</span>
+            <span class="n">fixator</span> <span class="o">=</span> <span class="n">MultiRandomSaccadePolicy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">nonrandom_first</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="p">,</span> <span class="s1">&#39;nonrandom_first&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="n">norm_dist_from_center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">nearcenter_dist</span><span class="p">,</span> <span class="o">**</span><span class="n">rand_kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fixation_policy</span> <span class="o">==</span> <span class="s1">&#39;multi_random_nearcenter_train&#39;</span><span class="p">:</span>
+            <span class="n">fixator</span> <span class="o">=</span> <span class="n">MultiRandomSaccadePolicy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">norm_dist_from_center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">nearcenter_dist</span><span class="p">,</span> <span class="n">nonrandom_first</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="p">,</span> <span class="s1">&#39;nonrandom_first&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="n">nonrandom_val</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">rand_kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fixation_policy</span> <span class="o">==</span> <span class="s1">&#39;multi_random_train&#39;</span><span class="p">:</span>
+            <span class="n">fixator</span> <span class="o">=</span> <span class="n">MultiRandomSaccadePolicy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">nonrandom_first</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="p">,</span> <span class="s1">&#39;nonrandom_first&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="n">nonrandom_val</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">rand_kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fixation_policy</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
+            <span class="n">fixator</span> <span class="o">=</span> <span class="n">NoSaccadePolicy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fixation_policy</span> <span class="o">==</span> <span class="s1">&#39;deepgazeI&#39;</span><span class="p">:</span>
+            <span class="n">fixator</span> <span class="o">=</span> <span class="n">DeepGazeISaccadePolicy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">ior_width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fix_ior_width</span><span class="p">,</span> <span class="n">tmp_scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fix_temp</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fixation_policy</span> <span class="o">==</span> <span class="s1">&#39;networksaliency&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+            <span class="n">fixator</span> <span class="o">=</span> <span class="n">NetworkSaliencySaccadePolicy</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">saliency</span><span class="o">.</span><span class="n">hook_layer</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">setting</span> <span class="o">==</span> <span class="s1">&#39;ssl&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">contr_pairs_per_image</span> <span class="o">=</span> <span class="mi">1</span>
+            
+        <span class="k">return</span> <span class="n">fixator</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNet.get_in_channels">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_in_channels">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_in_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the number of input channels for the model.</span>
+
+<span class="sd">        This method iterates through the model&#39;s modules to find the first layer</span>
+<span class="sd">        with an &#39;in_channels&#39; attribute. If no such layer is found, it returns</span>
+<span class="sd">        the default value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            default_value (int): The default number of input channels to return</span>
+<span class="sd">                                 if no layer with &#39;in_channels&#39; is found.</span>
+<span class="sd">                                 Defaults to 3.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The number of input channels for the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="s1">&#39;in_channels&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">layer</span><span class="o">.</span><span class="n">in_channels</span>
+        <span class="k">return</span> <span class="n">default_value</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNet.get_repr_sizes">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_repr_sizes">[docs]</a>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_repr_sizes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine the representation sizes of the network.</span>
+
+<span class="sd">        This method runs a forward pass through the network with a random input</span>
+<span class="sd">        to determine the sizes of the representations at each layer. It sets</span>
+<span class="sd">        several attributes of the class:</span>
+
+<span class="sd">        - self.repr_size: The size of the first layer&#39;s output (flattened).</span>
+<span class="sd">        - self.num_features: The size of the last layer&#39;s output (flattened).</span>
+<span class="sd">        - self.mlp_spec: A string representation of the sizes of all layer outputs,</span>
+<span class="sd">                         joined by hyphens.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            img_size (int): The size of the input image. Defaults to 224.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method temporarily sets the model to evaluation mode and</span>
+<span class="sd">            does not compute gradients.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Store the initial training mode</span>
+        <span class="n">initial_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span>
+        
+        <span class="c1"># Set model to evaluation mode for inference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>        
+
+        <span class="n">in_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_in_channels</span><span class="p">()</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixation_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixation_size</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;as_grid&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
+            <span class="c1"># standard CNN, no need to do this</span>
+            <span class="n">test_mlps</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># KNN model, this is needed</span>
+            <span class="n">test_mlps</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">with</span> <span class="n">autocast</span><span class="p">(</span><span class="n">device_type</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">amp_dtype</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">test_mlps</span><span class="p">:</span>
+                <span class="c1"># make sure all MLPs are initialized</span>
+                <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">return_layer_outputs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">apply_mlp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+                <span class="c1"># collapse over spatial positions</span>
+                <span class="n">embeddings</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="s1">&#39;b d p -&gt; b (d p)&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="s1">&#39;projector_ssl&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">projector_ssl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">embeddings</span><span class="p">,</span> <span class="n">layer_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">projector_ssl</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="n">return_layer_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># do supervised second so that it determine the mlp_spec appropriately</span>
+                <span class="n">embeddings</span><span class="p">,</span> <span class="n">layer_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">return_layer_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">apply_mlp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">embeddings</span><span class="p">,</span> <span class="n">layer_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">return_layer_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span> <span class="c1"># model returns list of outputs (e.g., multiple forward passes)</span>
+            <span class="n">layer_outputs</span> <span class="o">=</span> <span class="n">layer_outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># take only final ouput</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_outputs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span>
+        <span class="n">mlp_spec</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">output</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">layer_outputs</span><span class="p">):</span>
+            <span class="n">num_features</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">idx</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">repr_size</span> <span class="o">=</span> <span class="n">num_features</span>            
+            <span class="n">mlp_spec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num_features</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_spec</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mlp_spec</span><span class="p">)</span>     
+
+        <span class="c1"># Restore the model to its initial mode (train or eval)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">initial_mode</span><span class="p">)</span>   </div>
+
+        
+<div class="viewcode-block" id="SaccadeNet.to">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.to">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># if specifying a device, it is the first unnamed argument</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;device&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;device&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    
+<div class="viewcode-block" id="SaccadeNet.forward_ssl">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.forward_ssl">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward_ssl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">f1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">fix_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssl_fixator</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">f1</span><span class="o">=</span><span class="n">f1</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="n">fixation_size</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="n">area_range</span><span class="p">,</span> <span class="n">f1_only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">control_model</span><span class="p">)</span>
+
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">fix_outputs</span><span class="p">[</span><span class="s1">&#39;x_fixs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">n_fixations</span> <span class="o">=</span> <span class="n">fix_outputs</span><span class="p">[</span><span class="s1">&#39;x_fixs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># concatenate the fixations in the batch dimension</span>
+        <span class="n">x_fixs</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">fix_outputs</span><span class="p">[</span><span class="s1">&#39;x_fixs&#39;</span><span class="p">],</span> <span class="s1">&#39;b f c n -&gt; (f b) c n&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+
+        <span class="c1"># do the forward pass</span>
+        <span class="n">embeddings</span><span class="p">,</span> <span class="n">layer_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">x_fixs</span><span class="p">,</span> <span class="n">return_layer_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">apply_mlp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># make the positive pairs (fixations from same image) explicit</span>
+        <span class="n">embeddings</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="s1">&#39;(f b) c n -&gt; b f c n&#39;</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">layer_outputs</span><span class="p">,</span> <span class="n">x_fixs</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNet.forward_supervised">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.forward_supervised">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward_supervised</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">do_postproc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fixated_inputs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fixated_inputs</span><span class="p">:</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sup_fixator</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="n">fixation_size</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="n">area_range</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">fixations</span><span class="o">=</span><span class="n">fixations</span><span class="p">)</span>
+            <span class="n">x_fixs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;x_fixs&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_fixations</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;fixations&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x_fixs</span> <span class="o">=</span> <span class="n">inputs</span>
+
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x_fixs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">n_fixations</span> <span class="o">=</span> <span class="n">x_fixs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># concatenate fixations in the batch dimension</span>
+        <span class="k">if</span> <span class="s1">&#39;as_grid&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">x_fixs</span><span class="p">,</span> <span class="s1">&#39;b f c h w -&gt; (f b) c h w&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">x_fixs</span><span class="p">,</span> <span class="s1">&#39;b f c n -&gt; (f b) c n&#39;</span><span class="p">)</span>
+
+        <span class="c1"># do the forward pass</span>
+        <span class="n">embeddings</span><span class="p">,</span> <span class="n">layer_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">return_layer_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># reshape representations to make n_fixations explicit</span>
+        <span class="n">embeddings</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="s1">&#39;(f b) d -&gt; b f d&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="n">layer_outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">rearrange</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="s1">&#39;(f b) d -&gt; b f d&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">n_fixations</span><span class="p">)</span> <span class="k">for</span> <span class="n">lo</span> <span class="ow">in</span> <span class="n">layer_outputs</span><span class="p">]</span>
+
+        <span class="c1"># apply head if requested</span>
+        <span class="k">if</span> <span class="n">do_postproc</span><span class="p">:</span>
+            <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">layer_outputs</span><span class="p">,</span> <span class="n">x_fixs</span></div>
+
+        
+<div class="viewcode-block" id="SaccadeNet.forward">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">setting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is the main entry point for the SaccadeNet model. It determines the forward pass based on the setting and other arguments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *args: Variable length argument list.</span>
+<span class="sd">            setting (str, optional): The setting for the forward pass. Defaults to None.</span>
+<span class="sd">            **kwargs: Additional keyword arguments.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of embeddings from the model.</span>
+<span class="sd">            list: A list of layer outputs from the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">setting</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">setting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_setting</span>
+        <span class="k">if</span> <span class="n">setting</span> <span class="o">==</span> <span class="s1">&#39;ssl&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_ssl</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">setting</span> <span class="o">==</span> <span class="s1">&#39;supervised&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_supervised</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;setting </span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNet.get_transforms">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_transforms">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get image transforms for training and validation.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: (loader_transforms, pre_transforms, post_transforms) containing</span>
+<span class="sd">                   the transform pipelines for different stages of data processing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">load_cpu</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
+
+        <span class="n">loader_transforms</span><span class="p">,</span> <span class="n">pre_transforms</span><span class="p">,</span> <span class="n">post_transforms</span> <span class="o">=</span> <span class="n">get_std_transforms</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">where</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">flip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">color_jitter</span><span class="p">,</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">blur</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">pointcloud_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;loader_transforms: </span><span class="si">{</span><span class="n">loader_transforms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>   
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;pre_transforms: </span><span class="si">{</span><span class="n">pre_transforms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;post_transforms: </span><span class="si">{</span><span class="n">post_transforms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">loader_transforms</span><span class="p">},</span> <span class="n">pre_transforms</span><span class="p">,</span> <span class="n">post_transforms</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick start &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quick start</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/workshop.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Quick-start">
+<h1>Quick start<a class="headerlink" href="#Quick-start" title="Link to this heading"></a></h1>
+<p>Some folks will want to just get right to testing models. If that’s you, start here. Otherwise, see the other more detailed notebooks</p>
+<section id="Foveated-AlexNet-like-CNN-model">
+<h2>Foveated AlexNet-like CNN model<a class="headerlink" href="#Foveated-AlexNet-like-CNN-model" title="Link to this heading"></a></h2>
+<p>Our first model is an AlexNet-like CNN model. This model was trained with resource constraints, so instead of processing 224x224 pixel images at uniform resolution, it processes ~64x64 pixel images at a variable resolution that peaks in the center of gaze and falls off progressively. These resource constraints model the constraints the human brain has on brain size, here, reducing the number of neurons by a factor of 16; we can scale up the processing demands by moving our eyes and processing
+more fixations over time, trading energy usage for improved visual performance.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">foveation</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">foveation.saccadenet</span><span class="w"> </span><span class="kn">import</span> <span class="n">SaccadeNet</span>
+
+<span class="n">base_fn</span> <span class="o">=</span> <span class="s1">&#39;fovknnalexnet_a-1_res-64_in1k&#39;</span>
+<span class="n">config</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">,</span> <span class="n">model_key</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">base_fn</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;../models&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SaccadeNet</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="n">model_key</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[96, 11, 2, 5, 1], [256, 5, 1, 2, 1], [384, 3, 1, 1, 1], [384, 3, 1, 1, 1], [256, 3, 1, 1, 1]]
+adjusting FOV for fixation: 16.0 (full: 16.0)
+found resolution 53 giving 4085 points (desired: 4096)
+found resolution 53 giving 4085 points (desired: 4096)
+found resolution 26 giving 964 points (desired: 1024)
+found resolution 26 giving 964 points (desired: 1024)
+found resolution 13 giving 230 points (desired: 256)
+found resolution 13 giving 230 points (desired: 256)
+found resolution 13 giving 230 points (desired: 256)
+found resolution 13 giving 230 points (desired: 256)
+found resolution 7 giving 60 points (desired: 64)
+found resolution 7 giving 60 points (desired: 64)
+found resolution 7 giving 60 points (desired: 64)
+found resolution 7 giving 60 points (desired: 64)
+found resolution 7 giving 60 points (desired: 64)
+found resolution 7 giving 60 points (desired: 64)
+found resolution 7 giving 60 points (desired: 64)
+found resolution 7 giving 60 points (desired: 64)
+found resolution 4 giving 16 points (desired: 16)
+found resolution 1 giving 1 points (desired: 1)
+WARNING: horizontal flip always done in the loader, regardless of where other transforms are done
+loader_transforms: Compose(
+    ToTorchImage(device=cpu, dtype=torch.float32, from_numpy=True)
+    RandomHorizontalFlip(p=0.5, seed=None)
+)
+pre_transforms: Compose(
+    RandomColorJitter(p=0.8, hue=[-0.1, 0.1], saturation=[0.8, 1.2], value=[0.6, 1.4], contrast=[0.6, 1.4], seed=None)
+    RandomGrayscale(p=0.2, num_output_channels=3, seed=None)
+    NormalizeGPU(mean=tensor([0.4850, 0.4560, 0.4060], dtype=torch.float64), std=tensor([0.2290, 0.2240, 0.2250], dtype=torch.float64), inplace=True)
+)
+post_transforms: None
+found resolution 53 giving 4085 points (desired: 4096)
+Auto-matched resolution to 53 (4085 sampling coordinates) to best match 4096 cartesian pixels.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/nblauch/git/foveation-private/foveation/sensing/coords.py:332: RuntimeWarning: divide by zero encountered in scalar divide
+  w_delta = (w_max - w_min)/(res-1)
+/Users/nblauch/git/foveation-private/foveation/sensing/retina.py:106: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  fix_loc = torch.tensor(self._check_fix_loc(fix_loc, x.shape[0]), dtype=self.dtype, device=self.device)
+/opt/homebrew/Caskroom/miniforge/base/envs/knnconv1/lib/python3.13/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of &#39;cuda&#39;, but CUDA is not available. Disabling
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ssl_fixator:
+NoSaccadePolicy(retinal_transform=RetinalTransform(
+  (foveal_color): GaussianColorDecay(sigma=None)
+  (sampler): GridSampler(fov=16.0, cmf_a=0.5, style=isotropic, resolution=53, mode=nearest, n=4085)
+))
+
+sup_fixator:
+MultiRandomSaccadePolicy(retinal_transform=RetinalTransform(
+  (foveal_color): GaussianColorDecay(sigma=None)
+  (sampler): GridSampler(fov=16.0, cmf_a=0.5, style=isotropic, resolution=53, mode=nearest, n=4085)
+), n_fixations=4)
+
+LINEAR PROBE NUM CLASSES: 1000
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;All keys matched successfully&gt;
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Foveated-ViT-S-DINOv3">
+<h1>Foveated ViT-S DINOv3<a class="headerlink" href="#Foveated-ViT-S-DINOv3" title="Link to this heading"></a></h1>
+<p>Our second model is ViT-S that was pretrained under the DINOv3 protocol. More precisely, a larger ViT was first trained, and then it distilled its knowledge into the pre-trained ViT-S DINOv3 model we used as a starting point. We then adapted this model to receive foveated inputs. This involved replacing the patch embedding with a foveated one, and doing some low-rank adaptation (LoRA) to allow the network to better handle foveated inputs. Like the previous model, this model was trained with
+resource constraints; instead of processing 224x224 pixel images at uniform resolution, it processes ~64x64 pixel images at a variable resolution that peaks in the center of gaze and falls off progressively.</p>
+<p>Here, the resource constraints are not as extreme compared to the original model. This is because the number of patches – rather than pixels – primarily determines the processing resources in a ViT, and we opted to use 8x8-like patches (<span class="math notranslate nohighlight">\(k=64\)</span>), over a 64x64-like input sensor manifold (<span class="math notranslate nohighlight">\(n\approx4096\)</span>). This model thus reduces from the standard 14x14 or 16x16 number of patches to 8x8 number of patches, which is still a reduction of 3-4x. Thus, per fixation the savings in the linear
+operations is 3-4x, whereas the savings in the attention (quadratic) operations is 9-16x. We take multiple fixations to unfold the processing constraints over time.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">base_fn</span> <span class="o">=</span> <span class="s1">&#39;fovknndinov3-s_a-2.78_res-64_in1k&#39;</span>
+<span class="n">config</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">,</span> <span class="n">model_key</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">base_fn</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;../models&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SaccadeNet</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="n">model_key</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+found resolution 44 giving 3976 points (desired: 4096)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/nblauch/git/foveation-private/foveation/arch/knn.py:39: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  num_neighbors = torch.minimum(torch.tensor(self.k*m), torch.tensor(self.in_coords.shape[0]))
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+found resolution 6 giving 64 points (desired: 64)
+found resolution 6 giving 64 points (desired: 64)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 64/64 [00:00&lt;00:00, 755.57it/s]
+100%|██████████| 64/64 [00:00&lt;00:00, 373.66it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+adjusting FOV for fixation: 16.0 (full: 16.0)
+WARNING: horizontal flip always done in the loader, regardless of where other transforms are done
+loader_transforms: Compose(
+    ToTorchImage(device=cpu, dtype=torch.float32, from_numpy=True)
+    RandomHorizontalFlip(p=0.5, seed=None)
+)
+pre_transforms: Compose(
+    RandomColorJitter(p=0.8, hue=[-0.1, 0.1], saturation=[0.8, 1.2], value=[0.6, 1.4], contrast=[0.6, 1.4], seed=None)
+    RandomGrayscale(p=0.2, num_output_channels=3, seed=None)
+    NormalizeGPU(mean=tensor([0.4850, 0.4560, 0.4060], dtype=torch.float64), std=tensor([0.2290, 0.2240, 0.2250], dtype=torch.float64), inplace=True)
+)
+post_transforms: None
+found resolution 44 giving 3976 points (desired: 4096)
+Auto-matched resolution to 44 (3976 sampling coordinates) to best match 4096 cartesian pixels.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/nblauch/git/foveation-private/foveation/sensing/retina.py:106: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  fix_loc = torch.tensor(self._check_fix_loc(fix_loc, x.shape[0]), dtype=self.dtype, device=self.device)
+/opt/homebrew/Caskroom/miniforge/base/envs/knnconv1/lib/python3.13/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of &#39;cuda&#39;, but CUDA is not available. Disabling
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ssl_fixator:
+NoSaccadePolicy(retinal_transform=RetinalTransform(
+  (foveal_color): GaussianColorDecay(sigma=None)
+  (sampler): GridSampler(fov=16.0, cmf_a=2.785765, style=isotropic, resolution=44, mode=nearest, n=3976)
+))
+
+sup_fixator:
+MultiRandomSaccadePolicy(retinal_transform=RetinalTransform(
+  (foveal_color): GaussianColorDecay(sigma=None)
+  (sampler): GridSampler(fov=16.0, cmf_a=2.785765, style=isotropic, resolution=44, mode=nearest, n=3976)
+), n_fixations=4)
+
+LINEAR PROBE NUM CLASSES: 1000
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;All keys matched successfully&gt;
+</pre></div></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

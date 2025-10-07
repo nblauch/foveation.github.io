@@ -1,0 +1,963 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.utils.fastaugs.functional &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.utils.fastaugs.functional_tensor" href="foveation.utils.fastaugs.functional_tensor.html" />
+    <link rel="prev" title="foveation.utils.fastaugs package" href="foveation.utils.fastaugs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="foveation.utils.html">foveation.utils package</a></li>
+      <li class="breadcrumb-item active">foveation.utils.fastaugs.functional</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.utils.fastaugs.functional.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.utils.fastaugs.functional">
+<span id="foveation-utils-fastaugs-functional"></span><h1>foveation.utils.fastaugs.functional<a class="headerlink" href="#module-foveation.utils.fastaugs.functional" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.radians">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">radians</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#foveation.utils.fastaugs.functional.radians" title="Link to this definition"></a></dt>
+<dd><p>Convert angle x from degrees to radians.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.set_trace">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">set_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IPython/core/debugger.html#set_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.set_trace" title="Link to this definition"></a></dt>
+<dd><p>Start debugging from <cite>frame</cite>.</p>
+<p>If frame is not specified, debugging starts from caller’s frame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.mask_batch">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">mask_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#mask_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.mask_batch" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">mask_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#mask_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.mask_tensor">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">mask_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neutral</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#mask_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.mask_tensor" title="Link to this definition"></a></dt>
+<dd><p>Mask elements of <cite>x</cite> with <cite>neutral</cite> with probability <cite>1-p</cite>
+modified from <a class="reference external" href="https://github.com/fastai/fastai2/blob/master/fastai2/vision/augment.py">https://github.com/fastai/fastai2/blob/master/fastai2/vision/augment.py</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.normalize">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.normalize" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">torch.Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.to_device">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.to_device" title="Link to this definition"></a></dt>
+<dd><p>Move tensor to device</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.to_numpy">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.to_numpy" title="Link to this definition"></a></dt>
+<dd><p>Convert tensor to numpy array</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.to_float">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_float"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.to_float" title="Link to this definition"></a></dt>
+<dd><p>Convert tensor to float</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.div_">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">div_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#div_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.div_" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.to_channels_first">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_channels_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_channels_first"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.to_channels_first" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_channels_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_channels_first"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.to_channels_last">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_channels_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_channels_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.to_channels_last" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_channels_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_channels_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.random_grayscale">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_grayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_grayscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.random_grayscale" title="Link to this definition"></a></dt>
+<dd><p>Convert random set of images in batch <cite>b</cite> to grayscale using ITU-R 601-2 luma transform</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_grayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_grayscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<p>Convert random set of images in batch <cite>b</cite> to grayscale using ITU-R 601-2 luma transform</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_grayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_grayscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.to_grayscale">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_grayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_grayscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.to_grayscale" title="Link to this definition"></a></dt>
+<dd><p>Convert to grayscale like PIL, using ITU-R 601-2 luma transform
+L = R * 299/1000 + G * 587/1000 + B * 114/1000</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_grayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_grayscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<p>Convert to grayscale like PIL, using ITU-R 601-2 luma transform
+L = R * 299/1000 + G * 587/1000 + B * 114/1000</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_grayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PIL.Image.Image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_grayscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<p>Convert to grayscale like PIL, using ITU-R 601-2 luma transform
+L = R * 299/1000 + G * 587/1000 + B * 114/1000</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.dummy_red">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">dummy_red</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#dummy_red"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.dummy_red" title="Link to this definition"></a></dt>
+<dd><p>test generating batch of red squares</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.mat3">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">mat3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#mat3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.mat3" title="Link to this definition"></a></dt>
+<dd><p>Identity matrix with given value</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.hue_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hue_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hue_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.hue_mat" title="Link to this definition"></a></dt>
+<dd><p>Composes transformation matrix for hue</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.sat_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">sat_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saturation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#sat_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.sat_mat" title="Link to this definition"></a></dt>
+<dd><p>Composes transformation matrix for saturation</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.val_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">val_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#val_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.val_mat" title="Link to this definition"></a></dt>
+<dd><p>Composes transformation matrix for value</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.hsv_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hsv_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hsv_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.hsv_mat" title="Link to this definition"></a></dt>
+<dd><p>Composes transformation matrix for hue, sat, val transform over intermediate Yiq space</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.hsv_mat2">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hsv_mat2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hsv_mat2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.hsv_mat2" title="Link to this definition"></a></dt>
+<dd><p>Composes transformation matrix for hue, sat, val transform over intermediate Yiq space</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.hsv_jitter_tensor">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hsv_jitter_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hsv_jitter_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.hsv_jitter_tensor" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.hsv_jitter_array">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hsv_jitter_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hsv_jitter_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.hsv_jitter_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.hsv_jitter_array2">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hsv_jitter_array2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hsv_jitter_array2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.hsv_jitter_array2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.hsv_jitter">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hsv_jitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hsv_jitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.hsv_jitter" title="Link to this definition"></a></dt>
+<dd><p>Performs hue, saturation, value transform on an RGB image with interediate Yiq transform</p>
+<p>The RGB image can be a TensorImage with channels first (CxHxW; or a batch NxCxHxW),
+or an ArrayImage with channels last (HxWxC; or a batch NxHxWxC).</p>
+<p>Tensors are channels first because PyTorch/Torchvision operations assume so (though
+it looks like PyTorch 1.5 has a channels_last feature).</p>
+<p>Arrays are channels last so that this transformation can be used with the
+Albumentations library, which operates over numpy arrays with RGB channels last.</p>
+<dl class="simple">
+<dt>inputs:</dt><dd><p>x: RGB image [0-1] or batch of RGB images
+h: hue rotation angle in degrees (any angle, wraps at 360), or list of angles (one per image in batch)
+s: multiply saturation by this number, single value or list of values (one per image in batch)
+v: multiply value by this number, single value or list of values (one per image in batch)</p>
+</dd>
+<dt>out:</dt><dd><p>transformed RGB image (or batch of images images)
+clamped between 0,1 since Yiq values can be out of RGB range</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.hsv_jitter2">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hsv_jitter2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hsv_jitter2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.hsv_jitter2" title="Link to this definition"></a></dt>
+<dd><p>Performs hue, saturation, value transform on an RGB image with interediate Yiq transform</p>
+<p>The RGB image can be a TensorImage with channels first (CxHxW; or a batch NxCxHxW),
+or an ArrayImage with channels last (HxWxC; or a batch NxHxWxC).</p>
+<p>Tensors are channels first because PyTorch/Torchvision operations assume so (though
+it looks like PyTorch 1.5 has a channels_last feature).</p>
+<p>Arrays are channels last so that this transformation can be used with the
+Albumentations library, which operates over numpy arrays with RGB channels last.</p>
+<dl class="simple">
+<dt>inputs:</dt><dd><p>x: RGB image [0-1] or batch of RGB images
+h: hue rotation angle in degrees (any angle, wraps at 360), or list of angles (one per image in batch)
+s: multiply saturation by this number, single value or list of values (one per image in batch)
+v: multiply value by this number, single value or list of values (one per image in batch)
+b: brightness jitter operates in RGB space
+c: contrast jitter</p>
+</dd>
+<dt>out:</dt><dd><p>transformed RGB image (or batch of images images)
+clamped between 0,1 since Yiq values can be out of RGB range</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hsv_jitter2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hsv_jitter2"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">hsv_jitter2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#hsv_jitter2"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.random_hsv_jitter2">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_hsv_jitter2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_hsv_jitter2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.random_hsv_jitter2" title="Link to this definition"></a></dt>
+<dd><p>randomly apply hsv jitter to each image in a batch</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_hsv_jitter2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_hsv_jitter2"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional._get_scale_factor">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_get_scale_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_get_scale_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional._get_scale_factor" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_get_scale_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_get_scale_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.adjust_brightness">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_brightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255.</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_brightness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.adjust_brightness" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_brightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_brightness"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_brightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PIL.Image.Image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_brightness"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.adjust_brightness_pil">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_brightness_pil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255.</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_brightness_pil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.adjust_brightness_pil" title="Link to this definition"></a></dt>
+<dd><p>Adjust contrast like PIL ImageEnhance</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.sigmoid">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">sigmoid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#sigmoid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.sigmoid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.logit">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">logit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#logit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.logit" title="Link to this definition"></a></dt>
+<dd><p>Logit of <cite>x</cite>, clipped to avoid inf.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.random_adjust_brightness">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_adjust_brightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_adjust_brightness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.random_adjust_brightness" title="Link to this definition"></a></dt>
+<dd><p>Adjust brightness, <a href="#id5"><span class="problematic" id="id6">*</span></a>= scale_factor</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_adjust_brightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_adjust_brightness"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<p>Adjust brightness, <a href="#id7"><span class="problematic" id="id8">*</span></a>= scale_factor</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.adjust_contrast">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_contrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.adjust_contrast" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_contrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PIL.Image.Image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_contrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.adjust_contrast_logit">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_contrast_logit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255.</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_contrast_logit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.adjust_contrast_logit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.adjust_contrast_pil">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_contrast_pil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255.</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_contrast_pil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.adjust_contrast_pil" title="Link to this definition"></a></dt>
+<dd><p>Adjust contrast like PIL ImageEnhance</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.adjust_rms_contrast">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_rms_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255.</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_rms_contrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.adjust_rms_contrast" title="Link to this definition"></a></dt>
+<dd><p>Adjust the RMS contrast (std of the pixel intensities)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.adjust_rms_contrast_logit">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">adjust_rms_contrast_logit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255.</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#adjust_rms_contrast_logit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.adjust_rms_contrast_logit" title="Link to this definition"></a></dt>
+<dd><p>Adjust the RMS contrast (std of the log pixel intensities)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.random_adjust_contrast">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_adjust_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_adjust_contrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.random_adjust_contrast" title="Link to this definition"></a></dt>
+<dd><p>Adjust brightness, <a href="#id9"><span class="problematic" id="id10">*</span></a>= scale_factor</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_adjust_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_adjust_contrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<p>Adjust brightness, <a href="#id11"><span class="problematic" id="id12">*</span></a>= scale_factor</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional._prepare_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional._prepare_mat" title="Link to this definition"></a></dt>
+<dd><p>prepare transformation matrix <cite>mat</cite> to apply to ImageBatch <cite>x</cite> using _grid_sample
+from <a class="reference external" href="https://github.com/fastai/fastai2/blob/master/fastai2/vision/augment.py">https://github.com/fastai/fastai2/blob/master/fastai2/vision/augment.py</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional._grid_sample">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_grid_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bilinear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'reflection'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_corners</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_grid_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional._grid_sample" title="Link to this definition"></a></dt>
+<dd><p>Resample pixels in <cite>coords</cite> from <cite>x</cite> by <cite>mode</cite>, with <cite>padding_mode</cite> in (‘reflection’,’border’,’zeros’).
+from <a class="reference external" href="https://github.com/fastai/fastai2/blob/master/fastai2/vision/augment.py">https://github.com/fastai/fastai2/blob/master/fastai2/vision/augment.py</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.affine_transform">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">affine_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_corners</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bilinear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'reflection'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#affine_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.affine_transform" title="Link to this definition"></a></dt>
+<dd><p>apply affine transformation matrix <cite>mat</cite> using _grid_sample</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.flip_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">flip_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#flip_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.flip_mat" title="Link to this definition"></a></dt>
+<dd><p>create transformation matrix for horizontal flip
+flip: flip values inserted into matrix; -1 (flip) or 1 (don’t flip)</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">flip_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#flip_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">flip_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#flip_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">flip_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#flip_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">flip_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flip</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#flip_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional._prepare_thetas">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_thetas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thetas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_thetas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional._prepare_thetas" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_thetas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thetas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_thetas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_thetas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thetas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_thetas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_thetas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thetas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_thetas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_thetas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thetas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_thetas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_thetas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thetas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_thetas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional._prepare_coords">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional._prepare_coords" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional._prepare_rot_pt">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_rot_pt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_rot_pt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional._prepare_rot_pt" title="Link to this definition"></a></dt>
+<dd><p>convert coordinates from pixel coordinates to image-centered [-1,1] coordinates</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional._prepare_param">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional._prepare_param" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">_prepare_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#_prepare_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.rotate_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">rotate_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#rotate_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.rotate_mat" title="Link to this definition"></a></dt>
+<dd><p>create transformation matrix for rotation by <cite>theta</cite> degrees aground point x,y</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.rotate">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thetas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zeros'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#rotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.rotate" title="Link to this definition"></a></dt>
+<dd><p>rotate image(s) <cite>b</cite> by <cite>theta(s)</cite> around (x,y) points <cite>xs</cite> and <cite>ys</cite>.</p>
+<p>Works with a single image, or multiple images, on the cpu or gpu.
+Images are assumed to be TensorImage [CxHxW] or TensorBatch [NxCxHxW].</p>
+<p>For multiple images, each image will be rotated by the same theta if
+only one theta value is passed. To rotate images individually, pass
+one theta per image (as a list, np array, or tensor).</p>
+<p>If a single image is passed with multiple thetas, that image will
+be rotated N times (N = number of thetas).</p>
+<p>Center of rotation can also be set once for all images (set a single x,y value),
+or individually for each image by passing one x,y per image (as list, np array
+or tensor). Position is specified as pct of image (e.g., .5,.5 is the image center)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>b</strong> (<em>tensor</em>) – TensorImage or TensorImageBatch</p></li>
+<li><p><strong>thetas</strong> (<em>any</em>) – angle of rotation in degrees</p></li>
+<li><p><strong>xs</strong> (<em>any</em>) – center of rotation x-coordinate [0,1; .5=horizontal center of image]</p></li>
+<li><p><strong>ys</strong> (<em>any</em>) – center of rotation y-coordinate [0,1; .5=vertical center of image]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.zoom_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">zoom_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_pct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_pct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#zoom_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.zoom_mat" title="Link to this definition"></a></dt>
+<dd><p>create transformation matrix for zoom / scale
+scale: scale values
+col_pct: horizontal position [0,1] upon which to center zoom [.5 = horizontal center of image]
+row_pct: vertical position [0,1] upon which to center zoom [.5 = vertical center of image]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.zoom">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">zoom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scales</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zeros'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#zoom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.zoom" title="Link to this definition"></a></dt>
+<dd><p>zoom image(s) <cite>b</cite> by <cite>scale(s)</cite> around point(s) <cite>xs</cite>,`ys`.</p>
+<p>Works with a single image, or multiple images, on the cpu or gpu.
+Images are assumed to be TensorImage [CxHxW] or TensorBatch [NxCxHxW].</p>
+<p>For multiple images, each image will be zoomed by the same scale if
+only one scale value is passed. To scale images individually, pass
+one scale per image (as a list, np array, or tensor).</p>
+<p>If a single image is passed with multiple scales, that image will
+be scaled N times (where N is the number of scales).</p>
+<p>Center of zoom can also be set once for all images (set a single x,y value),
+or individually for each image by passing one x,y per image (as list, np array
+or tensor).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>b</strong> (<em>tensor</em>) – TensorImage or TensorImageBatch</p></li>
+<li><p><strong>thetas</strong> (<em>any</em>) – angle of rotation in degrees</p></li>
+<li><p><strong>xs</strong> (<em>any</em>) – center of zoom x-coordinate [0,1; .5=horizontal center of image]</p></li>
+<li><p><strong>ys</strong> (<em>any</em>) – center of zoom y-coordinate [0,1; .5=vertical center of image]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.translate_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">translate_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ty</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#translate_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.translate_mat" title="Link to this definition"></a></dt>
+<dd><p>create transformation matrix for translation
+tx: pct of image to translate in the horizontal direction
+ty: pct of image to translate in the vertical direction</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.rotate_object_mat">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">rotate_object_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctr_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctr_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#rotate_object_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.rotate_object_mat" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.rotate_object">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">rotate_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degrees</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctr_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctr_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'border'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#rotate_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.rotate_object" title="Link to this definition"></a></dt>
+<dd><p>rotate image(s) <cite>b</cite> by <cite>theta(s)</cite> around (x,y) points <cite>xs</cite> and <cite>ys</cite>.</p>
+<p>Works with a single image, or multiple images, on the cpu or gpu.
+Images are assumed to be TensorImage [CxHxW] or TensorBatch [NxCxHxW].</p>
+<p>For multiple images, each image will be rotated by the same theta if
+only one theta value is passed. To rotate images individually, pass
+one theta per image (as a list, np array, or tensor).</p>
+<p>If a single image is passed with multiple thetas, that image will
+be rotated N times (N = number of thetas).</p>
+<p>Center of rotation can also be set once for all images (set a single x,y value),
+or individually for each image by passing one x,y per image (as list, np array
+or tensor). Position is specified as pct of image (e.g., .5,.5 is the image center)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>b</strong> (<em>tensor</em>) – TensorImage or TensorImageBatch</p></li>
+<li><p><strong>thetas</strong> (<em>any</em>) – angle of rotation in degrees</p></li>
+<li><p><strong>xs</strong> (<em>any</em>) – center of rotation x-coordinate [0,1; .5=horizontal center of image]</p></li>
+<li><p><strong>ys</strong> (<em>any</em>) – center of rotation y-coordinate [0,1; .5=vertical center of image]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.grid_sample">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">grid_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_corners</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#grid_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.grid_sample" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.random_grid_sample">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_grid_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_corners</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_grid_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.random_grid_sample" title="Link to this definition"></a></dt>
+<dd><dl class="py function">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_grid_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_corners</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_grid_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.apply_mask">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">apply_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#apply_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.apply_mask" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.srgb_to_lrgb">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">srgb_to_lrgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#srgb_to_lrgb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.srgb_to_lrgb" title="Link to this definition"></a></dt>
+<dd><p>Converts a standard RGB image to linearized RGB.</p>
+<p class="rubric">References</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/SRGB">https://en.wikipedia.org/wiki/SRGB</a>
+<a class="reference external" href="http://www.w3.org/Graphics/Color/sRGB">http://www.w3.org/Graphics/Color/sRGB</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – RGB Image to be converted to XYZ with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XYZ version of the image with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="n">rgb_to_xyz</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>  <span class="c1"># 2x3x4x5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.rgb_to_xyz">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">rgb_to_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#rgb_to_xyz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.rgb_to_xyz" title="Link to this definition"></a></dt>
+<dd><p>Converts a RGB image to XYZ.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – RGB Image to be converted to XYZ with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XYZ version of the image with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="n">rgb_to_xyz</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>  <span class="c1"># 2x3x4x5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.xyz_to_lms">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">xyz_to_lms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#xyz_to_lms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.xyz_to_lms" title="Link to this definition"></a></dt>
+<dd><p>Converts a XYZ image to CAT02 LMS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – XYZ Image to be converted to LMS with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LMS version of the image with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="n">xyz_to_lms</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>  <span class="c1"># 2x3x4x5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.srgb_to_lms">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">srgb_to_lms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#srgb_to_lms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.srgb_to_lms" title="Link to this definition"></a></dt>
+<dd><p>Converts a standard RGB image -&gt; linear RGB -&gt; XYZ -&gt; to CAT02 LMS.</p>
+<blockquote>
+<div><p>LMS (long, medium, short), is a color space which represents the response of
+the three types of cones of the human eye, named for their responsivity
+(sensitivity) peaks at long, medium, and short wavelengths.</p>
+</div></blockquote>
+<p class="rubric">References</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/LMS_color_space">https://en.wikipedia.org/wiki/LMS_color_space</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – sRGB Image to be converted to LMS with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LMS version of the image with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="n">srgb_to_lms</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>  <span class="c1"># 2x3x4x5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.lms_to_lgrby">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">lms_to_lgrby</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#lms_to_lgrby"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.lms_to_lgrby" title="Link to this definition"></a></dt>
+<dd><p>Converts a standard LMS image to Luminance, R+,G+,B+,Y+ channels.</p>
+<blockquote>
+<div><p>LMS (long, medium, short), is a color space which represents the response of
+the three types of cones of the human eye, named for their responsivity
+(sensitivity) peaks at long, medium, and short wavelengths.</p>
+</div></blockquote>
+<p class="rubric">References</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/LMS_color_space">https://en.wikipedia.org/wiki/LMS_color_space</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – sRGB Image to be converted to LMS with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LMS version of the image with shape <span class="math notranslate nohighlight">\((*, 3, H, W)\)</span>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="n">srgb_to_lms</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>  <span class="c1"># 2x3x4x5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.crop">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crop_height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crop_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_start</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#crop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.crop" title="Link to this definition"></a></dt>
+<dd><p>crop_height, crop_width in pixels, h_start and w_start in percentage</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.solarization">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">solarization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#solarization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.solarization" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.random_solarization">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_solarization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_solarization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.random_solarization" title="Link to this definition"></a></dt>
+<dd><p>Solarize random set of images in batch <cite>b</cite></p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_solarization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">numpy.ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_solarization"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<p>Solarize random set of images in batch <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.random_gaussian_blur2d">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">random_gaussian_blur2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blur_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_kernels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'symmetric'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#random_gaussian_blur2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.random_gaussian_blur2d" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.generate_batch_permutations">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">generate_batch_permutations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#generate_batch_permutations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.generate_batch_permutations" title="Link to this definition"></a></dt>
+<dd><p>Generates a batch of permutations, each of size N, without using Python loops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of permutations to generate.</p></li>
+<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The size of each permutation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A (batch_size x N) tensor where each row is a random permutation of 0 to N-1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.functional.to_torch_image">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_torch_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_numpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_torch_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.functional.to_torch_image" title="Link to this definition"></a></dt>
+<dd><p>convert to torch image; assumes HxWxC</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_torch_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">torch.Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_torch_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<p>convert to torch image; assumes HxWxC or BxHxWxC</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.functional.</span></span><span class="sig-name descname"><span class="pre">to_torch_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_numpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/functional.html#to_torch_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="foveation.utils.fastaugs.html" class="btn btn-neutral float-left" title="foveation.utils.fastaugs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.utils.fastaugs.functional_tensor.html" class="btn btn-neutral float-right" title="foveation.utils.fastaugs.functional_tensor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

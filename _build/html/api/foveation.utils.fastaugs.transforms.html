@@ -1,0 +1,1011 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.utils.fastaugs.transforms &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.utils.flops" href="foveation.utils.flops.html" />
+    <link rel="prev" title="foveation.utils.fastaugs.loader" href="foveation.utils.fastaugs.loader.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="foveation.utils.html">foveation.utils package</a></li>
+      <li class="breadcrumb-item active">foveation.utils.fastaugs.transforms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.utils.fastaugs.transforms.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.utils.fastaugs.transforms">
+<span id="foveation-utils-fastaugs-transforms"></span><h1>foveation.utils.fastaugs.transforms<a class="headerlink" href="#module-foveation.utils.fastaugs.transforms" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.Compose">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">Compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transforms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#Compose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.Compose" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Composes several transforms together.
+:param transforms: list of transforms to compose.
+:type transforms: list of <code class="docutils literal notranslate"><span class="pre">Transform</span></code> objects</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">transforms</span><span class="o">.</span><span class="n">CenterCrop</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.Compose.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transforms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#Compose.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.Compose.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.Compose.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#Compose.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.Compose.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomApply">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomApply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transforms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomApply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomApply" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Randomly apply transforms with probability <cite>p</cite></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomApply.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transforms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomApply.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomApply.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomApply.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomApply.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomApply.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomApply.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomApply.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomApply.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomApply.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomApply.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomApply.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToTorchImage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ToTorchImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_numpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToTorchImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToTorchImage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToTorchImage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_numpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToTorchImage.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToTorchImage.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToTorchImage.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToTorchImage.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToTorchImage.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToTorchImage.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToTorchImage.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToTorchImage.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToNumpy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ToNumpy</span></span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToNumpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToNumpy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Converts the given Image to a numpy array.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToNumpy.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToNumpy.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToNumpy.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToNumpy.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToNumpy.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToNumpy.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToChannelsFirst">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ToChannelsFirst</span></span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToChannelsFirst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToChannelsFirst" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Converts batch from BxHxWxC to BxCxHxW</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToChannelsFirst.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToChannelsFirst.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToChannelsFirst.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToChannelsFirst.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToChannelsFirst.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToChannelsFirst.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToChannelsLast">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ToChannelsLast</span></span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToChannelsLast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToChannelsLast" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Converts batch from BxCxHxW to BxHxWxC</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToChannelsLast.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToChannelsLast.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToChannelsLast.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToChannelsLast.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToChannelsLast.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToChannelsLast.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToDevice">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ToDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToDevice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToDevice" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Moves tensor to device.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToDevice.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToDevice.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToDevice.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToDevice.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToDevice.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToDevice.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToDevice.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToDevice.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToDevice.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToFloat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ToFloat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToFloat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToFloat" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Converts tensor to float using .float()</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToFloat.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToFloat.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToFloat.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToFloat.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToFloat.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToFloat.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToFloat.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToFloat.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToFloat.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToFloatDiv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ToFloatDiv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToFloatDiv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToFloatDiv" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Converts tensor to float using division.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToFloatDiv.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToFloatDiv.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToFloatDiv.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToFloatDiv.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToFloatDiv.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToFloatDiv.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToFloatDiv.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToFloatDiv.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToFloatDiv.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.MultiSample">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">MultiSample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transforms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_copies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clone_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#MultiSample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.MultiSample" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Performs transforms muliple times, return multiple copies of the input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transforms</strong> – List of transforms</p></li>
+<li><p><strong>num_copies</strong> – number of copies to produce / how many times to run the trasforms</p></li>
+<li><p><strong>return_input</strong> – whether to return the input as an output (default = False)</p></li>
+<li><p><strong>clone_input</strong> – whether to clone the input before each application of transforms (default = True)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.MultiSample.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transforms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_copies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clone_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#MultiSample.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.MultiSample.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.NormalizeGPU">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">NormalizeGPU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">default_device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#NormalizeGPU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.NormalizeGPU" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>x = (x - mean) / std</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.NormalizeGPU.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">default_device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#NormalizeGPU.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.NormalizeGPU.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.NormalizeGPU.op">
+<span class="sig-name descname"><span class="pre">op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#NormalizeGPU.op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.NormalizeGPU.op" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.NormalizeGPU.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#NormalizeGPU.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.NormalizeGPU.before_call" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.NormalizeGPU.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#NormalizeGPU.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.NormalizeGPU.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.NormalizeGPU.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#NormalizeGPU.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.NormalizeGPU.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.CircularMask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">CircularMask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blur_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.0005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#CircularMask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.CircularMask" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Apply a circular mask to each image.</p>
+<p>Works for a single TensorImage or TensorBatch, on cpu or gpu.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.CircularMask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blur_span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.0005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#CircularMask.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.CircularMask.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.CircularMask.blur_radius">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">blur_radius</span></span><a class="headerlink" href="#foveation.utils.fastaugs.transforms.CircularMask.blur_radius" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.CircularMask.draw_params">
+<span class="sig-name descname"><span class="pre">draw_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#CircularMask.draw_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.CircularMask.draw_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.CircularMask.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#CircularMask.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.CircularMask.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.CircularMask.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#CircularMask.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.CircularMask.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.CircularMask.replay">
+<span class="sig-name descname"><span class="pre">replay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#CircularMask.replay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.CircularMask.replay" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToGrayscaleTorchGPU">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ToGrayscaleTorchGPU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToGrayscaleTorchGPU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToGrayscaleTorchGPU" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Convert image to Grayscale</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToGrayscaleTorchGPU.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToGrayscaleTorchGPU.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToGrayscaleTorchGPU.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToGrayscaleGPU">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ToGrayscaleGPU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToGrayscaleGPU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToGrayscaleGPU" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Convert image to Grayscale</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ToGrayscaleGPU.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ToGrayscaleGPU.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ToGrayscaleGPU.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ColorJitter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">ColorJitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ColorJitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ColorJitter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Random apply (at batch level) jitter to the hue, saturation, value (aka brightness), and contrast of an RGB image or batch.</p>
+<p>Parameters are stored for easy replay.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – probability that jitter should be applied. If input is a batch, the p operates at the batch level
+(i.e., either all images are jittered, or none, with probability p). Also, if jitter is applied,
+each property is jittered by a random value in the range specified (see below for how to set
+range for each property).</p></li>
+<li><p><strong>python</strong> (<em>contrast</em><em> (</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>tuple of</em>) – float (min, max)) – range over which to jitter hue
+Should have -.5 &lt; hue &lt; .5
+hue_factor is chosen uniformly from [-hue, hue] or the given [min, max].
+hue=0 for no change, hue=(-.5,.5) maximum color randomization.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter saturation.
+saturation_factor is chosen uniformly from [max(0, 1 - saturation), 1 + saturation] or the given [min, max].
+Should be non negative numbers.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter value / brightness.
+value_factor is chosen uniformly from [max(0, 1 - value), 1 + value] or the given [min, max].
+Should be non negative numbers.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter contrast in RGB.
+contrast_factor is chosen uniformly from [max(0, 1 - contrast), 1 + contrast] or the given [min, max].
+Should be non negative numbers.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ColorJitter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ColorJitter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ColorJitter.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ColorJitter.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ColorJitter.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ColorJitter.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ColorJitter.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ColorJitter.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ColorJitter.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ColorJitter.sample_params">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ColorJitter.sample_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ColorJitter.sample_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.ColorJitter.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#ColorJitter.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.ColorJitter.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGaussianBlur">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomGaussianBlur</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.1,</span> <span class="pre">2.)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sigmas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGaussianBlur"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGaussianBlur" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Gaussian blur augmentation in SimCLR <a class="reference external" href="https://arxiv.org/abs/2002.05709">https://arxiv.org/abs/2002.05709</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGaussianBlur.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.1,</span> <span class="pre">2.)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sigmas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGaussianBlur.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGaussianBlur.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGaussianBlur.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGaussianBlur.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGaussianBlur.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGaussianBlur.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGaussianBlur.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGaussianBlur.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGaussianBlur.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGaussianBlur.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGaussianBlur.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomHorizontalFlip">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomHorizontalFlip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomHorizontalFlip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomHorizontalFlip" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Flip the input horizontally around the y-axis with probability <cite>p</cite>.</p>
+<p>Works for a single TensorImage or TensorBatch, on cpu or gpu,
+with flipping deteremined and applied separately for each individual image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – probability of applying the transform. Default: 0.5.</p>
+</dd>
+</dl>
+<dl>
+<dt>Targets:</dt><dd><p>TensorImage, TensorBatch</p>
+<p>Not applied to ArrayImage or ArrayBatch because we rely on PyTorch grid_sample,
+which only works for tensors.</p>
+<p>For ArrayImage or ArrayBatch use albumentations HorizontalFlip.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomHorizontalFlip.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomHorizontalFlip.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomHorizontalFlip.__init__" title="Link to this definition"></a></dt>
+<dd><p><cite>p</cite> is the probability that each image is flipped</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomHorizontalFlip.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomHorizontalFlip.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomHorizontalFlip.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomHorizontalFlip.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomHorizontalFlip.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomHorizontalFlip.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomHorizontalFlip.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomHorizontalFlip.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomHorizontalFlip.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGrayscale">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomGrayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGrayscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGrayscale" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Convert image to Grayscale</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGrayscale.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_output_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGrayscale.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGrayscale.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGrayscale.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGrayscale.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGrayscale.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGrayscale.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGrayscale.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGrayscale.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomGrayscale.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomGrayscale.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomGrayscale.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomBrightness">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomBrightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.6,</span> <span class="pre">1.4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomBrightness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomBrightness" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Randomly Adjust Brightness with probability <cite>p</cite>, with scale_factor drawn
+uniformly between <cite>scale_range`=[min,max] separately for each image in a batch,
+clamping at maximum brightness `max_value</cite>.</p>
+<p>new_img = img * scale_factor</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomBrightness.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.6,</span> <span class="pre">1.4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomBrightness.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomBrightness.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomBrightness.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomBrightness.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomBrightness.before_call" title="Link to this definition"></a></dt>
+<dd><p>determine whether to <cite>do</cite> transform, and scale_factor <cite>sf</cite> for each image in batch <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomBrightness.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomBrightness.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomBrightness.last_params" title="Link to this definition"></a></dt>
+<dd><p>get parameters from last random draw</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomBrightness.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomBrightness.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomBrightness.apply_last" title="Link to this definition"></a></dt>
+<dd><p>apply last parameters from last random draw to batch <cite>b</cite></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomContrast">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomContrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.6,</span> <span class="pre">1.4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomContrast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomContrast" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Randomly Adjust Contrast with probability <cite>p</cite>, with scale_factor drawn
+uniformly between <cite>scale_range`=[min,max] separately for each image in a batch,
+clamping at maximum brightness `max_value</cite>.</p>
+<p>new_img = (1-scale_factor)*img.mean() - (scale_factor) * img</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomContrast.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.6,</span> <span class="pre">1.4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomContrast.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomContrast.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomContrast.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomContrast.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomContrast.before_call" title="Link to this definition"></a></dt>
+<dd><p>determine whether to <cite>do</cite> transform, and scale_factor <cite>sf</cite> for each image in batch <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomContrast.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomContrast.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomContrast.last_params" title="Link to this definition"></a></dt>
+<dd><p>get parameters from last random draw</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomContrast.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomContrast.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomContrast.apply_last" title="Link to this definition"></a></dt>
+<dd><p>apply last parameters from last random draw to batch <cite>b</cite></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomSolarization">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomSolarization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomSolarization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomSolarization" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Solarize the image randomly with a given probability by inverting all pixel
+values above a threshold. If img is a Tensor, it is expected to be in [bs, 1 or 3, H, W] format,
+where <cite>bs</cite> is the batch size.
+:param solarization_prob (float):
+:type solarization_prob (float): probability of the image being solarized. Default value is 0.5
+:param threshold (float):
+:type threshold (float): all pixels equal or above this value are inverted.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomSolarization.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomSolarization.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomSolarization.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomSolarization.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomSolarization.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomSolarization.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomSolarization.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomSolarization.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomSolarization.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomSolarization.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomSolarization.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomSolarization.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomRotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zeros'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotate" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Randomly rotate image around a point.</p>
+<p>Works for a single TensorImage or TensorBatch, on cpu or gpu,
+with flipping deteremined and applied separately for each individual image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – probability of applying the transform. Default: 0.5.</p></li>
+<li><p><strong>max_deg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – maximum rotation angle</p></li>
+<li><p><strong>angles</strong> (<em>optional list</em><em> of </em><em>possible rotation angles</em>) – e.g., [-45, -30, -15, 0, 15, 30, 45]</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Targets:</dt><dd><p>TensorImage, TensorBatch</p>
+<p>Not applied to ArrayImage or ArrayBatch because we rely on PyTorch grid_sample,
+which only works for tensors.</p>
+<p>For ArrayImage or ArrayBatch use albumentations HorizontalFlip.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zeros'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotate.__init__" title="Link to this definition"></a></dt>
+<dd><p><cite>p</cite> is the probability that each image is rotated</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotate.draw_params">
+<span class="sig-name descname"><span class="pre">draw_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotate.draw_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotate.draw_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotate.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotate.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotate.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotate.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotate.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotate.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotate.replay">
+<span class="sig-name descname"><span class="pre">replay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotate.replay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotate.replay" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomZoom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomZoom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.5,</span> <span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zeros'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomZoom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomZoom" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Randomly zoom image around a point.</p>
+<p>Works for a single TensorImage or TensorBatch, on cpu or gpu,
+with zoom deteremined and applied separately for each individual image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – probability of applying the transform. Default: 0.5.</p>
+</dd>
+</dl>
+<dl>
+<dt>Targets:</dt><dd><p>TensorImage, TensorBatch</p>
+<p>Not applied to ArrayImage or ArrayBatch because we rely on PyTorch grid_sample,
+which only works for tensors.</p>
+<p>For ArrayImage or ArrayBatch use albumentations.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomZoom.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.5,</span> <span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zeros'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomZoom.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomZoom.__init__" title="Link to this definition"></a></dt>
+<dd><p>p is the probability that each image is rotated
+x,y determine the focal point for the zoom operation, between [0,1]</p>
+<blockquote>
+<div><p>can be an int or float, in which case the range for x is (x,x),
+and the range for y is (y,y), or it can be a list/tuple specifying
+the range x=(left,right), y=(top,bottom)</p>
+<p>Default is x=.5, y=.5, which focuses the zoom at the center of the image.
+To randomly zoom on different points set x=(0,1), y=(0,1)</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomZoom.draw_params">
+<span class="sig-name descname"><span class="pre">draw_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomZoom.draw_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomZoom.draw_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomZoom.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomZoom.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomZoom.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomZoom.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomZoom.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomZoom.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomZoom.replay">
+<span class="sig-name descname"><span class="pre">replay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomZoom.replay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomZoom.replay" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomPatchShuffle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomPatchShuffle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">224</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomPatchShuffle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomPatchShuffle" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Randomly shuffle an image, dividined into NxN square patches (assumes square images).</p>
+<p>Operates over a TensorImage (CxHxW) or TensorImageBatch (BxCxHxW).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sizes</strong> (<em>patch size</em><em>, or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><em>patch_sizes</em><em>, </em><em>in proportion</em><em> of </em><em>image size</em>)</p></li>
+<li><p><strong>(</strong><strong>float</strong><strong>)</strong> (<em>p</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomPatchShuffle.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">224</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomPatchShuffle.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomPatchShuffle.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomPatchShuffle.random_choice">
+<span class="sig-name descname"><span class="pre">random_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomPatchShuffle.random_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomPatchShuffle.random_choice" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomPatchShuffle.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomPatchShuffle.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomPatchShuffle.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomPatchShuffle.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomPatchShuffle.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomPatchShuffle.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomPatchShuffle.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomPatchShuffle.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomPatchShuffle.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitterYIQ">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomColorJitterYIQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.80</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitterYIQ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Randomly change the hue, saturation, and value of an image using a Yiq conversion
+for computational efficiency. Brightness and contrast jitter can be applied on the resulting RGB.</p>
+<p>It’s expected that you will do either Yiq value jitter or RGB brightness jitter, but not both.</p>
+<p>The transformation matrix is created like so, so we get all of these operations in 1 step:
+mat = mat3(brightness) &#64; mat3(contrast) &#64; Yiq2Rgb &#64; hue_mat(h) &#64; sat_mat(s) &#64; val_mat(v) &#64; Rgb2Yiq</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – probability that jitter should be applied.</p></li>
+<li><p><strong>python</strong> (<em>contrast</em><em> (</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>tuple of</em>) – float (min, max)) – range over which to jitter hue
+Should have 0&lt;= hue &lt;= 180 or -180 &lt;= min &lt;= max &lt;= 180.
+hue_factor is chosen uniformly from [-hue, hue] or the given [min, max].
+hue=0 for no change, hue=(-180,180) maximum color randomization.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter saturation.
+saturation_factor is chosen uniformly from [max(0, 1 - saturation), 1 + saturation] or the given [min, max].
+Should be non negative numbers.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter brightness in YiQ.
+brightness_factor is chosen uniformly from [max(0, 1 - brightness), 1 + brightness] or the given [min, max].
+Should be non negative numbers.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter brightness in RGB.
+brightness_factor is chosen uniformly from [max(0, 1 - brightness), 1 + brightness] or the given [min, max].
+Should be non negative numbers.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter brightness in RGB.
+brightness_factor is chosen uniformly from [max(0, 1 - brightness), 1 + brightness] or the given [min, max].
+Should be non negative numbers.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.80</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitterYIQ.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitterYIQ.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.sample_params">
+<span class="sig-name descname"><span class="pre">sample_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitterYIQ.sample_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.sample_params" title="Link to this definition"></a></dt>
+<dd><p>b=batch; n=number to generate;</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitterYIQ.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>batch</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitterYIQ.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomColorJitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Randomly apply (per image) jitter to the hue, saturation, value (aka brightness), and contrast of an RGB image or batch.</p>
+<p>Parameters are stored for easy replay.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – probability that jitter should be applied. If input is a batch, the p operates at the batch level
+(i.e., either all images are jittered, or none, with probability p). Also, if jitter is applied,
+each property is jittered by a random value in the range specified (see below for how to set
+range for each property).</p></li>
+<li><p><strong>python</strong> (<em>contrast</em><em> (</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>tuple of</em>) – float (min, max)) – range over which to jitter hue
+Should have -.5 &lt; hue &lt; .5
+hue_factor is chosen uniformly from [-hue, hue] or the given [min, max].
+hue=0 for no change, hue=(-.5,.5) maximum color randomization.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter saturation.
+saturation_factor is chosen uniformly from [max(0, 1 - saturation), 1 + saturation] or the given [min, max].
+Should be non negative numbers.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter value / brightness.
+value_factor is chosen uniformly from [max(0, 1 - value), 1 + value] or the given [min, max].
+Should be non negative numbers.</p></li>
+<li><p><strong>python</strong> – float (min, max)) – range over which to jitter contrast in RGB.
+contrast_factor is chosen uniformly from [max(0, 1 - contrast), 1 + contrast] or the given [min, max].
+Should be non negative numbers.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitter.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitter.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitter.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitter.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitter.sample_params">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saturation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitter.sample_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitter.sample_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitter.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitter.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitter.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomColorJitter.apply_last">
+<span class="sig-name descname"><span class="pre">apply_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomColorJitter.apply_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomColorJitter.apply_last" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotateObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.fastaugs.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomRotateObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctr_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctr_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">2.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.25,</span> <span class="pre">.75)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.25,</span> <span class="pre">.75)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'border'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotateObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotateObject" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Randomly rotate, rescale, and re-position an object.</p>
+<p>Works for a single TensorImage or TensorBatch, on cpu or gpu,
+with parameters deteremined and applied separately for each individual image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – probability of applying the transform. Default: 0.5.</p>
+</dd>
+</dl>
+<dl>
+<dt>Targets:</dt><dd><p>TensorImage, TensorBatch</p>
+<p>Not applied to ArrayImage or ArrayBatch because we rely on PyTorch grid_sample,
+which only works for tensors.</p>
+<p>For ArrayImage or ArrayBatch use albumentations HorizontalFlip.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotateObject.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_deg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctr_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctr_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">2.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.25,</span> <span class="pre">.75)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(.25,</span> <span class="pre">.75)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'border'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotateObject.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotateObject.__init__" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>p: the probability that each image is rotated</p>
+</div></blockquote>
+<p>max_deg: maximum angle of rotation (+/- max_deg)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotateObject.draw_params">
+<span class="sig-name descname"><span class="pre">draw_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotateObject.draw_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotateObject.draw_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotateObject.before_call">
+<span class="sig-name descname"><span class="pre">before_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotateObject.before_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotateObject.before_call" title="Link to this definition"></a></dt>
+<dd><p>before_call the state for input <cite>b</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotateObject.last_params">
+<span class="sig-name descname"><span class="pre">last_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotateObject.last_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotateObject.last_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.fastaugs.transforms.RandomRotateObject.replay">
+<span class="sig-name descname"><span class="pre">replay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils/fastaugs/transforms.html#RandomRotateObject.replay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.fastaugs.transforms.RandomRotateObject.replay" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="foveation.utils.fastaugs.loader.html" class="btn btn-neutral float-left" title="foveation.utils.fastaugs.loader" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.utils.flops.html" class="btn btn-neutral float-right" title="foveation.utils.flops" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

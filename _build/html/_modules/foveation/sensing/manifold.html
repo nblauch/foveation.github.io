@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.sensing.manifold &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.sensing.manifold</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.sensing.manifold</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">cumulative_trapezoid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">root_scalar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_all</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="CorticalSensorManifold">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CorticalSensorManifold</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    3-D cortical sensor manifold based on Rovamu and Virsu (1984) (see also Motter (2009)).</span>
+<span class="sd">    Relevant coordinate systems:</span>
+<span class="sd">        (x, y) -&gt; visual cartesian coordiantes</span>
+<span class="sd">        (r, \theta) -&gt; visual polar coordinates</span>
+<span class="sd">        (\rho, z, \phi) -&gt; cortical cylindrical coordinates</span>
+<span class="sd">        (x, y, z) -&gt; cortical cartesian coordinates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CorticalSensorManifold.__init__">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        args:</span>
+<span class="sd">            cmf_a: a parameter in cortical magnification function (CMF)</span>
+<span class="sd">            fov: visual field size in degrees</span>
+<span class="sd">            k: scaling factor that gives a good match to cortical mm.</span>
+
+<span class="sd">        cortical magnification is given by: k/(cmf_a + eccentricity)</span>
+<span class="sd">        due to our choice of magnification function, this is essentially a 3d extension of the complex logarithmic map (Schwartz, 1980), where both preserve local isotropy</span>
+<span class="sd">        unlike the Schwartz (1980) model, our 3D version also preserves global/meridional isotropy, since there is no warping due to flattening</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span> <span class="o">=</span> <span class="n">cmf_a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="n">fov</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+
+        <span class="c1"># compute cortical radius (z) over a fine mesh of the visual field by integration of the CMF</span>
+        <span class="n">spacing</span> <span class="o">=</span> <span class="mf">0.0001</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">fov</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span> <span class="c1"># we go out well beyond r=fov/2 to support padding</span>
+        <span class="n">z_integrand_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_integrand</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span> 
+        <span class="n">integral_vals</span> <span class="o">=</span> <span class="n">cumulative_trapezoid</span><span class="p">(</span><span class="n">z_integrand_vec</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Integral from 0 to each x_grid point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_integral_interp</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">integral_vals</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.m">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.m">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        cortical magnification as a function of eccentricity r</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="c1"># mm/deg</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.rho_3d">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.rho_3d">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rho_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compute cortical radius in 3d cylindrical coordinates: m(r)*sin(r)</span>
+<span class="sd">        it is somewhat confusing from the equation, but the units are mm rather than mm/rad</span>
+<span class="sd">        this is because there is a left over radian term from the derivation</span>
+<span class="sd">        r=m(r)*sin(r)*d\theta/d\phi. While d\theta and d\phi cancel out, d\theta is is radians while d\phi is unitless. </span>
+<span class="sd">        d\phi is unitless because it is part of an infinitesimal distance r*d\phi along the cortical surface that is in units mm. r keeps the mm units and d\phi is unitless. </span>
+<span class="sd">        We use m(r) in mm/deg: thus m(r)*sin(r) -&gt; mm*rad/deg, so we convert to mm by multiplying by 180 deg/pi rad.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deg_per_rad</span> <span class="o">=</span> <span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">*</span><span class="n">deg_per_rad</span> <span class="c1"># mm</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.phi_3d">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.phi_3d">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phi_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        cortical phi in 3d cylindrical coordinates. \phi=\theta (theta is visual polar angle)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">theta</span> <span class="c1"># rad</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.dm_dr">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.dm_dr">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dm_dr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivative of cortical magnification function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">*</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># mm/deg^2</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.drho_dr">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.drho_dr">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">drho_dr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivative of cortical radius in 3d cylindrical coordinates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deg_per_rad</span> <span class="o">=</span> <span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dm_dr</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">*</span><span class="n">deg_per_rad</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="c1"># mm/(deg)</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.z_integrand">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.z_integrand">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">z_integrand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        integrand for cortical z in 3d cylindrical coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">drho_dr</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.z_3d">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.z_3d">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">z_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        cortical z in 3d cylindrical coordinates computed with numerical integration via interpolation of precomputed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_integral_interp</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.map_3d">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.map_3d">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">map_3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        map cartesian (x,y) coordinates to 3D cortical cylindrical coordinates (r,z,\phi)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho_3d</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_3d</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_3d</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rho</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">phi</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.map_to_xyz">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.map_to_xyz">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">map_to_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho_z_phi</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        map 3d cortical cylindrical coordinates to cortical cartesian coordinates for plotting convenience</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rho</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">rho_z_phi</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.normalize_coords">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.normalize_coords">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
+        <span class="c1"># normalize between -1 and 1</span>
+        <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="n">normalize</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.cort_cartesian_to_cort_cylindrical">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.cort_cartesian_to_cort_cylindrical">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cort_cartesian_to_cort_cylindrical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_y_z</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        map cortical cartesian coordinates to cortical cylindrical coordinates for reverse mapping</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">x_y_z</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">phi</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.vis_cartesian_to_cort_cartesian">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.vis_cartesian_to_cort_cartesian">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vis_cartesian_to_cort_cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        map visual cartesian coordinates to cortical cartesian coordinates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_to_xyz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_3d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)))</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">x_y</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.r_from_z">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.r_from_z">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">r_from_z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Use a numerical root-finding method to determine eccentricity from the cortical z coordinate</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_3d</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="n">z</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;brentq&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">root</span></div>
+
+    
+<div class="viewcode-block" id="CorticalSensorManifold.r_from_phi">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.r_from_phi">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">r_from_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Use a numerical root-finding method to determine eccentricity from the cortical phi coordinate</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_3d</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="n">phi</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;brentq&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">root</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.cylindrical_to_visual_polar">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.cylindrical_to_visual_polar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cylindrical_to_visual_polar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho_z_phi</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        reverse map from cortical cylindrical coordinates to visual polar coordinates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rho</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">rho_z_phi</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_from_z</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">phi</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.init_visual_mesh">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.init_visual_mesh">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_visual_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initialize a grid of visual points to specify the bounds of the 3d mesh</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">grid_pts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">grid_pts_polar</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">theta_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">geomspace</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span> <span class="k">if</span> <span class="n">rs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">rs</span>
+        <span class="c1"># we go to self.fov/2+1 so that we can remove 1 deg worth of visual angle from closed surface mesh to open it back up later</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">geomspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">500</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">theta_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">theta_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">10</span><span class="p">):</span>
+                <span class="n">grid_pts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)))</span>
+                <span class="n">grid_pts_polar</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">theta_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">theta_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">100</span><span class="p">):</span>
+                <span class="n">grid_pts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)))</span>
+                <span class="n">grid_pts_polar</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
+
+        <span class="n">grid_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid_pts</span><span class="p">)</span>
+        <span class="n">grid_pts_polar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid_pts_polar</span><span class="p">)</span>
+
+        <span class="c1"># map the grid to 3D</span>
+        <span class="n">grid_pts_3d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_3d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">grid_pts</span><span class="p">])</span>
+        <span class="n">grid_pts_3d_xyz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">map_to_xyz</span><span class="p">(</span><span class="n">rho_z_phi</span><span class="p">)</span> <span class="k">for</span> <span class="n">rho_z_phi</span> <span class="ow">in</span> <span class="n">grid_pts_3d</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">grid_pts_3d_xyz</span><span class="p">,</span> <span class="n">grid_pts_polar</span></div>
+
+
+<div class="viewcode-block" id="CorticalSensorManifold.init_cortical_mesh">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.init_cortical_mesh">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_cortical_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_pts_3d_xyz</span><span class="p">,</span> <span class="n">num_coords</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initialize a 3d mesh of cortical points</span>
+
+<span class="sd">        this is not evenly-spaced enough to be useful, but we keep it around for reference</span>
+
+<span class="sd">        we might be able to do a better job of equal sampling directly in cortical space</span>
+
+<span class="sd">        for now, we rely on isotropic sampling in visual space, and use the cortical space for receptive field sampling</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Convert grid_pts_3d_uniform to a mesh </span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">grid_pts_3d_xyz</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">grid_pts_3d_xyz</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>  
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">process</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="c1"># Extract the outer surface of the mesh</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">convex_hull</span>  
+
+        <span class="n">max_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Z threshold for 1 degree of visual angle</span>
+
+        <span class="c1"># sample the surface evenly (even sampling in cortical space)</span>
+        <span class="n">num_coords</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">mult</span> <span class="o">=</span> <span class="mf">1.2</span>
+        <span class="k">while</span> <span class="n">num_coords</span> <span class="o">&lt;</span> <span class="n">num_coords</span><span class="p">:</span>
+            <span class="n">uniform_points_3d</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">sample</span><span class="o">.</span><span class="n">sample_surface_even</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">mult</span><span class="o">*</span><span class="n">num_coords</span><span class="p">),</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Remove points corresponding to 1 degree worth of visual angle</span>
+            <span class="n">uniform_points_3d</span> <span class="o">=</span> <span class="n">uniform_points_3d</span><span class="p">[</span><span class="n">uniform_points_3d</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_z</span><span class="p">]</span>
+
+            <span class="n">num_coords</span> <span class="o">=</span> <span class="n">uniform_points_3d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">mult</span> <span class="o">*=</span> <span class="mf">1.1</span>
+
+        <span class="c1"># sort by z</span>
+        <span class="n">uniform_points_3d</span> <span class="o">=</span> <span class="n">uniform_points_3d</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">uniform_points_3d</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])]</span>
+
+        <span class="c1"># # sample num_coords point randomly to get correct number</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># ensure reproducibility</span>
+        <span class="n">uniform_points_3d</span> <span class="o">=</span> <span class="n">uniform_points_3d</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">uniform_points_3d</span><span class="p">),</span> <span class="n">num_coords</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">uniform_points_3d</span>    </div>
+
+    
+<div class="viewcode-block" id="CorticalSensorManifold.reverse_map">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.reverse_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reverse_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_points_xyz</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        reverse map from cortical cartesian coordinates to visual cartesian and polar coordinates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># get points in cylindrical coordinates to do reverse mapping</span>
+        <span class="n">mesh_points_cylindrical</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">cort_cartesian_to_cort_cylindrical</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="k">for</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">mesh_points_xyz</span><span class="p">])</span>
+        <span class="c1"># reverse map into visual space using polar/spherical coordinat3es</span>
+        <span class="n">polar_visual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">cylindrical_to_visual_polar</span><span class="p">(</span><span class="n">rho_z_phi</span><span class="p">)</span> <span class="k">for</span> <span class="n">rho_z_phi</span> <span class="ow">in</span> <span class="n">mesh_points_cylindrical</span><span class="p">])</span>
+        <span class="c1"># convert to cartesian coordinates for visual space</span>
+        <span class="n">cartesian_visual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">polar_visual</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">polar_visual</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">polar_visual</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">polar_visual</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]],</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cartesian_visual</span><span class="p">,</span> <span class="n">polar_visual</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="vis_cartesian_to_cortical_cartesian_coords">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.vis_cartesian_to_cortical_cartesian_coords">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vis_cartesian_to_cortical_cartesian_coords</span><span class="p">(</span><span class="n">cartesian_coords</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">as_tensor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Map visual cartesian coordinates to 3d cortical cartesian coordinates using the 3D cortical model. </span>
+<span class="sd">    We use this when coordinates are sampled elsewhere, and we want to map them into the 3d model for receptive field sampling.</span>
+<span class="sd">    This is the main function we use to implement the cortical sensor manifold, in combination with isotropically magnified visual field sampling  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cartesian_fov_coords</span> <span class="o">=</span> <span class="n">cartesian_coords</span><span class="o">*</span><span class="p">(</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">CorticalSensorManifold</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">grid_pts_3d</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">vis_cartesian_to_cort_cartesian</span><span class="p">(</span><span class="n">cartesian_fov_coords</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">as_tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">grid_pts_3d</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">grid_pts_3d</span></div>
+
+
+
+<div class="viewcode-block" id="vis_cartesian_to_cortical_cylindrical">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.vis_cartesian_to_cortical_cylindrical">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vis_cartesian_to_cortical_cylindrical</span><span class="p">(</span><span class="n">cartesian_coords</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">as_tensor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    map visual cartesian coordinates to cortical cylindrical coordinates using the 3D cortical model. </span>
+<span class="sd">    We use this when coordinates are sampled elsewhere, and we want to map them into the 3D model for receptive field sampling.</span>
+<span class="sd">    Not usually used, since the cortical cartesian coordinates are more useful typically</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cartesian_fov_coords</span> <span class="o">=</span> <span class="n">cartesian_coords</span><span class="o">*</span><span class="p">(</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">CorticalSensorManifold</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">grid_pts_3d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">model</span><span class="o">.</span><span class="n">map_3d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">cartesian_fov_coords</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">as_tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">grid_pts_3d</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">grid_pts_3d</span></div>
+
+
+<div class="viewcode-block" id="cortical_cylindrical_to_cortical_cartesian">
+<a class="viewcode-back" href="../../../api/foveation.sensing.manifold.html#foveation.sensing.manifold.cortical_cylindrical_to_cortical_cartesian">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cortical_cylindrical_to_cortical_cartesian</span><span class="p">(</span><span class="n">rho_z_phi</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    map cortical cylindrical coordinates to cortical cartesian coordinates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">CorticalSensorManifold</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">grid_pts_3d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">model</span><span class="o">.</span><span class="n">map_to_xyz</span><span class="p">(</span><span class="n">rho_z_phi_i</span><span class="p">))</span> <span class="k">for</span> <span class="n">rho_z_phi_i</span> <span class="ow">in</span> <span class="n">rho_z_phi</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">grid_pts_3d</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_coords_from_manifold</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">num_coords</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get sensor manifold coordinates using a 3D cortical model. </span>
+<span class="sd">    This samples the manifold approximately uniformly, but in practice it is not uniform enough. </span>
+<span class="sd">    Instead of using this, we typically:</span>
+<span class="sd">        - sample isotropically in visual space (see .coords.SamplingCoords), then map into the 3d model for receptive field sampling.</span>
+<span class="sd">            (vis_cartesian_to_cortical_cartesian_coords)</span>
+<span class="sd">        - this leads to uniformly spaced points on the cortical manifold</span>
+<span class="sd">        - thus, it is an indirect approach for even sampling on the manifold</span>
+<span class="sd">        - it works much better than the direct method thus far implemented</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">CorticalSensorManifold</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">)</span>
+    <span class="c1"># define a grid of visual points to specify the bounds of the 3d mesh</span>
+    <span class="n">grid_pts_3d_xyz</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">init_visual_mesh</span><span class="p">()</span>
+    <span class="c1"># sample the mesh evenly</span>
+    <span class="n">coords_3d</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">init_cortical_mesh</span><span class="p">(</span><span class="n">grid_pts_3d_xyz</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">)</span>
+    <span class="c1"># reverse map into visual space using polar/spherical coordinat3es</span>
+    <span class="n">coords</span><span class="p">,</span> <span class="n">polar_coords</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">reverse_map</span><span class="p">(</span><span class="n">coords_3d</span><span class="p">)</span>
+    <span class="c1"># get logz coordinates for plotting in 2D</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">normalize_coords</span><span class="p">(</span><span class="n">coords</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># flip x and y</span>
+    <span class="n">polar_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">polar_coords</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="c1"># divide radius by fov/2 to get it into the range [0,1]</span>
+    <span class="n">polar_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">polar_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plotting_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">coords_3d</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">polar_coords</span><span class="p">,</span> <span class="n">plotting_coords</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

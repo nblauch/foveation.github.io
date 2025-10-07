@@ -1,0 +1,369 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>probably going to remove this &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">probably going to remove this</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/tmp.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="probably-going-to-remove-this">
+<h1>probably going to remove this<a class="headerlink" href="#probably-going-to-remove-this" title="Link to this heading"></a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="c1"># let&#39;s also create our retinal transform and fixator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">foveation.sensing.retina</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetinalTransform</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">foveation.sensing.policies</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiRandomSaccadePolicy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">foveation.demo</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_image_as_batch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">foveation.arch.knnvit</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNPartitioningPatchEmbedding</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="n">fov</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">cmf_a</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">resolution</span> <span class="o">=</span> <span class="mi">224</span>
+
+<span class="n">img_batch</span> <span class="o">=</span> <span class="n">get_image_as_batch</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;streetview.jpg&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">start_res</span> <span class="o">=</span> <span class="n">img_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">retinal_transform</span> <span class="o">=</span> <span class="n">RetinalTransform</span><span class="p">(</span><span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">start_res</span><span class="o">=</span><span class="n">start_res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fov</span><span class="o">=</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="o">=</span><span class="n">cmf_a</span><span class="p">)</span>
+
+<span class="n">patch_embed</span> <span class="o">=</span> <span class="n">KNNPartitioningPatchEmbedding</span><span class="p">(</span>
+    <span class="mi">3</span><span class="p">,</span>
+    <span class="mi">384</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="p">,</span>
+    <span class="n">fov</span><span class="p">,</span>
+    <span class="n">cmf_a</span><span class="p">,</span>
+    <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">in_cart_res</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+    <span class="n">cart_patch_size</span><span class="o">=</span><span class="n">resolution</span><span class="o">//</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+    <span class="n">force_patches_less_than_matched</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_coord_val</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+    <span class="n">sample_cortex</span><span class="o">=</span><span class="s1">&#39;geodesic&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+found resolution 160 giving 49963 points (desired: 50176)
+Auto-matched resolution to 160 (49963 sampling coordinates) to best match 50176 cartesian pixels.
+found resolution 160 giving 49963 points (desired: 50176)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/nblauch/git/foveation/foveation/arch/knn.py:39: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  num_neighbors = torch.minimum(torch.tensor(self.k*m), torch.tensor(self.in_coords.shape[0]))
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+found resolution 6 giving 59 points (desired: 64)
+found resolution 6 giving 59 points (desired: 64)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 59/59 [00:02&lt;00:00, 20.80it/s]
+/opt/homebrew/Caskroom/miniforge/base/envs/knnconv1/lib/python3.13/site-packages/torch/functional.py:554: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/native/TensorShape.cpp:4324.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+100%|██████████| 59/59 [00:06&lt;00:00,  9.19it/s]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConvexHull</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">foveation.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">IMAGENET_MEAN</span><span class="p">,</span> <span class="n">IMAGENET_STD</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_partitioning_outline</span><span class="p">(</span><span class="n">patch_embed</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">sub_coords</span><span class="o">=</span><span class="s1">&#39;cartesian&#39;</span><span class="p">):</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">patch_embed</span><span class="o">.</span><span class="n">in_coords</span><span class="p">,</span> <span class="n">sub_coords</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+    <span class="c1"># cluster_assignments = patch_embed.partitioning.cpu()</span>
+    <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">knn_indices</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+    <span class="n">num_clusters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">patch_embed</span><span class="o">.</span><span class="n">out_coords</span><span class="p">)</span>
+    <span class="c1"># Plot all input coordinates as background</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+    <span class="c1"># For each selected unit, draw outline of its cluster</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">unit_idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_clusters</span><span class="p">)):</span>
+        <span class="c1"># Get points belonging to this cluster</span>
+        <span class="n">cluster_mask</span> <span class="o">=</span> <span class="n">knn_indices</span><span class="p">[:,</span><span class="n">unit_idx</span><span class="p">]</span>
+        <span class="n">cluster_mask</span> <span class="o">=</span> <span class="n">cluster_mask</span><span class="p">[</span><span class="n">cluster_mask</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)]</span> <span class="c1"># remove padding tokens</span>
+        <span class="n">cluster_coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">cluster_mask</span><span class="p">]</span>
+
+        <span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">cluster_coords</span><span class="p">)</span>
+        <span class="c1"># Plot the convex hull outline</span>
+        <span class="k">for</span> <span class="n">simplex</span> <span class="ow">in</span> <span class="n">hull</span><span class="o">.</span><span class="n">simplices</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cluster_coords</span><span class="p">[</span><span class="n">simplex</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cluster_coords</span><span class="p">[</span><span class="n">simplex</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+                <span class="c1">#    color=colors[i],</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+        <span class="c1"># Fill the hull area</span>
+        <span class="n">hull_points</span> <span class="o">=</span> <span class="n">cluster_coords</span><span class="p">[</span><span class="n">hull</span><span class="o">.</span><span class="n">vertices</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_fixated_images</span><span class="p">(</span><span class="n">fixator</span><span class="p">,</span> <span class="n">patch_embed</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">sub_coords</span><span class="o">=</span><span class="s1">&#39;cartesian&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cart_size_mult</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ax2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fix_loc</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">ax3</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">fixated_image</span> <span class="o">=</span> <span class="n">fixator</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">fix_loc</span><span class="o">=</span><span class="n">fix_loc</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">T</span> <span class="c1"># get first fixation</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fixated_image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">fixated_image</span> <span class="o">=</span> <span class="n">fixated_image</span> <span class="o">*</span> <span class="n">IMAGENET_STD</span> <span class="o">+</span> <span class="n">IMAGENET_MEAN</span>
+    <span class="n">fixated_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">fixated_image</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">in_coords</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">in_coords</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">in_coords</span><span class="p">,</span> <span class="n">sub_coords</span><span class="p">)</span>
+    <span class="n">rf_size</span> <span class="o">=</span> <span class="n">in_coords</span><span class="o">.</span><span class="n">polar</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">rf_size</span> <span class="o">=</span> <span class="n">rf_size</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">rf_size</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># add second smallest value</span>
+    <span class="n">rf_size</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">*</span><span class="p">(</span><span class="n">rf_size</span> <span class="o">/</span> <span class="n">rf_size</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">sub_coords</span> <span class="o">==</span> <span class="s1">&#39;cartesian&#39;</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">cart_size_mult</span><span class="o">*</span><span class="n">rf_size</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">size</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">y</span><span class="o">=</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">c</span><span class="o">=</span><span class="n">fixated_image</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ax2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">im_color</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="n">IMAGENET_STD</span> <span class="o">+</span> <span class="n">IMAGENET_MEAN</span>
+        <span class="n">im_color</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">im_color</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im_color</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">im_color</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">im_color</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">fix_loc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">h</span><span class="o">*</span><span class="n">fix_loc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fixated_image</span><span class="p">,</span> <span class="n">images</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_patches</span><span class="p">(</span><span class="n">patch_embed</span><span class="p">,</span> <span class="n">fixated_image</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+    <span class="n">in_coords</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">in_coords</span>
+    <span class="n">knn_coords</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">knn_coords</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">knn_indices</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+    <span class="c1"># Determine grid size based on number of units</span>
+    <span class="n">num_units</span> <span class="o">=</span> <span class="n">nrows</span><span class="o">*</span><span class="n">ncols</span>
+    <span class="n">total_units</span> <span class="o">=</span> <span class="n">knn_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">num_units</span> <span class="o">&lt;=</span> <span class="n">total_units</span>
+    <span class="n">plot_units</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">total_units</span><span class="p">,</span> <span class="n">num_units</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">plot_units</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">ncols</span><span class="p">,</span> <span class="n">nrows</span><span class="p">))</span>
+
+    <span class="c1"># Flatten axes array for easier indexing</span>
+    <span class="n">axes_flat</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">if</span> <span class="n">num_units</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">[</span><span class="n">axes</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">unit_ind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plot_units</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes_flat</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+
+        <span class="n">unit_coords</span> <span class="o">=</span> <span class="n">knn_coords</span><span class="p">[:,</span><span class="n">unit_ind</span><span class="p">]</span>
+        <span class="n">knn</span> <span class="o">=</span> <span class="n">knn_indices</span><span class="p">[:,</span> <span class="n">unit_ind</span><span class="p">]</span>
+        <span class="n">unit_coords</span> <span class="o">=</span> <span class="n">unit_coords</span><span class="p">[</span><span class="n">knn</span> <span class="o">&lt;</span> <span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">knn</span> <span class="o">=</span> <span class="n">knn</span><span class="p">[</span><span class="n">knn</span> <span class="o">&lt;</span> <span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">unit_img</span> <span class="o">=</span> <span class="n">fixated_image</span><span class="p">[</span><span class="n">knn</span><span class="p">]</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">unit_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">unit_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">unit_img</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Hide unused subplots</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_units</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes_flat</span><span class="p">)):</span>
+        <span class="n">axes_flat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ipywidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">interact</span><span class="p">,</span> <span class="n">IntSlider</span><span class="p">,</span> <span class="n">FloatSlider</span>
+<span class="c1"># from plotting import plot_fixated_images, plot_partitioning_outline, plot_patches</span>
+
+<span class="nd">@interact</span><span class="p">(</span>
+        <span class="n">cart_size_mult</span><span class="o">=</span><span class="n">FloatSlider</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.56</span><span class="p">),</span>
+        <span class="n">x_loc</span><span class="o">=</span><span class="n">FloatSlider</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.66</span><span class="p">),</span>
+        <span class="n">y_loc</span><span class="o">=</span><span class="n">FloatSlider</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.56</span><span class="p">),</span>
+        <span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_partitioned_image</span><span class="p">(</span><span class="n">cart_size_mult</span><span class="o">=</span><span class="mf">0.56</span><span class="p">,</span> <span class="n">x_loc</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">y_loc</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+    <span class="n">plot_partitioning_outline</span><span class="p">(</span><span class="n">patch_embed</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sub_coords</span><span class="o">=</span><span class="s1">&#39;cartesian&#39;</span><span class="p">)</span>
+    <span class="n">fixated_image</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">plot_fixated_images</span><span class="p">(</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="n">patch_embed</span><span class="p">,</span> <span class="n">img_batch</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sub_coords</span><span class="o">=</span><span class="s1">&#39;cartesian&#39;</span><span class="p">,</span> <span class="n">ax2</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">cart_size_mult</span><span class="o">=</span><span class="n">cart_size_mult</span><span class="p">,</span> <span class="n">fix_loc</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="o">-</span><span class="n">y_loc</span><span class="p">,</span> <span class="n">x_loc</span><span class="p">])</span>
+    <span class="n">p_coords</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">p_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=-</span><span class="n">p_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">fixated_image</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">plot_patches</span><span class="p">(</span><span class="n">patch_embed</span><span class="p">,</span> <span class="n">fixated_image</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+
+<span class="n">plot_partitioned_image</span><span class="p">(</span><span class="n">x_loc</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">y_loc</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c6c7855953954fbabe53032983e42377", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(49963, 3)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/api_tmp_3_2.png" src="../_images/api_tmp_3_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[np.int64(8), np.int64(16), np.int64(17), np.int64(19), np.int64(20), np.int64(22), np.int64(23), np.int64(28), np.int64(31), np.int64(41), np.int64(42), np.int64(44), np.int64(46), np.int64(48), np.int64(51), np.int64(58)]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/api_tmp_3_4.png" src="../_images/api_tmp_3_4.png" />
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

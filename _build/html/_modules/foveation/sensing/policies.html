@@ -1,0 +1,741 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.sensing.policies &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.sensing.policies</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.sensing.policies</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.transforms.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">TF</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.coords</span><span class="w"> </span><span class="kn">import</span> <span class="n">transform_sampling_grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.retina</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSampler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.saliency</span><span class="w"> </span><span class="kn">import</span> <span class="n">sample_from_logdensity</span><span class="p">,</span> <span class="n">get_center_bias</span><span class="p">,</span> <span class="n">sample_from_logits_pc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_all</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">deepgaze_pytorch</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeepGazeI</span><span class="p">,</span> <span class="n">DeepGazeIIE</span>
+    <span class="n">DEEPGAZE_ALLOWED</span><span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">DEEPGAZE_ALLOWED</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="BaseSaccadePolicy">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseSaccadePolicy</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Base class for SaccadeNet saccade/fixation policies, providing functionality for sampling multiple fixation points from images</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>    
+<div class="viewcode-block" id="BaseSaccadePolicy.__init__">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retinal_transform</span><span class="p">,</span> <span class="n">n_fixations</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span> <span class="o">=</span> <span class="n">retinal_transform</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span> <span class="o">=</span> <span class="n">n_fixations</span>
+        <span class="c1"># convenience access</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixation_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="o">.</span><span class="n">fixation_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="o">.</span><span class="n">device</span></div>
+
+
+
+<div class="viewcode-block" id="BaseSaccadePolicy.get_random_crop">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.get_random_crop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_random_crop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Generate a random crop with specified scale and aspect ratio.</span>
+<span class="sd">            </span>
+<span class="sd">            Args:</span>
+<span class="sd">                height (int): Image height.</span>
+<span class="sd">                width (int): Image width.</span>
+<span class="sd">                scale (float or tuple): Scale factor(s) for crop area.</span>
+<span class="sd">                ratio (float or tuple): Aspect ratio(s) for the crop.</span>
+<span class="sd">                </span>
+<span class="sd">            Returns:</span>
+<span class="sd">                tuple:</span>
+<span class="sd">                    - list: Normalized fixation center [y, x]</span>
+<span class="sd">                    - list: Fixation size [height, width]</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">width</span>
+            <span class="n">log_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
+                    <span class="n">target_area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">target_area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="n">scale</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
+                    <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">log_ratio</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">log_ratio</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">ratio</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target_area</span> <span class="o">*</span> <span class="n">aspect_ratio</span><span class="p">)))</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target_area</span> <span class="o">/</span> <span class="n">aspect_ratio</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">w</span> <span class="o">&lt;=</span> <span class="n">width</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="n">height</span><span class="p">:</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                    <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">-</span> <span class="n">w</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                    <span class="c1"># calculate normalized center of fixation</span>
+                    <span class="n">fixation</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">height</span><span class="p">,(</span><span class="n">j</span><span class="o">+</span><span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">]</span>
+                    <span class="n">fixation_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>
+                    <span class="k">return</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span>
+            <span class="n">in_ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">in_ratio</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="n">ratio</span><span class="p">):</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">width</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="nb">min</span><span class="p">(</span><span class="n">ratio</span><span class="p">)))</span>
+            <span class="k">elif</span> <span class="n">in_ratio</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">ratio</span><span class="p">):</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="n">height</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">ratio</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">width</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="n">height</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="n">w</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+            <span class="c1"># calculate normalized center of fixation</span>
+            <span class="n">fixation</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">height</span><span class="p">,(</span><span class="n">j</span><span class="o">+</span><span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">]</span>
+            <span class="n">fixation_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span></div>
+
+
+<div class="viewcode-block" id="BaseSaccadePolicy.get_random_nearcenter_fixation">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.get_random_nearcenter_fixation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_random_nearcenter_fixation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">normalized_dist_from_center</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a random fixation near the center with specified constraints.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            height (int): Image height.</span>
+<span class="sd">            width (int): Image width.</span>
+<span class="sd">            scale (float or tuple): Scale factor(s) for crop area.</span>
+<span class="sd">            ratio (float or tuple): Aspect ratio(s) for the crop.</span>
+<span class="sd">            normalized_dist_from_center (float): Maximum normalized distance from center.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple:</span>
+<span class="sd">                - list: Normalized fixation center [y, x]</span>
+<span class="sd">                - list: Fixation size [height, width]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">width</span>
+        <span class="n">log_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
+            <span class="n">target_area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target_area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="n">scale</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
+            <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">log_ratio</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">log_ratio</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">ratio</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_area</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="n">target_area</span> <span class="o">=</span> <span class="n">target_area</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target_area</span> <span class="o">*</span> <span class="n">aspect_ratio</span><span class="p">)))</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target_area</span> <span class="o">/</span> <span class="n">aspect_ratio</span><span class="p">)))</span>
+        <span class="n">fixation_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>
+
+        <span class="n">min_frac</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">-</span><span class="n">normalized_dist_from_center</span>
+        <span class="n">max_frac</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">+</span><span class="n">normalized_dist_from_center</span>
+        <span class="n">fixation</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">min_frac</span><span class="p">,</span> <span class="n">max_frac</span><span class="p">)),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">min_frac</span><span class="p">,</span> <span class="n">max_frac</span><span class="p">))]</span>
+
+        <span class="k">return</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span></div>
+
+
+<div class="viewcode-block" id="BaseSaccadePolicy.sample_fixations">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.sample_fixations">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_fixations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img_size</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_dist_from_center</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample multiple fixations for batch processing.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            img_size (tuple): Image size (height, width).</span>
+<span class="sd">            n (int): Number of fixations to sample. Defaults to 1.</span>
+<span class="sd">            area_range: Scale range for crop area. Defaults to None.</span>
+<span class="sd">            ratio: Aspect ratio range. Defaults to None.</span>
+<span class="sd">            norm_dist_from_center (float, optional): Maximum normalized distance from center. Defaults to None.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple:</span>
+<span class="sd">                - torch.Tensor: Fixation locations of shape (n, 2)</span>
+<span class="sd">                - np.ndarray: Fixation sizes of shape (n, 2)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">area_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">area_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_area_range</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_crop_size</span>
+        <span class="k">if</span> <span class="n">ratio</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_aspect_range</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">fixations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fixation_sizes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">norm_dist_from_center</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_random_nearcenter_fixation</span><span class="p">(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">img_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="n">area_range</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">,</span> 
+                    <span class="n">normalized_dist_from_center</span><span class="o">=</span><span class="n">norm_dist_from_center</span><span class="p">,</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_random_crop</span><span class="p">(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">img_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="n">area_range</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
+            <span class="n">fixations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fixation</span><span class="p">)</span>
+            <span class="n">fixation_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fixation_size</span><span class="p">)</span>
+        <span class="n">fixations</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">fixations</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">fixation_sizes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">fixation_sizes</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fixations</span><span class="p">,</span> <span class="n">fixation_sizes</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MultiRandomSaccadePolicy">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiRandomSaccadePolicy</span><span class="p">(</span><span class="n">BaseSaccadePolicy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class implements a multi-random saccade policy for generating fixations in images. The policy randomly selects multiple fixation points within the image.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        retinal_transform (RetinalTransform): The retinal transform object used to apply retinal transformations to the images.</span>
+<span class="sd">        n_fixations (int): The number of fixations to generate.</span>
+<span class="sd">        fixation_size (int): The size of the fixation area.</span>
+<span class="sd">        multi_policy (bool): Indicates if the policy is a multi-policy (i.e., it can handle multiple fixations).</span>
+<span class="sd">        nonrandom_val (bool): whether to make validation fixations deterministic</span>
+<span class="sd">        norm_dist_from_center (float): if not None, changes how fixations are sampled. rather than finding any valid crop, it takes a fixation within norm_dist_from_center fractional distance from the center of the image. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="MultiRandomSaccadePolicy.__init__">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retinal_transform</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+                    <span class="n">crop_area_range</span><span class="o">=</span><span class="p">[</span><span class="mf">0.08</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> 
+                    <span class="n">add_aspect_variation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+                    <span class="n">nonrandom_val</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+                    <span class="n">val_crop_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">nonrandom_first</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+                    <span class="n">norm_dist_from_center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="n">n_fixations</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crop_area_range</span> <span class="o">=</span> <span class="n">crop_area_range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crop_aspect_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="n">add_aspect_variation</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val_crop_size</span> <span class="o">=</span> <span class="n">val_crop_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nonrandom_first</span> <span class="o">=</span> <span class="n">nonrandom_first</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multi_policy</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nonrandom_val</span> <span class="o">=</span> <span class="n">nonrandom_val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nonrandom_first</span> <span class="o">=</span> <span class="n">nonrandom_first</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_dist_from_center</span> <span class="o">=</span> <span class="n">norm_dist_from_center</span></div>
+
+    
+<div class="viewcode-block" id="MultiRandomSaccadePolicy.forward">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass for the MultiRandomSaccadePolicy.</span>
+
+<span class="sd">        This method generates multiple random fixations for the input images and applies the retinal transform to each fixation. It returns the transformed images, the fixations</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): The input images of shape (n, c, h, w), where n is the batch size, c is the number of channels, h is the height, and w is the width.</span>
+<span class="sd">            n_fixations (int, optional): The number of fixations to generate. Defaults to None, which uses the default number of fixations set in the policy.</span>
+<span class="sd">            fixations (list of torch.Tensor, optional): A list of pre-defined fixations. Defaults to None, which generates random fixations.</span>
+<span class="sd">            fixation_size (int, optional): The size of the fixation area. Defaults to None, which uses the default fixation size set in the policy.</span>
+<span class="sd">            area_range (tuple, optional): The range of areas to sample from for the fixation size. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.tensor: The transformed images.</span>
+<span class="sd">            list: The fixation coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">n_fixations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_fixations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span>
+
+        <span class="k">assert</span> <span class="n">fixations</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">fixations</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_fixations</span>    
+
+        <span class="n">fixation_sizes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fixations_</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fix_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_fixations</span><span class="p">):</span>
+            <span class="n">fix_</span><span class="p">,</span> <span class="n">fix_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_fixations</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">n</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">area_range</span><span class="o">=</span><span class="n">area_range</span><span class="p">,</span> <span class="n">norm_dist_from_center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">norm_dist_from_center</span><span class="p">)</span>
+            <span class="n">fixation_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fix_size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fix_i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">nonrandom_first</span><span class="p">:</span>
+                <span class="n">fix_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">fix_</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">fix_</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">fixations_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fix_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fixations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nonrandom_val</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+                <span class="n">fixations</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span><span class="o">*</span><span class="n">n_fixations</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fixations</span> <span class="o">=</span> <span class="n">fixations_</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fixations</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_fixations</span>
+            <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">fixation</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fixations</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fixation</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">fixation</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">fixation</span>
+                    <span class="n">fixations</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">fixation</span>
+                 
+        <span class="n">x_fixs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fix_deltas</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="p">(</span><span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">fixations</span><span class="p">,</span> <span class="n">fixation_sizes</span><span class="p">)):</span>
+            <span class="n">x_fix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="n">fixation_size</span><span class="p">)</span>  
+            <span class="n">x_fixs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_fix</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ii</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">fix_deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fixation</span> <span class="o">-</span> <span class="n">fixations</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fix_deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;x_fixs&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">x_fixs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, C, N)</span>
+            <span class="s1">&#39;fixations&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">fixations</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, 2) </span>
+            <span class="s1">&#39;fixation_sizes&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">fixation_sizes</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, 2) </span>
+            <span class="s1">&#39;fix_deltas&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">fix_deltas</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, 2) </span>
+            <span class="p">}</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;MultiRandomSaccadePolicy(retinal_transform=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="si">}</span><span class="s2">, n_fixations=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+
+<span class="c1"># @add_to_all(__all__)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DeepGazeISaccadePolicy</span><span class="p">(</span><span class="n">BaseSaccadePolicy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Salience-based fixation policy that uses a pre-trained DeepGazeI model to generate fixations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retinal_transform</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">res_in</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">ior_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tmp_scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="n">n_fixations</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">DEEPGAZE_ALLOWED</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;please install deepgaze_pytorch&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saliency_model</span> <span class="o">=</span> <span class="n">DeepGazeI</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">res_in</span><span class="o">=</span><span class="n">res_in</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center_bias</span> <span class="o">=</span> <span class="n">get_center_bias</span><span class="p">(</span><span class="n">res_in</span><span class="o">=</span><span class="n">res_in</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ior_width</span> <span class="o">=</span> <span class="n">ior_width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_scale</span> <span class="o">=</span> <span class="n">tmp_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res_in</span> <span class="o">=</span> <span class="n">res_in</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span> <span class="c1"># in case we want to use a reduced batch size, due to the model being large</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cached_saliency</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_saliency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="o">.</span><span class="n">pre_transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="o">.</span><span class="n">pre_transforms</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log_density_prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saliency_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">centerbias</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">center_bias</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># split x into batches and concatenate predictions</span>
+            <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">):</span>
+                <span class="n">batch_x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+                <span class="n">batch_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saliency_model</span><span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">centerbias</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">center_bias</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+                <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch_pred</span><span class="p">)</span>
+            <span class="n">log_density_prediction</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">log_density_prediction</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_cached_saliency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cached_saliency</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cached_saliency</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cached_saliency</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cache_fn</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cached_saliency</span> <span class="o">=</span> <span class="n">cached_saliency</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cache_inds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n_fixations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_fixations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span>
+
+        <span class="k">assert</span> <span class="n">fixations</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">fixations</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_fixations</span>    
+
+        <span class="n">fixation_sizes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fix_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_fixations</span><span class="p">):</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">fix_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_fixations</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">n</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">area_range</span><span class="o">=</span><span class="n">area_range</span><span class="p">)</span>
+            <span class="n">fixation_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fix_size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cache_inds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_saliency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">log_density_prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_saliency</span><span class="p">[</span><span class="n">cache_inds</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log_density_prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_saliency</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">fix_x</span><span class="p">,</span> <span class="n">fix_y</span><span class="p">,</span> <span class="n">log_density_post_ior</span> <span class="o">=</span> <span class="n">sample_from_logdensity</span><span class="p">(</span><span class="n">log_density_prediction</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">tmp_scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_scale</span><span class="p">,</span> <span class="n">ior_width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ior_width</span><span class="p">)</span>
+
+        <span class="n">fixations</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">fix_y</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">res_in</span><span class="p">,</span> <span class="n">fix_x</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">res_in</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">fixations</span> <span class="o">=</span> <span class="p">[</span><span class="n">fixations</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_fixations</span><span class="p">)]</span>
+
+        <span class="n">x_fixs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fix_deltas</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="p">(</span><span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">fixations</span><span class="p">,</span> <span class="n">fixation_sizes</span><span class="p">)):</span>
+            <span class="n">x_fix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="n">fixation_size</span><span class="p">)</span>  
+            <span class="n">x_fixs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_fix</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ii</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">fix_deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fixation</span> <span class="o">-</span> <span class="n">fixations</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fix_deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;x_fixs&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">x_fixs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, C, N)</span>
+            <span class="s1">&#39;fixations&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">fixations</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, 2) </span>
+            <span class="s1">&#39;fixation_sizes&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">fixation_sizes</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, 2) </span>
+            <span class="s1">&#39;fix_deltas&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">fix_deltas</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, 2) </span>
+            <span class="p">}</span>
+
+<span class="c1"># @add_to_all(__all__)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NetworkSaliencySaccadePolicy</span><span class="p">(</span><span class="n">BaseSaccadePolicy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Salience-based fixation policy that uses intermediate activations from a specified network layer</span>
+<span class="sd">    to generate a saliency map and sample fixations. The saliency map is updated after each fixation</span>
+<span class="sd">    based on the network&#39;s processing of the transformed input.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        retinal_transform (RetinalTransform): The retinal transform object</span>
+<span class="sd">        network (nn.Module): The network to extract intermediate activations from</span>
+<span class="sd">        hook_layer (nn.Module): the layer to extract intermedate activations from</span>
+<span class="sd">        intermediate_coords (nn.Module): intermediate coordinates corresponding to hook_layer</span>
+<span class="sd">        n_fixations (int): Number of fixations to generate</span>
+<span class="sd">        ior_width (float, optional): Width for inhibition of return</span>
+<span class="sd">        tmp_scale (float): Temperature scaling for sampling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retinal_transform</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">hook_layer</span><span class="p">,</span> <span class="n">intermediate_coords</span><span class="p">,</span>
+                 <span class="n">n_fixations</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ior_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tmp_scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">norm_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">remove_leading_tokens</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="n">n_fixations</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hook_layer</span> <span class="o">=</span> <span class="n">hook_layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intermediate_coords</span> <span class="o">=</span> <span class="n">intermediate_coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ior_width</span> <span class="o">=</span> <span class="n">ior_width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_scale</span> <span class="o">=</span> <span class="n">tmp_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deterministic</span> <span class="o">=</span> <span class="n">deterministic</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_dim</span> <span class="o">=</span> <span class="n">norm_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_leading_tokens</span> <span class="o">=</span> <span class="n">remove_leading_tokens</span>
+        
+        <span class="c1"># Register hook to capture intermediate activations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_register_activation_hook</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_register_activation_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Register a forward hook on the target layer to capture its activations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">hook_fn</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="n">output</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hook_layer</span><span class="o">.</span><span class="n">register_forward_hook</span><span class="p">(</span><span class="n">hook_fn</span><span class="p">)</span>
+
+        <span class="c1"># set up sampler for inhibition map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intermed_sampler</span> <span class="o">=</span> <span class="n">GridSampler</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intermediate_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intermed_sampling_grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intermed_sampler</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">cartesian</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_saliency_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">inhibition_map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert intermediate activations into a saliency map.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            activation (torch.Tensor): Intermediate activations [batch, channels, height, width]</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Saliency map [batch, height, width]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># take l2-norm across channels (softmax w/ temperature is done in the sampling function)</span>
+        <span class="n">saliency</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">activation</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">norm_dim</span><span class="p">)</span>
+
+        <span class="c1"># remove leading tokens, e.g. cls and buffer tokens, if they are present</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_leading_tokens</span><span class="p">:</span>
+            <span class="n">n_tokens</span> <span class="o">=</span> <span class="n">saliency</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">inhibition_map</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">saliency</span> <span class="o">=</span> <span class="n">saliency</span><span class="p">[:,</span><span class="n">n_tokens</span><span class="p">:]</span>
+
+        <span class="c1"># multiply by inhibition map if provided</span>
+        <span class="k">if</span> <span class="n">inhibition_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">saliency</span> <span class="o">=</span> <span class="n">saliency</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">inhibition_map</span><span class="p">)</span>
+                
+        <span class="c1"># locally pool the saliency map</span>
+        <span class="c1"># TO-DO</span>
+        
+        <span class="k">return</span> <span class="n">saliency</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_inhibition_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">inhibition_map</span><span class="p">,</span> <span class="n">fixation</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the inhibition map based on the fixation location.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">inhibition_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">inhibition_map</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># add a local hot spot of inhibition on the fixation </span>
+        <span class="n">x_grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">y_grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x_grid</span><span class="p">,</span> <span class="n">y_grid</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">inhibition_map</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">inhibition_map</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">dists</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">X</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">fixation</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">Y</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">fixation</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">local_inhibition</span> <span class="o">=</span> <span class="n">dists</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ior_width</span>
+        <span class="n">inhibition_map</span><span class="p">[</span><span class="n">local_inhibition</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">inhibition_map</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate fixations based on network activations, updating saliency after each fixation.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): Input images [batch, channels, height, width]</span>
+<span class="sd">            n_fixations (int, optional): Number of fixations to generate</span>
+<span class="sd">            fixation_size (int, optional): Size of fixation area</span>
+<span class="sd">            area_range (tuple, optional): Range for sampling fixation area</span>
+<span class="sd">            fixations (list, optional): Pre-defined fixations</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Contains outputs, fixations, sizes, network outputs and other metadata</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">n_fixations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_fixations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span>
+
+        <span class="n">image_size</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+
+        <span class="k">assert</span> <span class="n">fixations</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">fixations</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_fixations</span>
+
+        <span class="c1"># Lists to store results</span>
+        <span class="n">x_fixs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fix_deltas</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fixation_sizes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">fixations_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">saliency_maps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">net_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">global_grids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_fix_inds</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># first fixation in center </span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">fix_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_fixations</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">n</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">area_range</span><span class="o">=</span><span class="n">area_range</span><span class="p">)</span>
+        <span class="n">fixation_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fix_size</span><span class="p">)</span>
+        <span class="n">fixation</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">fixations_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fixation</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>
+        <span class="n">prev_fixation</span> <span class="o">=</span> <span class="n">fixation</span>
+
+        <span class="c1"># add a local hot spot of inhibition on the fixation </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ior_width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">inhibition_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_inhibition_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fixation</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inhibition_map</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Process each fixation sequentially</span>
+        <span class="k">for</span> <span class="n">fix_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_fixations</span><span class="p">):</span>
+
+            <span class="c1"># Get network activations and compute saliency</span>
+            <span class="n">x_fix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">prev_fixation</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="n">fix_size</span><span class="p">)</span>
+            <span class="n">x_fixs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_fix</span><span class="p">)</span>
+            <span class="n">net_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">(</span><span class="n">x_fix</span><span class="p">)</span>  <span class="c1"># Forward pass to trigger hook</span>
+            <span class="c1"># get inhibition map in fixated space</span>
+            <span class="n">inhibition_fixation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intermed_sampler</span><span class="p">(</span><span class="n">inhibition_map</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">fix_loc</span><span class="o">=</span><span class="n">prev_fixation</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="n">fix_size</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            
+            <span class="n">fix_saliency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_saliency_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">,</span> <span class="n">inhibition_map</span><span class="o">=</span><span class="n">inhibition_fixation</span><span class="p">)</span>
+
+            <span class="c1"># determine global coordinates of saliency map</span>
+            <span class="n">global_grid</span> <span class="o">=</span> <span class="n">transform_sampling_grid</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">intermed_sampling_grid</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+                <span class="n">prev_fixation</span><span class="p">,</span> <span class="n">fix_size</span><span class="p">,</span> <span class="n">image_size</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="n">global_grids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">global_grid</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                
+            <span class="c1"># Store network output</span>
+            <span class="n">net_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">net_output</span><span class="p">)</span>
+
+            <span class="c1"># Sample next fixation point from saliency map</span>
+            <span class="n">fix_inds</span><span class="p">,</span> <span class="n">fix_saliency</span> <span class="o">=</span> <span class="n">sample_from_logits_pc</span><span class="p">(</span>
+                <span class="n">fix_saliency</span><span class="p">,</span>  <span class="c1"># Add small epsilon to avoid log(0)</span>
+                <span class="n">global_grid</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">tmp_scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_scale</span><span class="p">,</span>
+                <span class="n">bounding_coords</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>
+                <span class="n">deterministic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="c1"># fixation = torch.cat([fix_y, fix_x], dim=1)</span>
+            <span class="n">fixation</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">global_grid</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fix_inds</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="c1"># swap x and y</span>
+            <span class="n">fixation</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">fixation</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">fixation</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># fixation = torch.cat([fixation[:,:,0], fixation[:,:,1]], dim=1)</span>
+            <span class="c1"># convert from [-1, 1] to [0,1]</span>
+            <span class="n">fixation</span> <span class="o">=</span> <span class="p">(</span><span class="n">fixation</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">fixations_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fixation</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>
+            <span class="n">all_fix_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fix_inds</span><span class="p">)</span>
+
+            <span class="n">saliency_maps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fix_saliency</span><span class="p">)</span>
+            
+            <span class="c1"># Compute fixation delta</span>
+            <span class="k">if</span> <span class="n">prev_fixation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fix_deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fixation</span> <span class="o">-</span> <span class="n">prev_fixation</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fix_deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+            <span class="n">prev_fixation</span> <span class="o">=</span> <span class="n">fixation</span>
+
+            <span class="c1"># Generate next fixation size</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">fix_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_fixations</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">n</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">area_range</span><span class="o">=</span><span class="n">area_range</span><span class="p">)</span>
+            <span class="n">fixation_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fix_size</span><span class="p">)</span>
+
+            <span class="c1"># update inhibition map</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ior_width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">inhibition_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_inhibition_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">inhibition_map</span><span class="p">,</span> <span class="n">fixation</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;x_fixs&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">x_fixs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, C, N)</span>
+            <span class="s1">&#39;fixations&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">fixations</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, 2) </span>
+            <span class="s1">&#39;fixation_sizes&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">fixation_sizes</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, 2) </span>
+            <span class="s1">&#39;fix_deltas&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">fix_deltas</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># (B, F, 2) </span>
+            <span class="s1">&#39;saliency_maps&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">saliency_maps</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s1">&#39;net_outputs&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">net_outputs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s1">&#39;global_grids&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">global_grids</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s1">&#39;fix_inds&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">all_fix_inds</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;NetworkSaliencySaccadePolicy(network=</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, layer_idx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_idx</span><span class="si">}</span><span class="s2">, layer_type=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_type</span><span class="si">}</span><span class="s2">, n_fixations=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+<div class="viewcode-block" id="NoSaccadePolicy">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.NoSaccadePolicy">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NoSaccadePolicy</span><span class="p">(</span><span class="n">BaseSaccadePolicy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple wrapper that does not apply any fixations to the input images.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        retinal_transform (RetinalTransform): The retinal transform object used to apply retinal transformations to the images.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="NoSaccadePolicy.__init__">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.NoSaccadePolicy.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retinal_transform</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            retinal_transform (RetinalTransform): The retinal transform object used to apply retinal transformations to the images.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">retinal_transform</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multi_policy</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="NoSaccadePolicy.forward">
+<a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.NoSaccadePolicy.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">f1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): The input image.</span>
+<span class="sd">            f1 (torch.Tensor, optional): The first fixation coordinates. If not provided, a random fixation will be generated.</span>
+<span class="sd">            **kwargs: Additional unused keyword arguments, for compatibility with other policies.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: The transformed image.    </span>
+<span class="sd">            None: The fixation coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">f1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">area_range</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_fixations</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="n">x_f1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f1</span><span class="p">)</span>
+        <span class="n">x_f1</span> <span class="o">=</span> <span class="n">x_f1</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;x_fixs&#39;</span><span class="p">:</span> <span class="n">x_f1</span><span class="p">,</span>
+            <span class="s1">&#39;fixations&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">x_f1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="s1">&#39;fixation_sizes&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixation_size</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">x_f1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="s1">&#39;fixation_deltas&#39;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x_f1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">}</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;NoSaccadePolicy(retinal_transform=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.probes &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.probes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.probes</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">einops</span><span class="w"> </span><span class="kn">import</span> <span class="n">rearrange</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.arch.mlp</span><span class="w"> </span><span class="kn">import</span> <span class="n">LayerBlock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_all</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="LinearProbe">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.LinearProbe">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinearProbe</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A LinearProbe module is designed to probe a single layer of a network. It can be combined with other LinearProbes to form a more comprehensive probing system. This module is particularly useful for analyzing the representations learned by a network at different layers.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        probe (nn.Module): The probing module, which can be a simple linear layer or a more complex module with a bottleneck layer and layer normalization.</span>
+<span class="sd">        dropout (nn.Module): Dropout layer to apply dropout to the inputs before probing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LinearProbe.__init__">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.LinearProbe.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">mlp_coeff</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">bottleneck_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a LinearProbe module.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num_features (int): The number of features in the input.</span>
+<span class="sd">            mlp_coeff (int, optional): Coefficient to scale the number of features for the MLP. Defaults to 1.</span>
+<span class="sd">            num_classes (int, optional): The number of classes for classification. Defaults to 1000.</span>
+<span class="sd">            bottleneck_dim (int or str, optional): The dimension of the bottleneck layer. If &#39;infer&#39;, it will be set to num_features. Defaults to None.</span>
+<span class="sd">            layer_norm (bool, optional): Whether to use layer normalization. Defaults to False.</span>
+<span class="sd">            dropout (float, optional): Dropout rate. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LINEAR PROBE NUM CLASSES:&quot;</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span> <span class="k">if</span> <span class="n">dropout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dropout</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">bottleneck_dim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;adding bottleneck in probes&#39;</span><span class="p">)</span>
+            <span class="n">bneck_dim</span> <span class="o">=</span> <span class="n">num_features</span> <span class="k">if</span> <span class="n">bottleneck_dim</span> <span class="o">==</span> <span class="s1">&#39;infer&#39;</span> <span class="k">else</span> <span class="n">bottleneck_dim</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">probe</span> <span class="o">=</span> <span class="n">LayerBlock</span><span class="p">(</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">mlp_coeff</span><span class="o">*</span><span class="n">num_features</span><span class="p">,</span> <span class="n">bneck_dim</span><span class="p">),</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">([</span><span class="n">bneck_dim</span><span class="p">])</span> <span class="k">if</span> <span class="n">layer_norm</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">bneck_dim</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">probe</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">mlp_coeff</span><span class="o">*</span><span class="n">num_features</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinearProbe.forward">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.LinearProbe.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            inputs (torch.Tensor): The input tensor to the module.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: The output of the forward pass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">probe</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">inputs</span></div>
+</div>
+
+
+
+<span class="c1"># @add_to_all(__all__) # not being used currently</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AttentionProbe</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    AttentionProbe is a module designed for probing tokenized inputs. It utilizes a 1-layer self-attention block to process the inputs. The key, query, and value dimensions are set to the number of classes. This module is particularly useful for analyzing the representations learned by a network at different layers, especially when dealing with tokenized inputs.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        probe (nn.Module): The probing module, which is a 1-layer self-attention block.</span>
+<span class="sd">        dropout (nn.Module): Dropout layer to apply dropout to the inputs before probing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">mlp_coeff</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">pooling_token</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes an AttentionProbe module.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num_features (int): The number of features in the input.</span>
+<span class="sd">            mlp_coeff (int, optional): Coefficient to scale the number of features for the MLP. Defaults to 1.</span>
+<span class="sd">            num_classes (int, optional): The number of classes for classification. Defaults to 1000.</span>
+<span class="sd">            pooling_token (str, optional): The token to use for pooling. Can be &#39;avg&#39; for average pooling or an integer for selecting a specific token. Defaults to &#39;avg&#39;.</span>
+<span class="sd">            dropout (float, optional): Dropout rate. Defaults to None.</span>
+<span class="sd">            **kwargs: Additional keyword arguments for the TransformerEncoderLayer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_coeff</span> <span class="o">=</span> <span class="n">mlp_coeff</span> <span class="c1"># ??? not sure what this is doing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span> <span class="k">if</span> <span class="n">dropout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dropout</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_projector</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">num_features</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">([</span><span class="n">hidden_dim</span><span class="p">])</span>
+        <span class="c1"># note: currently missing positional encodings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">TransformerEncoderLayer</span><span class="p">(</span><span class="n">d_model</span><span class="o">=</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">nhead</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dim_feedforward</span><span class="o">=</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pooling_token</span> <span class="o">=</span> <span class="n">pooling_token</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pooling token: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pooling_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pooling_token</span> <span class="o">==</span> <span class="s1">&#39;avg&#39;</span> <span class="k">else</span> <span class="n">x</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pooling_token</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projector</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        for now, we implement average token pooling. which hopefully is fine given the attention. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># reshaper = lambda x: x.reshape(x.shape[0], x.shape[1], self.num_features)</span>
+        <span class="c1"># emb = reshaper(inputs)</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_projector</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projector</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">emb</span>
+
+
+<span class="c1"># @add_to_all(__all__) # not being used currently</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RNNProbe</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RNNProbe is a module designed for probing tokenized inputs using a recurrent neural network.</span>
+<span class="sd">    It utilizes a single-layer RNN (GRU by default) to process the inputs sequentially.</span>
+<span class="sd">    The hidden state dimension is set to match the number of classes.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        in_projector (nn.Module): Linear projection to map inputs to RNN hidden dimension</span>
+<span class="sd">        norm (nn.Module): Layer normalization</span>
+<span class="sd">        rnn (nn.Module): The RNN layer (GRU by default)</span>
+<span class="sd">        projector (nn.Module): Final projection to output classes</span>
+<span class="sd">        dropout (nn.Module): Dropout layer</span>
+<span class="sd">        pooling_token (str or int): Method for pooling RNN outputs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">num_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">rnn_type</span><span class="o">=</span><span class="s1">&#39;gru&#39;</span><span class="p">,</span> <span class="n">bidirectional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">softmax_inputs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes an RNNProbe module.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num_features (int): The number of features in the input</span>
+<span class="sd">            num_classes (int, optional): Number of output classes. Defaults to 1000</span>
+<span class="sd">            hidden_dim (int, optional): Hidden dimension of the RNN. Defaults to 128</span>
+<span class="sd">            rnn_type (str, optional): Type of RNN (&#39;gru&#39; or &#39;lstm&#39;). Defaults to &#39;gru&#39;</span>
+<span class="sd">            bidirectional (bool, optional): Whether to use bidirectional RNN. Defaults to True</span>
+<span class="sd">            dropout (float, optional): Dropout rate. Defaults to None</span>
+<span class="sd">            **kwargs: Additional arguments for the RNN layer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span> <span class="k">if</span> <span class="n">dropout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dropout</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">()</span>
+        
+        <span class="c1"># # Input projection and normalization</span>
+        <span class="c1"># self.in_projector = nn.Linear(num_features, hidden_dim)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">([</span><span class="n">num_features</span><span class="p">])</span>
+        
+        <span class="c1"># RNN layer</span>
+        <span class="k">if</span> <span class="n">rnn_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;gru&#39;</span><span class="p">:</span>
+            <span class="n">rnn_class</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">GRU</span>
+        <span class="k">elif</span> <span class="n">rnn_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;lstm&#39;</span><span class="p">:</span>
+            <span class="n">rnn_class</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span>
+        <span class="k">elif</span> <span class="n">rnn_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;rnn&#39;</span><span class="p">:</span>
+            <span class="n">rnn_class</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">RNN</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RNN type </span><span class="si">{</span><span class="n">rnn_type</span><span class="si">}</span><span class="s2"> not supported&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rnn</span> <span class="o">=</span> <span class="n">rnn_class</span><span class="p">(</span>
+            <span class="n">input_size</span><span class="o">=</span><span class="n">num_features</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_dim</span><span class="p">,</span>
+            <span class="n">num_layers</span><span class="o">=</span><span class="n">num_layers</span><span class="p">,</span>
+            <span class="n">batch_first</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">bidirectional</span><span class="o">=</span><span class="n">bidirectional</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Output dimension accounting for bidirectional</span>
+        <span class="n">out_dim</span> <span class="o">=</span> <span class="n">hidden_dim</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">bidirectional</span> <span class="k">else</span> <span class="n">hidden_dim</span>    
+
+        <span class="c1"># Final projection to classes if needed</span>
+        <span class="k">if</span> <span class="n">out_dim</span> <span class="o">!=</span> <span class="n">num_classes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">projector</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">out_dim</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">projector</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">softmax_inputs</span> <span class="o">=</span> <span class="n">softmax_inputs</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass of the RNNProbe.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputs (torch.Tensor): Input tensor of shape (sequence_length, batch_size, features)</span>
+<span class="sd">                                 or (batch_size, sequence_length, features)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Output tensor of shape (batch_size, num_classes)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">softmax_inputs</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Apply dropout</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        
+        <span class="c1"># # Project to hidden dimension and normalize</span>
+        <span class="c1"># emb = self.in_projector(emb)</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+        
+        <span class="c1"># Run through RNN</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rnn</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+
+        <span class="c1"># Collapse over bidirectional passes and layers</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="n">emb</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">emb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                
+        <span class="c1"># Project to output classes</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projector</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">emb</span>
+
+<div class="viewcode-block" id="SaccadeNetProbe">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbe">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SaccadeNetProbe</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SaccadeNetProbe is a module designed to apply a probe to the outputs of a network, specifically tailored for SaccadeNet models.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        fix_agg (str): The aggregation method for fixations.</span>
+<span class="sd">        num_features (int): The number of features in the input.</span>
+<span class="sd">        num_classes (int): The number of classes for classification.</span>
+<span class="sd">        dropout (float, optional): The dropout rate. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SaccadeNetProbe.__init__">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbe.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">fix_agg</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span> <span class="o">=</span> <span class="n">fix_agg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="n">num_classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix_projector</span> <span class="o">=</span> <span class="n">LinearProbe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span>
+                                        <span class="n">num_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> 
+                                        <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span>
+                                        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_fix_agg</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNetProbe._init_fix_agg">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbe._init_fix_agg">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_fix_agg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the fixation aggregation module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span> <span class="o">==</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fix_aggregator</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="k">else</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span> <span class="o">==</span> <span class="s1">&#39;attn&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fix_aggregator</span> <span class="o">=</span> <span class="n">AttentionProbe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;rnn&#39;</span><span class="p">,</span> <span class="s1">&#39;lstm&#39;</span><span class="p">,</span> <span class="s1">&#39;gru&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fix_aggregator</span> <span class="o">=</span> <span class="n">RNNProbe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span> <span class="n">rnn_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span><span class="p">,</span> <span class="n">softmax_inputs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;fixation aggregation </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span><span class="si">}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNetProbe.forward">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbe.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            x: tensor of shape (fixations, batch, features)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            embeddings: embeddings of shape (batch, features)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># we changed the input format, this is for compatibility with our probes here which expect fixations first</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;b f d -&gt; f b d&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_projector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_aggregator</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">y</span></div>
+</div>
+
+    
+<div class="viewcode-block" id="SaccadeNetProbes">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbes">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SaccadeNetProbes</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SaccadeNetProbes is a module that applies probes to the output of a SaccadeNet model.</span>
+<span class="sd">    It is designed to extract features from different layers of the model and apply</span>
+<span class="sd">    a classification head to each layer output. This allows for the evaluation of</span>
+<span class="sd">    the model&#39;s performance at different stages of processing.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        mlp_spec (str): A string representation of the sizes of all layer outputs,</span>
+<span class="sd">                         joined by hyphens.</span>
+<span class="sd">        fix_agg (str): The method used for aggregating fixation-level features.</span>
+<span class="sd">        num_classes (int): The number of classes in the classification task.</span>
+<span class="sd">        dropout (float, optional): The dropout rate to apply to the probes. Defaults to None.</span>
+<span class="sd">        probes (nn.ModuleList): A list of probes, each applied to a different layer output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SaccadeNetProbes.__init__">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbes.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mlp_spec</span><span class="p">,</span> <span class="n">fix_agg</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the SaccadeNetProbes module.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mlp_spec (str): A string representation of the sizes of all layer outputs,</span>
+<span class="sd">                             joined by hyphens.</span>
+<span class="sd">            fix_agg (str): The method used for aggregating fixation-level features.</span>
+<span class="sd">            num_classes (int): The number of classes in the classification task.</span>
+<span class="sd">            dropout (float, optional): The dropout rate to apply to the probes. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_spec</span> <span class="o">=</span> <span class="n">mlp_spec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span> <span class="o">=</span> <span class="n">fix_agg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="n">num_classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_probes</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNetProbes._init_probes">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbes._init_probes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_probes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the probes for each layer output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp_spec</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)))</span>
+        <span class="n">probes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">num_features</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">probe</span> <span class="o">=</span> <span class="n">SaccadeNetProbe</span><span class="p">(</span><span class="n">num_features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">)</span>
+            <span class="n">probes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">probe</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">probes</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">probes</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNetProbes.forward">
+<a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbes.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_outputs</span><span class="p">,</span> <span class="n">probes_layer_inds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            list_outputs (list): A list of outputs from different layers of the SaccadeNet model.</span>
+<span class="sd">            probes_layer_inds (list, optional): Indices of the layers to apply the probes to.</span>
+<span class="sd">                                                 Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of outputs from the probes applied to the specified layers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">probes_layer_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probes</span><span class="p">))</span> <span class="k">if</span> <span class="n">probes_layer_inds</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">probes_layer_inds</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">list_outputs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">list_outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">list_outputs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">probes</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">list_outputs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_outputs</span><span class="p">))]</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

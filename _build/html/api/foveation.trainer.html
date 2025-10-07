@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.trainer &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.utils package" href="foveation.utils.html" />
+    <link rel="prev" title="foveation.saccadenet" href="foveation.saccadenet.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">foveation.trainer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.trainer.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.__init__"><code class="docutils literal notranslate"><span class="pre">Trainer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.setup_distributed"><code class="docutils literal notranslate"><span class="pre">Trainer.setup_distributed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.cleanup_distributed"><code class="docutils literal notranslate"><span class="pre">Trainer.cleanup_distributed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.create_optimizer"><code class="docutils literal notranslate"><span class="pre">Trainer.create_optimizer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.create_train_loader"><code class="docutils literal notranslate"><span class="pre">Trainer.create_train_loader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.create_val_loader"><code class="docutils literal notranslate"><span class="pre">Trainer.create_val_loader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.create_standard_loader"><code class="docutils literal notranslate"><span class="pre">Trainer.create_standard_loader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.create_model_and_scaler"><code class="docutils literal notranslate"><span class="pre">Trainer.create_model_and_scaler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.reset_model"><code class="docutils literal notranslate"><span class="pre">Trainer.reset_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.train"><code class="docutils literal notranslate"><span class="pre">Trainer.train()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.eval_and_log"><code class="docutils literal notranslate"><span class="pre">Trainer.eval_and_log()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.load_checkpoint"><code class="docutils literal notranslate"><span class="pre">Trainer.load_checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.checkpoint"><code class="docutils literal notranslate"><span class="pre">Trainer.checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.save_checkpoint"><code class="docutils literal notranslate"><span class="pre">Trainer.save_checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.train_loop"><code class="docutils literal notranslate"><span class="pre">Trainer.train_loop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.val_loop"><code class="docutils literal notranslate"><span class="pre">Trainer.val_loop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.compute_activations"><code class="docutils literal notranslate"><span class="pre">Trainer.compute_activations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.initialize_logger"><code class="docutils literal notranslate"><span class="pre">Trainer.initialize_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.copy_hydra_outputs"><code class="docutils literal notranslate"><span class="pre">Trainer.copy_hydra_outputs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.initialize_remote_logger"><code class="docutils literal notranslate"><span class="pre">Trainer.initialize_remote_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.log"><code class="docutils literal notranslate"><span class="pre">Trainer.log()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.exec"><code class="docutils literal notranslate"><span class="pre">Trainer.exec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.launch_from_args"><code class="docutils literal notranslate"><span class="pre">Trainer.launch_from_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.add_supervised_meters"><code class="docutils literal notranslate"><span class="pre">Trainer.add_supervised_meters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.trainer.Trainer.final_accuracy"><code class="docutils literal notranslate"><span class="pre">Trainer.final_accuracy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.trainer.load_config"><code class="docutils literal notranslate"><span class="pre">load_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.trainer.find_config"><code class="docutils literal notranslate"><span class="pre">find_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">foveation.trainer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.trainer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.trainer">
+<span id="foveation-trainer"></span><h1>foveation.trainer<a class="headerlink" href="#module-foveation.trainer" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.trainer.</span></span><span class="sig-name descname"><span class="pre">Trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gpu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DictConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_checkpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gpu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DictConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_checkpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize trainer with hydra configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gpu</strong> – which gpu to run on</p></li>
+<li><p><strong>cfg</strong> – Hydra configuration object</p></li>
+<li><p><strong>load_checkpoint</strong> – Whether to load checkpoint</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.setup_distributed">
+<span class="sig-name descname"><span class="pre">setup_distributed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.setup_distributed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.setup_distributed" title="Link to this definition"></a></dt>
+<dd><p>Initialize distributed training process group.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.cleanup_distributed">
+<span class="sig-name descname"><span class="pre">cleanup_distributed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.cleanup_distributed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.cleanup_distributed" title="Link to this definition"></a></dt>
+<dd><p>Clean up distributed training process group.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.create_optimizer">
+<span class="sig-name descname"><span class="pre">create_optimizer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.create_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.create_optimizer" title="Link to this definition"></a></dt>
+<dd><p>Create and configure optimizers for model and probes.</p>
+<p>Sets up separate optimizers for the main model and linear probes,
+with appropriate weight decay settings and learning rate scaling.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.create_train_loader">
+<span class="sig-name descname"><span class="pre">create_train_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batches_ahead</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.create_train_loader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.create_train_loader" title="Link to this definition"></a></dt>
+<dd><p>Create training data loader with appropriate transforms and augmentation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_dataset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to training dataset file</p></li>
+<li><p><strong>subset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Fraction of dataset to use for faster prototyping</p></li>
+<li><p><strong>batches_ahead</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of batches to prefetch</p></li>
+<li><p><strong>phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Training phase (‘train’ or other)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured data loader for training</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FlashLoader</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.create_val_loader">
+<span class="sig-name descname"><span class="pre">create_val_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.create_val_loader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.create_val_loader" title="Link to this definition"></a></dt>
+<dd><p>Create validation data loader with center crop transforms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val_dataset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to validation dataset file</p></li>
+<li><p><strong>subset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Fraction of dataset to use</p></li>
+<li><p><strong>ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – crop linear ratio</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured data loader for validation</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FlashLoader</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.create_standard_loader">
+<span class="sig-name descname"><span class="pre">create_standard_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.create_standard_loader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.create_standard_loader" title="Link to this definition"></a></dt>
+<dd><p>Create standard data loader with basic transforms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> – Dataset to create loader for</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Batch size for the data loader</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of worker processes for data loading</p></li>
+<li><p><strong>resolution</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Target resolution to resize images to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Standard PyTorch data loader with basic image transforms</dt><dd><p>(ToTensor, Resize, Normalize) applied</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataLoader</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.create_model_and_scaler">
+<span class="sig-name descname"><span class="pre">create_model_and_scaler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.create_model_and_scaler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.create_model_and_scaler" title="Link to this definition"></a></dt>
+<dd><p>Create and configure the neural network model and gradient scaler.
+:returns:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>(model, scaler) where model is the configured neural network</dt><dd><p>and scaler is the gradient scaler for mixed precision training</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.reset_model">
+<span class="sig-name descname"><span class="pre">reset_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.reset_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.reset_model" title="Link to this definition"></a></dt>
+<dd><p>Reset the model by recreating it from scratch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.train" title="Link to this definition"></a></dt>
+<dd><p>Execute the main training loop.</p>
+<p>Runs training for the specified number of epochs, performing validation
+at regular intervals and saving checkpoints. Handles learning rate scheduling
+and early stopping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Training statistics for all epochs</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.eval_and_log">
+<span class="sig-name descname"><span class="pre">eval_and_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.eval_and_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.eval_and_log" title="Link to this definition"></a></dt>
+<dd><p>Run validation and log results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>extra_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional data to include in logging</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Validation statistics</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.load_checkpoint">
+<span class="sig-name descname"><span class="pre">load_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ckpt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.load_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.load_checkpoint" title="Link to this definition"></a></dt>
+<dd><p>Load model and optimizer state from checkpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ckpt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Checkpoint dictionary. If None, loads from
+default checkpoint file in log folder.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.checkpoint">
+<span class="sig-name descname"><span class="pre">checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.checkpoint" title="Link to this definition"></a></dt>
+<dd><p>Save checkpoint at regular intervals based on checkpoint frequency.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.save_checkpoint">
+<span class="sig-name descname"><span class="pre">save_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.save_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.save_checkpoint" title="Link to this definition"></a></dt>
+<dd><p>Save model and optimizer state to checkpoint file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>epoch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Current training epoch</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.train_loop">
+<span class="sig-name descname"><span class="pre">train_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.train_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.train_loop" title="Link to this definition"></a></dt>
+<dd><p>Execute one epoch of training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epoch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Current epoch number</p></li>
+<li><p><strong>max_batches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Maximum number of batches to process</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(average_loss, training_stats)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.val_loop">
+<span class="sig-name descname"><span class="pre">val_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_preds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.val_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.val_loop" title="Link to this definition"></a></dt>
+<dd><p>Execute validation loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>return_preds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to return predictions</p></li>
+<li><p><strong>max_batches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Maximum number of batches to process</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Validation statistics, optionally with predictions and labels</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.compute_activations">
+<span class="sig-name descname"><span class="pre">compute_activations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_ind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixation_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_fixations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_head</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_fix_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_images</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'supervised'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.compute_activations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.compute_activations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.initialize_logger">
+<span class="sig-name descname"><span class="pre">initialize_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.initialize_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.initialize_logger" title="Link to this definition"></a></dt>
+<dd><p>Initialize logging system and create log directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.copy_hydra_outputs">
+<span class="sig-name descname"><span class="pre">copy_hydra_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.copy_hydra_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.copy_hydra_outputs" title="Link to this definition"></a></dt>
+<dd><p>Copy Hydra output files to our log directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.initialize_remote_logger">
+<span class="sig-name descname"><span class="pre">initialize_remote_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.initialize_remote_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.initialize_remote_logger" title="Link to this definition"></a></dt>
+<dd><p>Initialize remote logging (e.g., wandb) for experiment tracking.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.log" title="Link to this definition"></a></dt>
+<dd><p>Log training/validation statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Statistics to log</p></li>
+<li><p><strong>phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Phase name (‘train’ or ‘val’)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.exec">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gpu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.exec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.exec" title="Link to this definition"></a></dt>
+<dd><p>Execute training with the given configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gpu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – GPU device ID</p></li>
+<li><p><strong>cfg</strong> (<em>DictConfig</em>) – Training configuration</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.launch_from_args">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">launch_from_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.launch_from_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.launch_from_args" title="Link to this definition"></a></dt>
+<dd><p>Launch training with the given configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<em>DictConfig</em>) – Training configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.add_supervised_meters">
+<span class="sig-name descname"><span class="pre">add_supervised_meters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.add_supervised_meters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.add_supervised_meters" title="Link to this definition"></a></dt>
+<dd><p>Add supervised training metrics for logging.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.trainer.Trainer.final_accuracy">
+<span class="sig-name descname"><span class="pre">final_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#Trainer.final_accuracy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.Trainer.final_accuracy" title="Link to this definition"></a></dt>
+<dd><p>Compute the final accuracy of the model by averaging over a number of iterations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of validation runs to average over</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing averaged validation statistics</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.trainer.load_config">
+<span class="sig-prename descclassname"><span class="pre">foveation.trainer.</span></span><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.load_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.trainer.find_config">
+<span class="sig-prename descclassname"><span class="pre">foveation.trainer.</span></span><span class="sig-name descname"><span class="pre">find_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[SLOW_DIR,</span> <span class="pre">SAVE_DIR]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subfolder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'logs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/trainer.html#find_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.trainer.find_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="foveation.saccadenet.html" class="btn btn-neutral float-left" title="foveation.saccadenet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.utils.html" class="btn btn-neutral float-right" title="foveation.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

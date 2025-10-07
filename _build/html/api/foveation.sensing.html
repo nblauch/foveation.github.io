@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.sensing package &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.sensing.coords" href="foveation.sensing.coords.html" />
+    <link rel="prev" title="Example notebooks" href="../quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">foveation.sensing package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html">foveation.sensing.coords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.manifold.html">foveation.sensing.manifold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.policies.html">foveation.sensing.policies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.retina.html">foveation.sensing.retina</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.saliency.html">foveation.sensing.saliency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.samplers.html">foveation.sensing.samplers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">foveation.sensing package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.sensing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.sensing">
+<span id="foveation-sensing-package"></span><h1>foveation.sensing package<a class="headerlink" href="#module-foveation.sensing" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.coords.html">foveation.sensing.coords</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords"><code class="docutils literal notranslate"><span class="pre">SamplingCoords</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.__init__"><code class="docutils literal notranslate"><span class="pre">SamplingCoords.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.pad_cartesian"><code class="docutils literal notranslate"><span class="pre">SamplingCoords.pad_cartesian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.get_strided_coords"><code class="docutils literal notranslate"><span class="pre">SamplingCoords.get_strided_coords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.to"><code class="docutils literal notranslate"><span class="pre">SamplingCoords.to()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.get_scatter_sizes"><code class="docutils literal notranslate"><span class="pre">SamplingCoords.get_scatter_sizes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.clone"><code class="docutils literal notranslate"><span class="pre">SamplingCoords.clone()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.get_isotropic_sampling_coords"><code class="docutils literal notranslate"><span class="pre">get_isotropic_sampling_coords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.get_logpolar_image_sampling_coords"><code class="docutils literal notranslate"><span class="pre">get_logpolar_image_sampling_coords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.num_sampling_coords_isotropic"><code class="docutils literal notranslate"><span class="pre">num_sampling_coords_isotropic()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.find_desired_res"><code class="docutils literal notranslate"><span class="pre">find_desired_res()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.get_sampling_coords"><code class="docutils literal notranslate"><span class="pre">get_sampling_coords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.rowcol_to_xy"><code class="docutils literal notranslate"><span class="pre">rowcol_to_xy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.xy_to_rowcol"><code class="docutils literal notranslate"><span class="pre">xy_to_rowcol()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.xy_to_colrow"><code class="docutils literal notranslate"><span class="pre">xy_to_colrow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.num_sampling_coords"><code class="docutils literal notranslate"><span class="pre">num_sampling_coords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.transform_sampling_grid"><code class="docutils literal notranslate"><span class="pre">transform_sampling_grid()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.auto_match_num_coords"><code class="docutils literal notranslate"><span class="pre">auto_match_num_coords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.logpolar_radius"><code class="docutils literal notranslate"><span class="pre">logpolar_radius()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.cart_to_polar"><code class="docutils literal notranslate"><span class="pre">cart_to_polar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.polar_to_cart"><code class="docutils literal notranslate"><span class="pre">polar_to_cart()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.cart_to_complex_log"><code class="docutils literal notranslate"><span class="pre">cart_to_complex_log()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords._compute_isotropic_r_and_num_theta"><code class="docutils literal notranslate"><span class="pre">_compute_isotropic_r_and_num_theta()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.manifold.html">foveation.sensing.manifold</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.__init__"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.m"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.m()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.rho_3d"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.rho_3d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.phi_3d"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.phi_3d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.dm_dr"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.dm_dr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.drho_dr"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.drho_dr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.z_integrand"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.z_integrand()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.z_3d"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.z_3d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.map_3d"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.map_3d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.map_to_xyz"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.map_to_xyz()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.normalize_coords"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.normalize_coords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.cort_cartesian_to_cort_cylindrical"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.cort_cartesian_to_cort_cylindrical()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.vis_cartesian_to_cort_cartesian"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.vis_cartesian_to_cort_cartesian()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.r_from_z"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.r_from_z()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.r_from_phi"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.r_from_phi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.cylindrical_to_visual_polar"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.cylindrical_to_visual_polar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.init_visual_mesh"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.init_visual_mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.init_cortical_mesh"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.init_cortical_mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.CorticalSensorManifold.reverse_map"><code class="docutils literal notranslate"><span class="pre">CorticalSensorManifold.reverse_map()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.vis_cartesian_to_cortical_cartesian_coords"><code class="docutils literal notranslate"><span class="pre">vis_cartesian_to_cortical_cartesian_coords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.vis_cartesian_to_cortical_cylindrical"><code class="docutils literal notranslate"><span class="pre">vis_cartesian_to_cortical_cylindrical()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.manifold.html#foveation.sensing.manifold.cortical_cylindrical_to_cortical_cartesian"><code class="docutils literal notranslate"><span class="pre">cortical_cylindrical_to_cortical_cartesian()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.policies.html">foveation.sensing.policies</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy"><code class="docutils literal notranslate"><span class="pre">BaseSaccadePolicy</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.__init__"><code class="docutils literal notranslate"><span class="pre">BaseSaccadePolicy.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.get_random_crop"><code class="docutils literal notranslate"><span class="pre">BaseSaccadePolicy.get_random_crop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.get_random_nearcenter_fixation"><code class="docutils literal notranslate"><span class="pre">BaseSaccadePolicy.get_random_nearcenter_fixation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.sample_fixations"><code class="docutils literal notranslate"><span class="pre">BaseSaccadePolicy.sample_fixations()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy"><code class="docutils literal notranslate"><span class="pre">MultiRandomSaccadePolicy</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.retinal_transform"><code class="docutils literal notranslate"><span class="pre">MultiRandomSaccadePolicy.retinal_transform</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.n_fixations"><code class="docutils literal notranslate"><span class="pre">MultiRandomSaccadePolicy.n_fixations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.fixation_size"><code class="docutils literal notranslate"><span class="pre">MultiRandomSaccadePolicy.fixation_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.multi_policy"><code class="docutils literal notranslate"><span class="pre">MultiRandomSaccadePolicy.multi_policy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.nonrandom_val"><code class="docutils literal notranslate"><span class="pre">MultiRandomSaccadePolicy.nonrandom_val</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.norm_dist_from_center"><code class="docutils literal notranslate"><span class="pre">MultiRandomSaccadePolicy.norm_dist_from_center</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.__init__"><code class="docutils literal notranslate"><span class="pre">MultiRandomSaccadePolicy.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.MultiRandomSaccadePolicy.forward"><code class="docutils literal notranslate"><span class="pre">MultiRandomSaccadePolicy.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.NoSaccadePolicy"><code class="docutils literal notranslate"><span class="pre">NoSaccadePolicy</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.NoSaccadePolicy.retinal_transform"><code class="docutils literal notranslate"><span class="pre">NoSaccadePolicy.retinal_transform</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.NoSaccadePolicy.__init__"><code class="docutils literal notranslate"><span class="pre">NoSaccadePolicy.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.policies.html#foveation.sensing.policies.NoSaccadePolicy.forward"><code class="docutils literal notranslate"><span class="pre">NoSaccadePolicy.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.retina.html">foveation.sensing.retina</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform"><code class="docutils literal notranslate"><span class="pre">RetinalTransform</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform.__init__"><code class="docutils literal notranslate"><span class="pre">RetinalTransform.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform.forward"><code class="docutils literal notranslate"><span class="pre">RetinalTransform.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform.change_sigma"><code class="docutils literal notranslate"><span class="pre">RetinalTransform.change_sigma()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform.get_warp_params"><code class="docutils literal notranslate"><span class="pre">RetinalTransform.get_warp_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform._check_fixation_size"><code class="docutils literal notranslate"><span class="pre">RetinalTransform._check_fixation_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform._check_fix_loc"><code class="docutils literal notranslate"><span class="pre">RetinalTransform._check_fix_loc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform._check_aspect_ratio"><code class="docutils literal notranslate"><span class="pre">RetinalTransform._check_aspect_ratio()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform._apply_aspect_ratio"><code class="docutils literal notranslate"><span class="pre">RetinalTransform._apply_aspect_ratio()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.min_diff_for_cmf_a"><code class="docutils literal notranslate"><span class="pre">min_diff_for_cmf_a()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.get_min_cmf_a"><code class="docutils literal notranslate"><span class="pre">get_min_cmf_a()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.GaussianColorDecay"><code class="docutils literal notranslate"><span class="pre">GaussianColorDecay</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.GaussianColorDecay.__init__"><code class="docutils literal notranslate"><span class="pre">GaussianColorDecay.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.retina.html#foveation.sensing.retina.GaussianColorDecay.forward"><code class="docutils literal notranslate"><span class="pre">GaussianColorDecay.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.saliency.html">foveation.sensing.saliency</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.saliency.html#foveation.sensing.saliency.sample_from_logdensity"><code class="docutils literal notranslate"><span class="pre">sample_from_logdensity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.saliency.html#foveation.sensing.saliency.get_center_bias"><code class="docutils literal notranslate"><span class="pre">get_center_bias()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.saliency.html#foveation.sensing.saliency.sample_from_logits_pc"><code class="docutils literal notranslate"><span class="pre">sample_from_logits_pc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.samplers.html">foveation.sensing.samplers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.BaseGridSampler"><code class="docutils literal notranslate"><span class="pre">BaseGridSampler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.BaseGridSampler._transform_fix_grid"><code class="docutils literal notranslate"><span class="pre">BaseGridSampler._transform_fix_grid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.BaseGridSampler._prep_grid_for_grid_sample"><code class="docutils literal notranslate"><span class="pre">BaseGridSampler._prep_grid_for_grid_sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.GridSampler"><code class="docutils literal notranslate"><span class="pre">GridSampler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.GridSampler.__init__"><code class="docutils literal notranslate"><span class="pre">GridSampler.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.GridSampler.forward"><code class="docutils literal notranslate"><span class="pre">GridSampler.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.GridSampler.all_coords"><code class="docutils literal notranslate"><span class="pre">GridSampler.all_coords()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.KNNGridSampler"><code class="docutils literal notranslate"><span class="pre">KNNGridSampler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.KNNGridSampler.__init__"><code class="docutils literal notranslate"><span class="pre">KNNGridSampler.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.KNNGridSampler.forward"><code class="docutils literal notranslate"><span class="pre">KNNGridSampler.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.KNNGridSampler.all_coords"><code class="docutils literal notranslate"><span class="pre">KNNGridSampler.all_coords()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.GaussianKNNGridSampler"><code class="docutils literal notranslate"><span class="pre">GaussianKNNGridSampler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.sensing.samplers.html#foveation.sensing.samplers.GaussianKNNGridSampler.__init__"><code class="docutils literal notranslate"><span class="pre">GaussianKNNGridSampler.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../quickstart.html" class="btn btn-neutral float-left" title="Example notebooks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.sensing.coords.html" class="btn btn-neutral float-right" title="foveation.sensing.coords" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

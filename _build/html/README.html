@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A biologically-inspired foveated interface for deep vision models &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Example notebooks" href="quickstart.html" />
+    <link rel="prev" title="Welcome to foveation’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">A biologically-inspired foveated interface for deep vision models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install">🛠️ Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-notebooks">📝 Example notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">📚 Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citation">🏛️ Citation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">A biologically-inspired foveated interface for deep vision models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/readme.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="a-biologically-inspired-foveated-interface-for-deep-vision-models">
+<h1>A biologically-inspired foveated interface for deep vision models<a class="headerlink" href="#a-biologically-inspired-foveated-interface-for-deep-vision-models" title="Link to this heading"></a></h1>
+<p>Welcome to the <code class="docutils literal notranslate"><span class="pre">foveation</span></code> code-base, a PyTorch library for
+implementing foveated vision. This library provides tools for retinal
+sampling, cortical mapping, and foveated neural network architectures.</p>
+<section id="install">
+<h2>🛠️ Install<a class="headerlink" href="#install" title="Link to this heading"></a></h2>
+<p>First, create a fresh conda environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">foveation</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">foveation</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="n">pip</span>
+</pre></div>
+</div>
+<p>To download pretrained models from our repo, you will need <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span></code>,
+which is used for “large file storage”. Then clone the repo and enter
+it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">git</span><span class="o">-</span><span class="n">lfs</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">nblauch</span><span class="o">/</span><span class="n">foveation</span><span class="o">-</span><span class="n">private</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">foveation</span><span class="o">-</span><span class="n">private</span>
+</pre></div>
+</div>
+<p>Now, for installing our package. The easiest installation is without
+<code class="docutils literal notranslate"><span class="pre">ffcv</span></code>. This will allow you to use everything in our code-base except
+the training functionality. If you want training functionality with
+<code class="docutils literal notranslate"><span class="pre">ffcv</span></code>, see below. You could also use your own training scripts with
+our models.</p>
+<p>For the easy install, just do</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">foveation</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="n">pip</span>
+<span class="c1"># from within the foveation-private repo</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span> <span class="c1"># this will automatically install foveation/requirements.txt</span>
+</pre></div>
+</div>
+<p>To install with <code class="docutils literal notranslate"><span class="pre">ffcv</span></code> to allow fast training, first follow the
+instructions to install <code class="docutils literal notranslate"><span class="pre">ffcv-ssl</span></code>, which has stricter requirements,
+and then install <code class="docutils literal notranslate"><span class="pre">foveation</span></code> and its requirements.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.9</span> <span class="n">cupy</span> <span class="n">pkg</span><span class="o">-</span><span class="n">config</span> <span class="n">compilers</span> <span class="n">libjpeg</span><span class="o">-</span><span class="n">turbo</span> <span class="n">opencv</span> <span class="n">pytorch</span> <span class="n">torchvision</span> <span class="n">torchaudio</span> <span class="n">pytorch</span><span class="o">-</span><span class="n">cuda</span> <span class="n">numba</span> <span class="o">-</span><span class="n">c</span> <span class="n">pytorch</span> <span class="o">-</span><span class="n">c</span> <span class="n">nvidia</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">facebookresearch</span><span class="o">/</span><span class="n">FFCV</span><span class="o">-</span><span class="n">SSL</span><span class="o">.</span><span class="n">git</span>
+<span class="c1"># from within the foveation repo</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>For VisionLab researchers, the easiest thing to do for <code class="docutils literal notranslate"><span class="pre">ffcv</span></code> support
+on the <code class="docutils literal notranslate"><span class="pre">FASRC</span></code> cluster is to clone your <code class="docutils literal notranslate"><span class="pre">workshop</span></code> environment, and
+then install <code class="docutils literal notranslate"><span class="pre">foveation</span></code> into it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">--</span><span class="n">name</span> <span class="n">foveation</span> <span class="o">--</span><span class="n">clone</span> <span class="n">workshop</span>
+<span class="c1"># from within the foveation repo</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+</section>
+<section id="example-notebooks">
+<h2>📝 Example notebooks<a class="headerlink" href="#example-notebooks" title="Link to this heading"></a></h2>
+<p>(if viewing the docs, see “Getting Started/Example notebooks” on the
+left).</p>
+<p><code class="docutils literal notranslate"><span class="pre">notebooks/step0_sensor_manifold</span></code> : explore the basic concepts
+involved in our foveated sensor</p>
+<p><code class="docutils literal notranslate"><span class="pre">notebooks/step1_sampling.ipynb</span></code> : learn how to do foveated sampling
+from images</p>
+<p><code class="docutils literal notranslate"><span class="pre">notebooks/step2_knnconv.ipynb</span></code> : learn how to build kNN-convolutional
+neural networks to process foveated sensor outputs</p>
+<p><code class="docutils literal notranslate"><span class="pre">notebooks/step3_dinov3.ipynb</span></code> : work with a state-of-the-art foveated
+vision system based on the DINOv3 ViT model, adapted to handle foveated
+inputs.</p>
+</section>
+<section id="documentation">
+<h2>📚 Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<p>Comprehensive documentation is automatically generated from the source
+code and docstrings. The documentation includes:</p>
+<ul class="simple">
+<li><p><strong>API Reference</strong>: Complete documentation of all functions, classes,
+and modules</p></li>
+<li><p><strong>User Guide</strong>: Installation, quickstart, and usage examples</p></li>
+<li><p><strong>Developer Guide</strong>: Contributing guidelines and development setup</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install documentation dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-docs.txt
+
+<span class="c1"># Generate documentation</span>
+python<span class="w"> </span>scripts/generate_docs.py
+
+<span class="c1"># View the documentation</span>
+open<span class="w"> </span>docs/_build/html/index.html
+
+<span class="c1"># View documentation on a remote cluster (need to forward the port separately, this is done automatically in VScode/Cursor)</span>
+python<span class="w"> </span>-m<span class="w"> </span>http.server<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--directory<span class="w"> </span>docs/_build/html
+</pre></div>
+</div>
+</section>
+<section id="citation">
+<h2>🏛️ Citation<a class="headerlink" href="#citation" title="Link to this heading"></a></h2>
+<p>Blauch, N.M., Alvarez, G.A., Konkle, T. (2025). A biologically-inspired
+foveated interface for deep vision models. arXiv.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to foveation’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Example notebooks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

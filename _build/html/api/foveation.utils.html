@@ -1,0 +1,660 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.utils package &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.utils.fastaugs package" href="foveation.utils.fastaugs.html" />
+    <link rel="prev" title="foveation.trainer" href="foveation.trainer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">foveation.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.add_to_all"><code class="docutils literal notranslate"><span class="pre">add_to_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.get_random_name"><code class="docutils literal notranslate"><span class="pre">get_random_name()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.get_model"><code class="docutils literal notranslate"><span class="pre">get_model()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.reproducible_results"><code class="docutils literal notranslate"><span class="pre">reproducible_results()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.HiddenPrints"><code class="docutils literal notranslate"><span class="pre">HiddenPrints</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.utils.HiddenPrints.__init__"><code class="docutils literal notranslate"><span class="pre">HiddenPrints.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.timeit"><code class="docutils literal notranslate"><span class="pre">timeit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.load_pretrained"><code class="docutils literal notranslate"><span class="pre">load_pretrained()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.analyze_rf"><code class="docutils literal notranslate"><span class="pre">analyze_rf()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.normalize_imagenet"><code class="docutils literal notranslate"><span class="pre">normalize_imagenet()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foveation.utils.flatten_dict"><code class="docutils literal notranslate"><span class="pre">flatten_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.html">foveation.utils.fastaugs package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html">foveation.utils.fastaugs.functional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html">foveation.utils.fastaugs.functional_tensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.loader.html">foveation.utils.fastaugs.loader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html">foveation.utils.fastaugs.transforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.flops.html">foveation.utils.flops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.knnprobe.html">foveation.utils.knnprobe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lora.html">foveation.utils.lora</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.losses.html">foveation.utils.losses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lr_scheduling.html">foveation.utils.lr_scheduling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.std_transforms.html">foveation.utils.std_transforms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">foveation.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.utils">
+<span id="foveation-utils-package"></span><h1>foveation.utils package<a class="headerlink" href="#module-foveation.utils" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.add_to_all">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">add_to_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#add_to_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.add_to_all" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.get_random_name">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">get_random_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#get_random_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.get_random_name" title="Link to this definition"></a></dt>
+<dd><p>generate a random 10-digit string of uppercase and lowercase letters, and digits</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.get_model">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.get_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.reproducible_results">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">reproducible_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#reproducible_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.reproducible_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.utils.HiddenPrints">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">HiddenPrints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#HiddenPrints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.HiddenPrints" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.utils.HiddenPrints.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#HiddenPrints.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.HiddenPrints.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.normalize">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.normalize" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.timeit">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">timeit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Code</span> <span class="pre">block'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#timeit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.timeit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.load_pretrained">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">load_pretrained</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#load_pretrained"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.load_pretrained" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.analyze_rf">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">analyze_rf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf_center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#analyze_rf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.analyze_rf" title="Link to this definition"></a></dt>
+<dd><p>Analyze RF for aspect ratio and radial asymmetry.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.normalize_imagenet">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">normalize_imagenet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#normalize_imagenet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.normalize_imagenet" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.utils.flatten_dict">
+<span class="sig-prename descclassname"><span class="pre">foveation.utils.</span></span><span class="sig-name descname"><span class="pre">flatten_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/utils.html#flatten_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.utils.flatten_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Subpackages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.fastaugs.html">foveation.utils.fastaugs package</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.fastaugs.functional.html">foveation.utils.fastaugs.functional</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.radians"><code class="docutils literal notranslate"><span class="pre">radians()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.set_trace"><code class="docutils literal notranslate"><span class="pre">set_trace()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.mask_batch"><code class="docutils literal notranslate"><span class="pre">mask_batch()</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#id0"><code class="docutils literal notranslate"><span class="pre">mask_batch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.mask_tensor"><code class="docutils literal notranslate"><span class="pre">mask_tensor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#id1"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.to_device"><code class="docutils literal notranslate"><span class="pre">to_device()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.to_numpy"><code class="docutils literal notranslate"><span class="pre">to_numpy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.to_float"><code class="docutils literal notranslate"><span class="pre">to_float()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.div_"><code class="docutils literal notranslate"><span class="pre">div_()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.to_channels_first"><code class="docutils literal notranslate"><span class="pre">to_channels_first()</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#id2"><code class="docutils literal notranslate"><span class="pre">to_channels_first()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.to_channels_last"><code class="docutils literal notranslate"><span class="pre">to_channels_last()</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#id3"><code class="docutils literal notranslate"><span class="pre">to_channels_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.random_grayscale"><code class="docutils literal notranslate"><span class="pre">random_grayscale()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.to_grayscale"><code class="docutils literal notranslate"><span class="pre">to_grayscale()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.dummy_red"><code class="docutils literal notranslate"><span class="pre">dummy_red()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.mat3"><code class="docutils literal notranslate"><span class="pre">mat3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.hue_mat"><code class="docutils literal notranslate"><span class="pre">hue_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.sat_mat"><code class="docutils literal notranslate"><span class="pre">sat_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.val_mat"><code class="docutils literal notranslate"><span class="pre">val_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.hsv_mat"><code class="docutils literal notranslate"><span class="pre">hsv_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.hsv_mat2"><code class="docutils literal notranslate"><span class="pre">hsv_mat2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.hsv_jitter_tensor"><code class="docutils literal notranslate"><span class="pre">hsv_jitter_tensor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.hsv_jitter_array"><code class="docutils literal notranslate"><span class="pre">hsv_jitter_array()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.hsv_jitter_array2"><code class="docutils literal notranslate"><span class="pre">hsv_jitter_array2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.hsv_jitter"><code class="docutils literal notranslate"><span class="pre">hsv_jitter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.hsv_jitter2"><code class="docutils literal notranslate"><span class="pre">hsv_jitter2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.random_hsv_jitter2"><code class="docutils literal notranslate"><span class="pre">random_hsv_jitter2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional._get_scale_factor"><code class="docutils literal notranslate"><span class="pre">_get_scale_factor()</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#id4"><code class="docutils literal notranslate"><span class="pre">_get_scale_factor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.adjust_brightness"><code class="docutils literal notranslate"><span class="pre">adjust_brightness()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.adjust_brightness_pil"><code class="docutils literal notranslate"><span class="pre">adjust_brightness_pil()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.sigmoid"><code class="docutils literal notranslate"><span class="pre">sigmoid()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.logit"><code class="docutils literal notranslate"><span class="pre">logit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.random_adjust_brightness"><code class="docutils literal notranslate"><span class="pre">random_adjust_brightness()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.adjust_contrast"><code class="docutils literal notranslate"><span class="pre">adjust_contrast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.adjust_contrast_logit"><code class="docutils literal notranslate"><span class="pre">adjust_contrast_logit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.adjust_contrast_pil"><code class="docutils literal notranslate"><span class="pre">adjust_contrast_pil()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.adjust_rms_contrast"><code class="docutils literal notranslate"><span class="pre">adjust_rms_contrast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.adjust_rms_contrast_logit"><code class="docutils literal notranslate"><span class="pre">adjust_rms_contrast_logit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.random_adjust_contrast"><code class="docutils literal notranslate"><span class="pre">random_adjust_contrast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional._prepare_mat"><code class="docutils literal notranslate"><span class="pre">_prepare_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional._grid_sample"><code class="docutils literal notranslate"><span class="pre">_grid_sample()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.affine_transform"><code class="docutils literal notranslate"><span class="pre">affine_transform()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.flip_mat"><code class="docutils literal notranslate"><span class="pre">flip_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional._prepare_thetas"><code class="docutils literal notranslate"><span class="pre">_prepare_thetas()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional._prepare_coords"><code class="docutils literal notranslate"><span class="pre">_prepare_coords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional._prepare_rot_pt"><code class="docutils literal notranslate"><span class="pre">_prepare_rot_pt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional._prepare_param"><code class="docutils literal notranslate"><span class="pre">_prepare_param()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.rotate_mat"><code class="docutils literal notranslate"><span class="pre">rotate_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.rotate"><code class="docutils literal notranslate"><span class="pre">rotate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.zoom_mat"><code class="docutils literal notranslate"><span class="pre">zoom_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.zoom"><code class="docutils literal notranslate"><span class="pre">zoom()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.translate_mat"><code class="docutils literal notranslate"><span class="pre">translate_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.rotate_object_mat"><code class="docutils literal notranslate"><span class="pre">rotate_object_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.rotate_object"><code class="docutils literal notranslate"><span class="pre">rotate_object()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.grid_sample"><code class="docutils literal notranslate"><span class="pre">grid_sample()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.random_grid_sample"><code class="docutils literal notranslate"><span class="pre">random_grid_sample()</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#id13"><code class="docutils literal notranslate"><span class="pre">random_grid_sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.apply_mask"><code class="docutils literal notranslate"><span class="pre">apply_mask()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.srgb_to_lrgb"><code class="docutils literal notranslate"><span class="pre">srgb_to_lrgb()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.rgb_to_xyz"><code class="docutils literal notranslate"><span class="pre">rgb_to_xyz()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.xyz_to_lms"><code class="docutils literal notranslate"><span class="pre">xyz_to_lms()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.srgb_to_lms"><code class="docutils literal notranslate"><span class="pre">srgb_to_lms()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.lms_to_lgrby"><code class="docutils literal notranslate"><span class="pre">lms_to_lgrby()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.crop"><code class="docutils literal notranslate"><span class="pre">crop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.solarization"><code class="docutils literal notranslate"><span class="pre">solarization()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.random_solarization"><code class="docutils literal notranslate"><span class="pre">random_solarization()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.random_gaussian_blur2d"><code class="docutils literal notranslate"><span class="pre">random_gaussian_blur2d()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.generate_batch_permutations"><code class="docutils literal notranslate"><span class="pre">generate_batch_permutations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.to_torch_image"><code class="docutils literal notranslate"><span class="pre">to_torch_image()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html">foveation.utils.fastaugs.functional_tensor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor"><code class="docutils literal notranslate"><span class="pre">Tensor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor._clear_non_serializable_cached_data"><code class="docutils literal notranslate"><span class="pre">Tensor._clear_non_serializable_cached_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.align_to"><code class="docutils literal notranslate"><span class="pre">Tensor.align_to()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.backward"><code class="docutils literal notranslate"><span class="pre">Tensor.backward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.detach"><code class="docutils literal notranslate"><span class="pre">Tensor.detach()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.detach_"><code class="docutils literal notranslate"><span class="pre">Tensor.detach_()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.dim_order"><code class="docutils literal notranslate"><span class="pre">Tensor.dim_order()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.eig"><code class="docutils literal notranslate"><span class="pre">Tensor.eig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.is_shared"><code class="docutils literal notranslate"><span class="pre">Tensor.is_shared()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.istft"><code class="docutils literal notranslate"><span class="pre">Tensor.istft()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.lstsq"><code class="docutils literal notranslate"><span class="pre">Tensor.lstsq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.lu"><code class="docutils literal notranslate"><span class="pre">Tensor.lu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.module_load"><code class="docutils literal notranslate"><span class="pre">Tensor.module_load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.norm"><code class="docutils literal notranslate"><span class="pre">Tensor.norm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.refine_names"><code class="docutils literal notranslate"><span class="pre">Tensor.refine_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.register_hook"><code class="docutils literal notranslate"><span class="pre">Tensor.register_hook()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.register_post_accumulate_grad_hook"><code class="docutils literal notranslate"><span class="pre">Tensor.register_post_accumulate_grad_hook()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.reinforce"><code class="docutils literal notranslate"><span class="pre">Tensor.reinforce()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.rename"><code class="docutils literal notranslate"><span class="pre">Tensor.rename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.rename_"><code class="docutils literal notranslate"><span class="pre">Tensor.rename_()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.resize"><code class="docutils literal notranslate"><span class="pre">Tensor.resize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.resize_as"><code class="docutils literal notranslate"><span class="pre">Tensor.resize_as()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.share_memory_"><code class="docutils literal notranslate"><span class="pre">Tensor.share_memory_()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.solve"><code class="docutils literal notranslate"><span class="pre">Tensor.solve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.split"><code class="docutils literal notranslate"><span class="pre">Tensor.split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.stft"><code class="docutils literal notranslate"><span class="pre">Tensor.stft()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.storage"><code class="docutils literal notranslate"><span class="pre">Tensor.storage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.storage_type"><code class="docutils literal notranslate"><span class="pre">Tensor.storage_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.symeig"><code class="docutils literal notranslate"><span class="pre">Tensor.symeig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.to_sparse_coo"><code class="docutils literal notranslate"><span class="pre">Tensor.to_sparse_coo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.unflatten"><code class="docutils literal notranslate"><span class="pre">Tensor.unflatten()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.unique"><code class="docutils literal notranslate"><span class="pre">Tensor.unique()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor.unique_consecutive"><code class="docutils literal notranslate"><span class="pre">Tensor.unique_consecutive()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.grid_sample"><code class="docutils literal notranslate"><span class="pre">grid_sample()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.conv2d"><code class="docutils literal notranslate"><span class="pre">conv2d()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.interpolate"><code class="docutils literal notranslate"><span class="pre">interpolate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.torch_pad"><code class="docutils literal notranslate"><span class="pre">torch_pad()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.get_image_size"><code class="docutils literal notranslate"><span class="pre">get_image_size()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.get_image_num_channels"><code class="docutils literal notranslate"><span class="pre">get_image_num_channels()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.convert_image_dtype"><code class="docutils literal notranslate"><span class="pre">convert_image_dtype()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.vflip"><code class="docutils literal notranslate"><span class="pre">vflip()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.hflip"><code class="docutils literal notranslate"><span class="pre">hflip()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.crop"><code class="docutils literal notranslate"><span class="pre">crop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.rgb_to_grayscale"><code class="docutils literal notranslate"><span class="pre">rgb_to_grayscale()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.adjust_brightness"><code class="docutils literal notranslate"><span class="pre">adjust_brightness()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.adjust_contrast"><code class="docutils literal notranslate"><span class="pre">adjust_contrast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.adjust_hue"><code class="docutils literal notranslate"><span class="pre">adjust_hue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.adjust_hue_fast"><code class="docutils literal notranslate"><span class="pre">adjust_hue_fast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.adjust_saturation"><code class="docutils literal notranslate"><span class="pre">adjust_saturation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.mat3"><code class="docutils literal notranslate"><span class="pre">mat3()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor._get_sbc_mat"><code class="docutils literal notranslate"><span class="pre">_get_sbc_mat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.color_jitter"><code class="docutils literal notranslate"><span class="pre">color_jitter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.random_color_jitter"><code class="docutils literal notranslate"><span class="pre">random_color_jitter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.adjust_gamma"><code class="docutils literal notranslate"><span class="pre">adjust_gamma()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.center_crop"><code class="docutils literal notranslate"><span class="pre">center_crop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.five_crop"><code class="docutils literal notranslate"><span class="pre">five_crop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.ten_crop"><code class="docutils literal notranslate"><span class="pre">ten_crop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.pad"><code class="docutils literal notranslate"><span class="pre">pad()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.resize"><code class="docutils literal notranslate"><span class="pre">resize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.affine"><code class="docutils literal notranslate"><span class="pre">affine()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.rotate"><code class="docutils literal notranslate"><span class="pre">rotate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.perspective"><code class="docutils literal notranslate"><span class="pre">perspective()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.gaussian_blur"><code class="docutils literal notranslate"><span class="pre">gaussian_blur()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.invert"><code class="docutils literal notranslate"><span class="pre">invert()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.posterize"><code class="docutils literal notranslate"><span class="pre">posterize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.solarize"><code class="docutils literal notranslate"><span class="pre">solarize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.adjust_sharpness"><code class="docutils literal notranslate"><span class="pre">adjust_sharpness()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.autocontrast"><code class="docutils literal notranslate"><span class="pre">autocontrast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.equalize"><code class="docutils literal notranslate"><span class="pre">equalize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.fastaugs.loader.html">foveation.utils.fastaugs.loader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html">foveation.utils.fastaugs.transforms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.Compose"><code class="docutils literal notranslate"><span class="pre">Compose</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.Compose.__init__"><code class="docutils literal notranslate"><span class="pre">Compose.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.Compose.apply_last"><code class="docutils literal notranslate"><span class="pre">Compose.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomApply"><code class="docutils literal notranslate"><span class="pre">RandomApply</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomApply.__init__"><code class="docutils literal notranslate"><span class="pre">RandomApply.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomApply.before_call"><code class="docutils literal notranslate"><span class="pre">RandomApply.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomApply.last_params"><code class="docutils literal notranslate"><span class="pre">RandomApply.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomApply.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomApply.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToTorchImage"><code class="docutils literal notranslate"><span class="pre">ToTorchImage</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToTorchImage.__init__"><code class="docutils literal notranslate"><span class="pre">ToTorchImage.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToTorchImage.last_params"><code class="docutils literal notranslate"><span class="pre">ToTorchImage.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToTorchImage.apply_last"><code class="docutils literal notranslate"><span class="pre">ToTorchImage.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToNumpy"><code class="docutils literal notranslate"><span class="pre">ToNumpy</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToNumpy.last_params"><code class="docutils literal notranslate"><span class="pre">ToNumpy.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToNumpy.apply_last"><code class="docutils literal notranslate"><span class="pre">ToNumpy.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToChannelsFirst"><code class="docutils literal notranslate"><span class="pre">ToChannelsFirst</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToChannelsFirst.last_params"><code class="docutils literal notranslate"><span class="pre">ToChannelsFirst.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToChannelsFirst.apply_last"><code class="docutils literal notranslate"><span class="pre">ToChannelsFirst.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToChannelsLast"><code class="docutils literal notranslate"><span class="pre">ToChannelsLast</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToChannelsLast.last_params"><code class="docutils literal notranslate"><span class="pre">ToChannelsLast.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToChannelsLast.apply_last"><code class="docutils literal notranslate"><span class="pre">ToChannelsLast.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToDevice"><code class="docutils literal notranslate"><span class="pre">ToDevice</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToDevice.__init__"><code class="docutils literal notranslate"><span class="pre">ToDevice.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToDevice.last_params"><code class="docutils literal notranslate"><span class="pre">ToDevice.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToDevice.apply_last"><code class="docutils literal notranslate"><span class="pre">ToDevice.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToFloat"><code class="docutils literal notranslate"><span class="pre">ToFloat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToFloat.__init__"><code class="docutils literal notranslate"><span class="pre">ToFloat.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToFloat.last_params"><code class="docutils literal notranslate"><span class="pre">ToFloat.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToFloat.apply_last"><code class="docutils literal notranslate"><span class="pre">ToFloat.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToFloatDiv"><code class="docutils literal notranslate"><span class="pre">ToFloatDiv</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToFloatDiv.__init__"><code class="docutils literal notranslate"><span class="pre">ToFloatDiv.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToFloatDiv.last_params"><code class="docutils literal notranslate"><span class="pre">ToFloatDiv.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToFloatDiv.apply_last"><code class="docutils literal notranslate"><span class="pre">ToFloatDiv.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.MultiSample"><code class="docutils literal notranslate"><span class="pre">MultiSample</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.MultiSample.__init__"><code class="docutils literal notranslate"><span class="pre">MultiSample.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.NormalizeGPU"><code class="docutils literal notranslate"><span class="pre">NormalizeGPU</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.NormalizeGPU.__init__"><code class="docutils literal notranslate"><span class="pre">NormalizeGPU.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.NormalizeGPU.op"><code class="docutils literal notranslate"><span class="pre">NormalizeGPU.op()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.NormalizeGPU.before_call"><code class="docutils literal notranslate"><span class="pre">NormalizeGPU.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.NormalizeGPU.last_params"><code class="docutils literal notranslate"><span class="pre">NormalizeGPU.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.NormalizeGPU.apply_last"><code class="docutils literal notranslate"><span class="pre">NormalizeGPU.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.CircularMask"><code class="docutils literal notranslate"><span class="pre">CircularMask</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.CircularMask.__init__"><code class="docutils literal notranslate"><span class="pre">CircularMask.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.CircularMask.blur_radius"><code class="docutils literal notranslate"><span class="pre">CircularMask.blur_radius</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.CircularMask.draw_params"><code class="docutils literal notranslate"><span class="pre">CircularMask.draw_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.CircularMask.before_call"><code class="docutils literal notranslate"><span class="pre">CircularMask.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.CircularMask.last_params"><code class="docutils literal notranslate"><span class="pre">CircularMask.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.CircularMask.replay"><code class="docutils literal notranslate"><span class="pre">CircularMask.replay()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToGrayscaleTorchGPU"><code class="docutils literal notranslate"><span class="pre">ToGrayscaleTorchGPU</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToGrayscaleTorchGPU.__init__"><code class="docutils literal notranslate"><span class="pre">ToGrayscaleTorchGPU.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToGrayscaleGPU"><code class="docutils literal notranslate"><span class="pre">ToGrayscaleGPU</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ToGrayscaleGPU.__init__"><code class="docutils literal notranslate"><span class="pre">ToGrayscaleGPU.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ColorJitter"><code class="docutils literal notranslate"><span class="pre">ColorJitter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ColorJitter.__init__"><code class="docutils literal notranslate"><span class="pre">ColorJitter.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ColorJitter.last_params"><code class="docutils literal notranslate"><span class="pre">ColorJitter.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ColorJitter.apply_last"><code class="docutils literal notranslate"><span class="pre">ColorJitter.apply_last()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ColorJitter.sample_params"><code class="docutils literal notranslate"><span class="pre">ColorJitter.sample_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ColorJitter.before_call"><code class="docutils literal notranslate"><span class="pre">ColorJitter.before_call()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGaussianBlur"><code class="docutils literal notranslate"><span class="pre">RandomGaussianBlur</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGaussianBlur.__init__"><code class="docutils literal notranslate"><span class="pre">RandomGaussianBlur.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGaussianBlur.before_call"><code class="docutils literal notranslate"><span class="pre">RandomGaussianBlur.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGaussianBlur.last_params"><code class="docutils literal notranslate"><span class="pre">RandomGaussianBlur.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGaussianBlur.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomGaussianBlur.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomHorizontalFlip"><code class="docutils literal notranslate"><span class="pre">RandomHorizontalFlip</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomHorizontalFlip.__init__"><code class="docutils literal notranslate"><span class="pre">RandomHorizontalFlip.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomHorizontalFlip.before_call"><code class="docutils literal notranslate"><span class="pre">RandomHorizontalFlip.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomHorizontalFlip.last_params"><code class="docutils literal notranslate"><span class="pre">RandomHorizontalFlip.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomHorizontalFlip.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomHorizontalFlip.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGrayscale"><code class="docutils literal notranslate"><span class="pre">RandomGrayscale</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGrayscale.__init__"><code class="docutils literal notranslate"><span class="pre">RandomGrayscale.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGrayscale.before_call"><code class="docutils literal notranslate"><span class="pre">RandomGrayscale.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGrayscale.last_params"><code class="docutils literal notranslate"><span class="pre">RandomGrayscale.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomGrayscale.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomGrayscale.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomBrightness"><code class="docutils literal notranslate"><span class="pre">RandomBrightness</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomBrightness.__init__"><code class="docutils literal notranslate"><span class="pre">RandomBrightness.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomBrightness.before_call"><code class="docutils literal notranslate"><span class="pre">RandomBrightness.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomBrightness.last_params"><code class="docutils literal notranslate"><span class="pre">RandomBrightness.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomBrightness.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomBrightness.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomContrast"><code class="docutils literal notranslate"><span class="pre">RandomContrast</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomContrast.__init__"><code class="docutils literal notranslate"><span class="pre">RandomContrast.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomContrast.before_call"><code class="docutils literal notranslate"><span class="pre">RandomContrast.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomContrast.last_params"><code class="docutils literal notranslate"><span class="pre">RandomContrast.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomContrast.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomContrast.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomSolarization"><code class="docutils literal notranslate"><span class="pre">RandomSolarization</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomSolarization.__init__"><code class="docutils literal notranslate"><span class="pre">RandomSolarization.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomSolarization.before_call"><code class="docutils literal notranslate"><span class="pre">RandomSolarization.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomSolarization.last_params"><code class="docutils literal notranslate"><span class="pre">RandomSolarization.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomSolarization.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomSolarization.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotate"><code class="docutils literal notranslate"><span class="pre">RandomRotate</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotate.__init__"><code class="docutils literal notranslate"><span class="pre">RandomRotate.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotate.draw_params"><code class="docutils literal notranslate"><span class="pre">RandomRotate.draw_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotate.before_call"><code class="docutils literal notranslate"><span class="pre">RandomRotate.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotate.last_params"><code class="docutils literal notranslate"><span class="pre">RandomRotate.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotate.replay"><code class="docutils literal notranslate"><span class="pre">RandomRotate.replay()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomZoom"><code class="docutils literal notranslate"><span class="pre">RandomZoom</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomZoom.__init__"><code class="docutils literal notranslate"><span class="pre">RandomZoom.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomZoom.draw_params"><code class="docutils literal notranslate"><span class="pre">RandomZoom.draw_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomZoom.before_call"><code class="docutils literal notranslate"><span class="pre">RandomZoom.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomZoom.last_params"><code class="docutils literal notranslate"><span class="pre">RandomZoom.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomZoom.replay"><code class="docutils literal notranslate"><span class="pre">RandomZoom.replay()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomPatchShuffle"><code class="docutils literal notranslate"><span class="pre">RandomPatchShuffle</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomPatchShuffle.__init__"><code class="docutils literal notranslate"><span class="pre">RandomPatchShuffle.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomPatchShuffle.random_choice"><code class="docutils literal notranslate"><span class="pre">RandomPatchShuffle.random_choice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomPatchShuffle.before_call"><code class="docutils literal notranslate"><span class="pre">RandomPatchShuffle.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomPatchShuffle.last_params"><code class="docutils literal notranslate"><span class="pre">RandomPatchShuffle.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomPatchShuffle.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomPatchShuffle.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ"><code class="docutils literal notranslate"><span class="pre">RandomColorJitterYIQ</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.__init__"><code class="docutils literal notranslate"><span class="pre">RandomColorJitterYIQ.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.last_params"><code class="docutils literal notranslate"><span class="pre">RandomColorJitterYIQ.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.sample_params"><code class="docutils literal notranslate"><span class="pre">RandomColorJitterYIQ.sample_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.before_call"><code class="docutils literal notranslate"><span class="pre">RandomColorJitterYIQ.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitterYIQ.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomColorJitterYIQ.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitter"><code class="docutils literal notranslate"><span class="pre">RandomColorJitter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitter.__init__"><code class="docutils literal notranslate"><span class="pre">RandomColorJitter.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitter.last_params"><code class="docutils literal notranslate"><span class="pre">RandomColorJitter.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitter.sample_params"><code class="docutils literal notranslate"><span class="pre">RandomColorJitter.sample_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitter.before_call"><code class="docutils literal notranslate"><span class="pre">RandomColorJitter.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomColorJitter.apply_last"><code class="docutils literal notranslate"><span class="pre">RandomColorJitter.apply_last()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotateObject"><code class="docutils literal notranslate"><span class="pre">RandomRotateObject</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotateObject.__init__"><code class="docutils literal notranslate"><span class="pre">RandomRotateObject.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotateObject.draw_params"><code class="docutils literal notranslate"><span class="pre">RandomRotateObject.draw_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotateObject.before_call"><code class="docutils literal notranslate"><span class="pre">RandomRotateObject.before_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotateObject.last_params"><code class="docutils literal notranslate"><span class="pre">RandomRotateObject.last_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.RandomRotateObject.replay"><code class="docutils literal notranslate"><span class="pre">RandomRotateObject.replay()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.flops.html">foveation.utils.flops</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.flops.html#foveation.utils.flops.make_flop_counter"><code class="docutils literal notranslate"><span class="pre">make_flop_counter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.flops.html#foveation.utils.flops.FlopWrapper"><code class="docutils literal notranslate"><span class="pre">FlopWrapper</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.flops.html#foveation.utils.flops.FlopWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">FlopWrapper.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.flops.html#foveation.utils.flops.FlopWrapper.get_inputs"><code class="docutils literal notranslate"><span class="pre">FlopWrapper.get_inputs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.flops.html#foveation.utils.flops.FlopWrapper.forward"><code class="docutils literal notranslate"><span class="pre">FlopWrapper.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.flops.html#foveation.utils.flops.measure_latency"><code class="docutils literal notranslate"><span class="pre">measure_latency()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.flops.html#foveation.utils.flops.get_flops_df"><code class="docutils literal notranslate"><span class="pre">get_flops_df()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.flops.html#foveation.utils.flops._int_list_from_value"><code class="docutils literal notranslate"><span class="pre">_int_list_from_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.knnprobe.html">foveation.utils.knnprobe</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.knnprobe.html#foveation.utils.knnprobe.knn_probe"><code class="docutils literal notranslate"><span class="pre">knn_probe()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.knnprobe.html#foveation.utils.knnprobe.knn_classifier"><code class="docutils literal notranslate"><span class="pre">knn_classifier()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.lora.html">foveation.utils.lora</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lora.html#foveation.utils.lora.LoRAParam"><code class="docutils literal notranslate"><span class="pre">LoRAParam</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.lora.html#foveation.utils.lora.LoRAParam.__init__"><code class="docutils literal notranslate"><span class="pre">LoRAParam.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.lora.html#foveation.utils.lora.LoRAParam.forward"><code class="docutils literal notranslate"><span class="pre">LoRAParam.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lora.html#foveation.utils.lora.apply_lora"><code class="docutils literal notranslate"><span class="pre">apply_lora()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lora.html#foveation.utils.lora.remove_lora"><code class="docutils literal notranslate"><span class="pre">remove_lora()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.losses.html">foveation.utils.losses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.__init__"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.__init__()</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.batch_size"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.batch_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.temperature"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.temperature</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.world_size"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.world_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.pairs_per_sample"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.pairs_per_sample</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.mask"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.mask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.criterion"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.criterion</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.similarity_f"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.similarity_f</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.mask_correlated_samples"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.mask_correlated_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.compute_logits"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.compute_logits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.forward"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.accuracy"><code class="docutils literal notranslate"><span class="pre">SimCLRLoss.accuracy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.VicRegLoss"><code class="docutils literal notranslate"><span class="pre">VicRegLoss</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.VicRegLoss.sim_coeff"><code class="docutils literal notranslate"><span class="pre">VicRegLoss.sim_coeff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.VicRegLoss.std_coeff"><code class="docutils literal notranslate"><span class="pre">VicRegLoss.std_coeff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.VicRegLoss.cov_coeff"><code class="docutils literal notranslate"><span class="pre">VicRegLoss.cov_coeff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.VicRegLoss.__init__"><code class="docutils literal notranslate"><span class="pre">VicRegLoss.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.VicRegLoss.forward"><code class="docutils literal notranslate"><span class="pre">VicRegLoss.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss"><code class="docutils literal notranslate"><span class="pre">BarlowTwinsLoss</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss.bn"><code class="docutils literal notranslate"><span class="pre">BarlowTwinsLoss.bn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss.lambd"><code class="docutils literal notranslate"><span class="pre">BarlowTwinsLoss.lambd</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss.batch_size"><code class="docutils literal notranslate"><span class="pre">BarlowTwinsLoss.batch_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss.world_size"><code class="docutils literal notranslate"><span class="pre">BarlowTwinsLoss.world_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss.__init__"><code class="docutils literal notranslate"><span class="pre">BarlowTwinsLoss.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss.forward"><code class="docutils literal notranslate"><span class="pre">BarlowTwinsLoss.forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.lr_scheduling.html">foveation.utils.lr_scheduling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.LARS"><code class="docutils literal notranslate"><span class="pre">LARS</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.LARS.__init__"><code class="docutils literal notranslate"><span class="pre">LARS.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.LARS.step"><code class="docutils literal notranslate"><span class="pre">LARS.step()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.trunc_normal_"><code class="docutils literal notranslate"><span class="pre">trunc_normal_()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.cosine_decay"><code class="docutils literal notranslate"><span class="pre">cosine_decay()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.cosine_scheduler"><code class="docutils literal notranslate"><span class="pre">cosine_scheduler()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.learning_schedule"><code class="docutils literal notranslate"><span class="pre">learning_schedule()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.CosineDecayWithWarmup"><code class="docutils literal notranslate"><span class="pre">CosineDecayWithWarmup</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.CosineDecayWithWarmup.__init__"><code class="docutils literal notranslate"><span class="pre">CosineDecayWithWarmup.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.CosineDecayWithWarmup.state_dict"><code class="docutils literal notranslate"><span class="pre">CosineDecayWithWarmup.state_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.CosineDecayWithWarmup.load_state_dict"><code class="docutils literal notranslate"><span class="pre">CosineDecayWithWarmup.load_state_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.std_transforms.html">foveation.utils.std_transforms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foveation.utils.std_transforms.html#foveation.utils.std_transforms.get_std_transforms"><code class="docutils literal notranslate"><span class="pre">get_std_transforms()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="foveation.trainer.html" class="btn btn-neutral float-left" title="foveation.trainer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.utils.fastaugs.html" class="btn btn-neutral float-right" title="foveation.utils.fastaugs package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.utils.losses &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+          <li class="breadcrumb-item"><a href="../utils.html">foveation.utils</a></li>
+      <li class="breadcrumb-item active">foveation.utils.losses</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.utils.losses</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributed</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_all</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="SimCLRLoss">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SimCLRLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SimCLR (Simple Framework for Contrastive Learning of Visual Representations) Loss.</span>
+
+<span class="sd">    This loss function is used for self-supervised learning of visual representations.</span>
+<span class="sd">    It encourages the model to learn similar representations for different augmented</span>
+<span class="sd">    views of the same image, while pushing apart representations of different images.</span>
+
+<span class="sd">    The loss is computed using a contrastive learning approach:</span>
+<span class="sd">    1. For each image in a batch, two augmented views are created.</span>
+<span class="sd">    2. These views are passed through an encoder network to get embeddings.</span>
+<span class="sd">    3. The similarity between positive pairs (two views of the same image) is maximized.</span>
+<span class="sd">    4. The similarity between negative pairs (views from different images) is minimized.</span>
+
+<span class="sd">    The loss uses a temperature-scaled softmax function to compute the probability</span>
+<span class="sd">    of identifying the correct positive sample among the negative samples.</span>
+
+<span class="sd">    Key Components:</span>
+<span class="sd">    - Cosine similarity is used as the similarity metric between embeddings.</span>
+<span class="sd">    - A mask is used to identify and exclude self-comparisons from the negative samples.</span>
+<span class="sd">    - The loss is computed using cross-entropy between the similarity scores and the true labels.</span>
+
+<span class="sd">    Optimization Notes:</span>
+<span class="sd">    When using a batch size of 2048, use LARS as optimizer with a base learning rate of 0.5, </span>
+<span class="sd">    weight decay of 1e-6 and a temperature of 0.15.</span>
+<span class="sd">    When using a batch size of 256, use LARS as optimizer with base learning rate of 1.0, </span>
+<span class="sd">    weight decay of 1e-6 and a temperature of 0.15.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SimCLRLoss.__init__">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">world_size</span><span class="p">,</span> <span class="n">gpu</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">pairs_per_sample</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the SimCLRLoss module.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            batch_size (int): The number of samples in each batch.</span>
+<span class="sd">            world_size (int): The number of distributed processes.</span>
+<span class="sd">            gpu (torch.device): The GPU device to use.</span>
+<span class="sd">            temperature (float): A scaling factor for the cosine similarity.</span>
+<span class="sd">            pairs_per_sample (int, optional): Number of augmented pairs per sample. Defaults to 1.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            batch_size (int): The number of samples in each batch.</span>
+<span class="sd">            temperature (float): A scaling factor for the cosine similarity.</span>
+<span class="sd">            world_size (int): The number of distributed processes.</span>
+<span class="sd">            pairs_per_sample (int): Number of augmented pairs per sample.</span>
+<span class="sd">            mask (torch.Tensor): A boolean mask to exclude self-comparisons.</span>
+<span class="sd">            criterion (nn.CrossEntropyLoss): The loss function.</span>
+<span class="sd">            similarity_f (nn.CosineSimilarity): The similarity function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SimCLRLoss</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span> <span class="o">=</span> <span class="n">world_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_sample</span> <span class="o">=</span> <span class="n">pairs_per_sample</span> <span class="c1"># multiple pairs of augmentations per image, used for saccadenet</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_correlated_samples</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">world_size</span><span class="p">,</span> <span class="n">pairs_per_sample</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">gpu</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">similarity_f</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CosineSimilarity</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;SimCLRLoss(temperature=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="si">}</span><span class="s2">, batch_size=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="si">}</span><span class="s2">, world_size=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world_size</span><span class="si">}</span><span class="s2">, pairs_per_sample=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_sample</span><span class="si">}</span><span class="s2">), criterion=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="si">}</span><span class="s2">, similarity_f=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity_f</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="SimCLRLoss.mask_correlated_samples">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.mask_correlated_samples">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mask_correlated_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">world_size</span><span class="p">,</span> <span class="n">pairs_per_sample</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a mask to identify and exclude self-comparisons from negative samples.</span>
+
+<span class="sd">        This method generates a boolean mask that is used to exclude self-comparisons</span>
+<span class="sd">        and comparisons between augmented views of the same image when computing the</span>
+<span class="sd">        SimCLR loss.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            batch_size (int): The number of samples in each batch.</span>
+<span class="sd">            world_size (int): The number of distributed processes.</span>
+<span class="sd">            pairs_per_sample (int): Number of augmented pairs per sample.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: A boolean mask of shape (N, N), where N = 2 * pairs_per_sample * batch_size * world_size.</span>
+<span class="sd">                          True values indicate valid comparisons, while False values indicate</span>
+<span class="sd">                          self-comparisons or comparisons between augmented views of the same image.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The resulting mask is structured such that it can be used directly in the</span>
+<span class="sd">            SimCLR loss computation to select valid negative samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span> <span class="n">pairs_per_sample</span> <span class="o">*</span> <span class="n">batch_size</span> <span class="o">*</span> <span class="n">world_size</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="c1"># mask out any samples that are from the same image</span>
+        <span class="n">batch_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">*</span><span class="n">world_size</span><span class="p">,</span> <span class="n">pairs_per_sample</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_index</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">batch_index</span><span class="p">[:,</span><span class="n">ii</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">ii</span>
+        <span class="n">batch_index</span> <span class="o">=</span> <span class="n">batch_index</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">batch_index</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="n">batch_index</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mask</span></div>
+
+    
+<div class="viewcode-block" id="SimCLRLoss.compute_logits">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.compute_logits">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_logits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_i</span><span class="p">,</span> <span class="n">z_j</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the logits for the SimCLR loss.</span>
+
+<span class="sd">        This method calculates the similarity matrix between the two sets of feature vectors</span>
+<span class="sd">        (z_i and z_j) and prepares the logits for the contrastive loss computation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            z_i (torch.Tensor): The first set of feature vectors.</span>
+<span class="sd">            z_j (torch.Tensor): The second set of feature vectors.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: A tensor of shape (N, N+1) containing the logits for each sample.</span>
+<span class="sd">                          The first column contains the similarity with the positive sample,</span>
+<span class="sd">                          and the remaining columns contain similarities with negative samples.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method handles distributed training by gathering tensors across processes</span>
+<span class="sd">            when world_size &gt; 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_sample</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">z_i</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">GatherLayer</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">z_i</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">z_j</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">GatherLayer</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">z_j</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">z_i</span><span class="p">,</span> <span class="n">z_j</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span>
+
+        <span class="n">sim_i_j</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_sample</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span><span class="p">)</span>
+        <span class="n">sim_j_i</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_sample</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span><span class="p">)</span>
+
+        <span class="c1"># We have 2N samples, but with Distributed training every GPU gets N examples too, resulting in: 2xNxN</span>
+        <span class="n">positive_samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">sim_i_j</span><span class="p">,</span> <span class="n">sim_j_i</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">negative_samples</span> <span class="o">=</span> <span class="n">sim</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># this has been checked to be correct</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">positive_samples</span><span class="p">,</span> <span class="n">negative_samples</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">logits</span></div>
+
+
+<div class="viewcode-block" id="SimCLRLoss.forward">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_i</span><span class="p">,</span> <span class="n">z_j</span><span class="p">,</span> <span class="n">logits</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the SimCLR loss for the given feature representations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            z_i (torch.Tensor): The first set of feature representations.</span>
+<span class="sd">            z_j (torch.Tensor): The second set of feature representations.</span>
+<span class="sd">            logits (torch.Tensor, optional): Pre-computed logits. If None,</span>
+<span class="sd">                                             they will be computed using</span>
+<span class="sd">                                             the `compute_logits` method.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: A tuple containing:</span>
+<span class="sd">                - num_sim (float): The numerator term of the loss, representing</span>
+<span class="sd">                                   the similarity between positive pairs.</span>
+<span class="sd">                - num_entropy (float): The denominator term of the loss,</span>
+<span class="sd">                                       representing the entropy of the similarity</span>
+<span class="sd">                                       distribution.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This implementation treats all augmented examples within a minibatch,</span>
+<span class="sd">            except for the positive pair, as negative examples. This approach is</span>
+<span class="sd">            similar to that described in (Chen et al., 2017).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairs_per_sample</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span>
+        <span class="k">if</span> <span class="n">logits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_logits</span><span class="p">(</span><span class="n">z_i</span><span class="p">,</span> <span class="n">z_j</span><span class="p">)</span>
+        <span class="n">logits_num</span> <span class="o">=</span> <span class="n">logits</span>
+        <span class="n">logits_denum</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">num_sim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span> <span class="n">logits_num</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">N</span>
+        <span class="n">num_entropy</span> <span class="o">=</span> <span class="n">logits_denum</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">N</span>
+        <span class="k">return</span> <span class="n">num_sim</span><span class="p">,</span> <span class="n">num_entropy</span></div>
+
+    
+<div class="viewcode-block" id="SimCLRLoss.accuracy">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.SimCLRLoss.accuracy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_i</span><span class="p">,</span> <span class="n">z_j</span><span class="p">,</span> <span class="n">topks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">logits</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        similar to forward, but compute accuracy rather than loss, where accuracy is the number of</span>
+<span class="sd">        positive pairs that have a higher similarity than all negative pairs for a given image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">logits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_logits</span><span class="p">(</span><span class="n">z_i</span><span class="p">,</span> <span class="n">z_j</span><span class="p">)</span>
+        <span class="n">accuracies</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># compute top-k accuracy</span>
+        <span class="k">for</span> <span class="n">topk</span> <span class="ow">in</span> <span class="n">topks</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">topk</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">correct</span> <span class="o">=</span> <span class="p">(</span><span class="n">indices</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correct</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">logits</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">accuracies</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="VicRegLoss">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.VicRegLoss">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VicRegLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the VICReg (Variance-Invariance-Covariance Regularization) loss.</span>
+
+<span class="sd">    VICReg is a self-supervised learning method that learns representations by</span>
+<span class="sd">    enforcing invariance, variance, and covariance constraints on the embeddings.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        sim_coeff (float): Coefficient for the invariance (similarity) term.</span>
+<span class="sd">        std_coeff (float): Coefficient for the variance (standard deviation) term.</span>
+<span class="sd">        cov_coeff (float): Coefficient for the covariance term.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Recommended hyperparameters:</span>
+<span class="sd">        - For batch size 2048: LARS optimizer, base learning rate 0.5, weight decay 1e-4,</span>
+<span class="sd">          sim_coeff and std_coeff 25, cov_coeff 1.</span>
+<span class="sd">        - For batch size 256: LARS optimizer, base learning rate 1.5, weight decay 1e-4,</span>
+<span class="sd">          sim_coeff and std_coeff 25, cov_coeff 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VicRegLoss.__init__">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.VicRegLoss.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim_coeff</span><span class="p">,</span> <span class="n">std_coeff</span><span class="p">,</span> <span class="n">cov_coeff</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VicRegLoss</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_coeff</span> <span class="o">=</span> <span class="n">sim_coeff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">std_coeff</span> <span class="o">=</span> <span class="n">std_coeff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cov_coeff</span> <span class="o">=</span> <span class="n">cov_coeff</span></div>
+
+
+<div class="viewcode-block" id="VicRegLoss.forward">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.VicRegLoss.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_i</span><span class="p">,</span> <span class="n">z_j</span><span class="p">,</span> <span class="n">return_only_loss</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the VICReg loss.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            z_i (torch.Tensor): First set of embeddings.</span>
+<span class="sd">            z_j (torch.Tensor): Second set of embeddings.</span>
+<span class="sd">            return_only_loss (bool): If True, return only the total loss.</span>
+<span class="sd">                                     If False, return individual loss components.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            If return_only_loss is True:</span>
+<span class="sd">                torch.Tensor: The total VICReg loss.</span>
+<span class="sd">            If return_only_loss is False:</span>
+<span class="sd">                tuple: (total_loss, repr_loss, std_loss, cov_loss)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Repr Loss</span>
+        <span class="n">repr_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim_coeff</span> <span class="o">*</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">z_i</span><span class="p">,</span> <span class="n">z_j</span><span class="p">)</span>
+        <span class="n">std_loss</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">cov_loss</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="c1"># Std Loss z_i</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">gather_center</span><span class="p">(</span><span class="n">z_i</span><span class="p">)</span>
+        <span class="n">std_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.0001</span><span class="p">)</span>
+        <span class="n">std_loss</span> <span class="o">=</span> <span class="n">std_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_coeff</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">std_x</span><span class="p">))</span>
+        <span class="c1"># Cov Loss z_i</span>
+        <span class="n">cov_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">cov_loss</span> <span class="o">=</span> <span class="n">cov_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cov_coeff</span> <span class="o">*</span> <span class="n">off_diagonal</span><span class="p">(</span><span class="n">cov_x</span><span class="p">)</span><span class="o">.</span><span class="n">pow_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">z_i</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        
+        <span class="c1"># Std Loss z_j</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">gather_center</span><span class="p">(</span><span class="n">z_j</span><span class="p">)</span>
+        <span class="n">std_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.0001</span><span class="p">)</span>
+        <span class="n">std_loss</span> <span class="o">=</span> <span class="n">std_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_coeff</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">std_x</span><span class="p">))</span>
+        <span class="c1"># Cov Loss z_j</span>
+        <span class="n">cov_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">cov_loss</span> <span class="o">=</span> <span class="n">cov_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cov_coeff</span> <span class="o">*</span> <span class="n">off_diagonal</span><span class="p">(</span><span class="n">cov_x</span><span class="p">)</span><span class="o">.</span><span class="n">pow_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">z_j</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">std_loss</span> <span class="o">=</span> <span class="n">std_loss</span> <span class="o">/</span> <span class="mf">2.</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">std_loss</span> <span class="o">+</span> <span class="n">cov_loss</span> <span class="o">+</span> <span class="n">repr_loss</span>
+        <span class="k">if</span> <span class="n">return_only_loss</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">loss</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">repr_loss</span><span class="p">,</span> <span class="n">std_loss</span><span class="p">,</span> <span class="n">cov_loss</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BarlowTwinsLoss">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BarlowTwinsLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the Barlow Twins loss for self-supervised learning.</span>
+
+<span class="sd">    Barlow Twins aims to learn representations by maximizing the similarity between</span>
+<span class="sd">    distorted versions of a sample while reducing the redundancy between the components</span>
+<span class="sd">    of the representation vector.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        bn (nn.BatchNorm1d): Batch normalization layer for the embeddings.</span>
+<span class="sd">        lambd (float): Trade-off parameter for the off-diagonal elements.</span>
+<span class="sd">        batch_size (int): Batch size used in training.</span>
+<span class="sd">        world_size (int): Number of processes in distributed training.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BarlowTwinsLoss.__init__">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bn</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">world_size</span><span class="p">,</span> <span class="n">lambd</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BarlowTwinsLoss</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn</span> <span class="o">=</span> <span class="n">bn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambd</span> <span class="o">=</span> <span class="n">lambd</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span> <span class="o">=</span> <span class="n">world_size</span></div>
+
+
+<div class="viewcode-block" id="BarlowTwinsLoss.forward">
+<a class="viewcode-back" href="../../../api/foveation.utils.losses.html#foveation.utils.losses.BarlowTwinsLoss.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the Barlow Twins loss.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            z1 (torch.Tensor): First set of embeddings.</span>
+<span class="sd">            z2 (torch.Tensor): Second set of embeddings.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: The computed Barlow Twins loss.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># empirical cross-correlation matrix</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn</span><span class="p">(</span><span class="n">z2</span><span class="p">)</span>
+
+        <span class="c1"># sum the cross-correlation matrix between all gpus</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">div_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">all_reduce</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="n">on_diag</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">add_</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">pow_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">off_diag</span> <span class="o">=</span> <span class="n">off_diagonal</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">pow_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">on_diag</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambd</span> <span class="o">*</span> <span class="n">off_diag</span>
+        <span class="k">return</span> <span class="n">loss</span></div>
+</div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">off_diagonal</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract the off-diagonal elements of a square matrix.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (torch.Tensor): A 2D square tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: A 1D tensor containing the off-diagonal elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">==</span> <span class="n">m</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">gather_center</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gather tensors from all processes and center them.</span>
+
+<span class="sd">    This function is used in distributed training to collect tensors from all processes</span>
+<span class="sd">    and subtract the mean across all samples.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (torch.Tensor): Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Centered tensor gathered from all processes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">batch_all_gather</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">batch_all_gather</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gather tensors from all processes in distributed training.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (torch.Tensor): Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Tensor containing gathered data from all processes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x_list</span> <span class="o">=</span> <span class="n">GatherLayer</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">contiguous</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">x_list</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GatherLayer</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">Function</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Custom autograd function for gathering tensors from all processes.</span>
+
+<span class="sd">    This layer supports backward propagation for gradients across processes</span>
+<span class="sd">    in distributed training.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gather tensors from all processes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ctx: Context object for autograd.</span>
+<span class="sd">            x (torch.Tensor): Input tensor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: Tuple of gathered tensors from all processes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">get_world_size</span><span class="p">())]</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">all_gather</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="o">*</span><span class="n">grads</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Backward pass for the gather operation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ctx: Context object for autograd.</span>
+<span class="sd">            *grads: Gradients from the subsequent layer.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Gradient for the input of the forward pass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_gradients</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">grads</span><span class="p">)</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">all_reduce</span><span class="p">(</span><span class="n">all_gradients</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">all_gradients</span><span class="p">[</span><span class="n">dist</span><span class="o">.</span><span class="n">get_rank</span><span class="p">()]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.sensing.manifold &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.sensing.policies" href="foveation.sensing.policies.html" />
+    <link rel="prev" title="foveation.sensing.coords" href="foveation.sensing.coords.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="foveation.sensing.html">foveation.sensing package</a></li>
+      <li class="breadcrumb-item active">foveation.sensing.manifold</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.sensing.manifold.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.sensing.manifold">
+<span id="foveation-sensing-manifold"></span><h1>foveation.sensing.manifold<a class="headerlink" href="#module-foveation.sensing.manifold" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.sensing.manifold.</span></span><span class="sig-name descname"><span class="pre">CorticalSensorManifold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>3-D cortical sensor manifold based on Rovamu and Virsu (1984) (see also Motter (2009)).
+Relevant coordinate systems:</p>
+<blockquote>
+<div><p>(x, y) -&gt; visual cartesian coordiantes
+(r,     heta) -&gt; visual polar coordinates
+(</p>
+</div></blockquote>
+<dl class="simple">
+<dt>ho, z, phi) -&gt; cortical cylindrical coordinates</dt><dd><p>(x, y, z) -&gt; cortical cartesian coordinates</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmf_a</strong> – a parameter in cortical magnification function (CMF)</p></li>
+<li><p><strong>fov</strong> – visual field size in degrees</p></li>
+<li><p><strong>k</strong> – scaling factor that gives a good match to cortical mm.</p></li>
+</ul>
+</dd>
+</dl>
+<p>cortical magnification is given by: k/(cmf_a + eccentricity)
+due to our choice of magnification function, this is essentially a 3d extension of the complex logarithmic map (Schwartz, 1980), where both preserve local isotropy
+unlike the Schwartz (1980) model, our 3D version also preserves global/meridional isotropy, since there is no warping due to flattening</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.m">
+<span class="sig-name descname"><span class="pre">m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.m" title="Link to this definition"></a></dt>
+<dd><p>cortical magnification as a function of eccentricity r</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.rho_3d">
+<span class="sig-name descname"><span class="pre">rho_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.rho_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.rho_3d" title="Link to this definition"></a></dt>
+<dd><p>compute cortical radius in 3d cylindrical coordinates: m(r)*sin(r)
+it is somewhat confusing from the equation, but the units are mm rather than mm/rad
+this is because there is a left over radian term from the derivation
+r=m(r)*sin(r)*d heta/dphi. While d     heta and dphi cancel out, d    heta is is radians while dphi is unitless.
+dphi is unitless because it is part of an infinitesimal distance r*dphi along the cortical surface that is in units mm. r keeps the mm units and dphi is unitless.
+We use m(r) in mm/deg: thus m(r)*sin(r) -&gt; mm*rad/deg, so we convert to mm by multiplying by 180 deg/pi rad.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.phi_3d">
+<span class="sig-name descname"><span class="pre">phi_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.phi_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.phi_3d" title="Link to this definition"></a></dt>
+<dd><p>cortical phi in 3d cylindrical coordinates. phi=       heta (theta is visual polar angle)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.dm_dr">
+<span class="sig-name descname"><span class="pre">dm_dr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.dm_dr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.dm_dr" title="Link to this definition"></a></dt>
+<dd><p>derivative of cortical magnification function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.drho_dr">
+<span class="sig-name descname"><span class="pre">drho_dr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.drho_dr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.drho_dr" title="Link to this definition"></a></dt>
+<dd><p>derivative of cortical radius in 3d cylindrical coordinates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.z_integrand">
+<span class="sig-name descname"><span class="pre">z_integrand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.z_integrand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.z_integrand" title="Link to this definition"></a></dt>
+<dd><p>integrand for cortical z in 3d cylindrical coordinates.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.z_3d">
+<span class="sig-name descname"><span class="pre">z_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.z_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.z_3d" title="Link to this definition"></a></dt>
+<dd><p>cortical z in 3d cylindrical coordinates computed with numerical integration via interpolation of precomputed values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.map_3d">
+<span class="sig-name descname"><span class="pre">map_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.map_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.map_3d" title="Link to this definition"></a></dt>
+<dd><p>map cartesian (x,y) coordinates to 3D cortical cylindrical coordinates (r,z,phi)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.map_to_xyz">
+<span class="sig-name descname"><span class="pre">map_to_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_z_phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.map_to_xyz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.map_to_xyz" title="Link to this definition"></a></dt>
+<dd><p>map 3d cortical cylindrical coordinates to cortical cartesian coordinates for plotting convenience</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.normalize_coords">
+<span class="sig-name descname"><span class="pre">normalize_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.normalize_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.normalize_coords" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.cort_cartesian_to_cort_cylindrical">
+<span class="sig-name descname"><span class="pre">cort_cartesian_to_cort_cylindrical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_y_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.cort_cartesian_to_cort_cylindrical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.cort_cartesian_to_cort_cylindrical" title="Link to this definition"></a></dt>
+<dd><p>map cortical cartesian coordinates to cortical cylindrical coordinates for reverse mapping</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.vis_cartesian_to_cort_cartesian">
+<span class="sig-name descname"><span class="pre">vis_cartesian_to_cort_cartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.vis_cartesian_to_cort_cartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.vis_cartesian_to_cort_cartesian" title="Link to this definition"></a></dt>
+<dd><p>map visual cartesian coordinates to cortical cartesian coordinates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.r_from_z">
+<span class="sig-name descname"><span class="pre">r_from_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.r_from_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.r_from_z" title="Link to this definition"></a></dt>
+<dd><p>Use a numerical root-finding method to determine eccentricity from the cortical z coordinate</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.r_from_phi">
+<span class="sig-name descname"><span class="pre">r_from_phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.r_from_phi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.r_from_phi" title="Link to this definition"></a></dt>
+<dd><p>Use a numerical root-finding method to determine eccentricity from the cortical phi coordinate</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.cylindrical_to_visual_polar">
+<span class="sig-name descname"><span class="pre">cylindrical_to_visual_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_z_phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.cylindrical_to_visual_polar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.cylindrical_to_visual_polar" title="Link to this definition"></a></dt>
+<dd><p>reverse map from cortical cylindrical coordinates to visual polar coordinates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.init_visual_mesh">
+<span class="sig-name descname"><span class="pre">init_visual_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.init_visual_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.init_visual_mesh" title="Link to this definition"></a></dt>
+<dd><p>initialize a grid of visual points to specify the bounds of the 3d mesh</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.init_cortical_mesh">
+<span class="sig-name descname"><span class="pre">init_cortical_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_pts_3d_xyz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.init_cortical_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.init_cortical_mesh" title="Link to this definition"></a></dt>
+<dd><p>initialize a 3d mesh of cortical points</p>
+<p>this is not evenly-spaced enough to be useful, but we keep it around for reference</p>
+<p>we might be able to do a better job of equal sampling directly in cortical space</p>
+<p>for now, we rely on isotropic sampling in visual space, and use the cortical space for receptive field sampling</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.reverse_map">
+<span class="sig-name descname"><span class="pre">reverse_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_points_xyz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.reverse_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.reverse_map" title="Link to this definition"></a></dt>
+<dd><p>reverse map from cortical cartesian coordinates to visual cartesian and polar coordinates</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.vis_cartesian_to_cortical_cartesian_coords">
+<span class="sig-prename descclassname"><span class="pre">foveation.sensing.manifold.</span></span><span class="sig-name descname"><span class="pre">vis_cartesian_to_cortical_cartesian_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cartesian_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#vis_cartesian_to_cortical_cartesian_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.vis_cartesian_to_cortical_cartesian_coords" title="Link to this definition"></a></dt>
+<dd><p>Map visual cartesian coordinates to 3d cortical cartesian coordinates using the 3D cortical model.
+We use this when coordinates are sampled elsewhere, and we want to map them into the 3d model for receptive field sampling.
+This is the main function we use to implement the cortical sensor manifold, in combination with isotropically magnified visual field sampling</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.vis_cartesian_to_cortical_cylindrical">
+<span class="sig-prename descclassname"><span class="pre">foveation.sensing.manifold.</span></span><span class="sig-name descname"><span class="pre">vis_cartesian_to_cortical_cylindrical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cartesian_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#vis_cartesian_to_cortical_cylindrical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.vis_cartesian_to_cortical_cylindrical" title="Link to this definition"></a></dt>
+<dd><p>map visual cartesian coordinates to cortical cylindrical coordinates using the 3D cortical model.
+We use this when coordinates are sampled elsewhere, and we want to map them into the 3D model for receptive field sampling.
+Not usually used, since the cortical cartesian coordinates are more useful typically</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.sensing.manifold.cortical_cylindrical_to_cortical_cartesian">
+<span class="sig-prename descclassname"><span class="pre">foveation.sensing.manifold.</span></span><span class="sig-name descname"><span class="pre">cortical_cylindrical_to_cortical_cartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_z_phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#cortical_cylindrical_to_cortical_cartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.cortical_cylindrical_to_cortical_cartesian" title="Link to this definition"></a></dt>
+<dd><p>map cortical cylindrical coordinates to cortical cartesian coordinates</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="foveation.sensing.coords.html" class="btn btn-neutral float-left" title="foveation.sensing.coords" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.sensing.policies.html" class="btn btn-neutral float-right" title="foveation.sensing.policies" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

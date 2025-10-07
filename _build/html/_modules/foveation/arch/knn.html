@@ -1,0 +1,982 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.arch.knn &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.arch.knn</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.arch.knn</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">einops</span><span class="w"> </span><span class="kn">import</span> <span class="n">rearrange</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial</span><span class="w"> </span><span class="kn">import</span> <span class="n">Delaunay</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..sensing.coords</span><span class="w"> </span><span class="kn">import</span> <span class="n">SamplingCoords</span><span class="p">,</span> <span class="n">auto_match_num_coords</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalize</span><span class="p">,</span> <span class="n">add_to_all</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="KNNBaseLayer">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNBaseLayer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class implementing basic KNN functionalities for foveated vision.</span>
+<span class="sd">    </span>
+<span class="sd">    This class provides the foundation for KNN-based operations in foveated neural networks,</span>
+<span class="sd">    including distance computation in both visual and cortical spaces.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="KNNBaseLayer._compute_distances">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_distances">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute distances between input and output coordinates in visual or cortical space.</span>
+<span class="sd">        </span>
+<span class="sd">        This method supports multiple distance computation strategies:</span>
+<span class="sd">        - Euclidean distances in visual space (interesting baseline)</span>
+<span class="sd">        - Euclidean distances in cortical space (most typical -- fast and bio-plausible)</span>
+<span class="sd">        - Geodesic distances on cortical surface (slower, more ideal, but very well approximated by euclidean for typical small local RFs, so not typically necessary. we tend to use it for ViTs where there are fewer coordinates with larger kernels and only one KNNConv, but not for CNNs where there are many layers of KNNConvs and more coordinates with smaller kernels.)</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Distance matrix between input and output coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span> <span class="o">==</span> <span class="s1">&#39;geodesic&#39;</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">pygeodesic.geodesic</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">geodesic</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># multiple of k nearest euclidean neighbors to consider for geodesic distance computation. speeds things up substantially. works well because euclidean is a good local approximation. </span>
+            <span class="n">num_neighbors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">*</span><span class="n">m</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords_cart</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cartesian</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cartesian_pad_coords</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cortical</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cortical_pad_coords</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">out_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="o">.</span><span class="n">cortical</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+
+            <span class="c1"># compute euclidean distances between all input and output units</span>
+            <span class="n">D_euc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">)</span>
+
+            <span class="n">D_init</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">inf</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">D_euc</span><span class="p">)</span>
+
+            <span class="c1"># iterate over output units and compute geodesic distances to the m*k nearest euclidean neighbors</span>
+            <span class="n">all_dists</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">all_indices</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="n">source_idx</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">target_points</span> <span class="o">=</span> <span class="n">D_euc</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">num_neighbors</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">indices</span>
+                <span class="n">tri</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_coords_cart</span><span class="p">[</span><span class="n">target_points</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+                <span class="n">F</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">simplices</span>  <span class="c1"># shape: [M, 3]</span>
+                <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="p">[</span><span class="n">target_points</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span> <span class="c1"># [N, 3]  3D positions</span>
+                <span class="n">algorithm</span> <span class="o">=</span> <span class="n">geodesic</span><span class="o">.</span><span class="n">PyGeodesicAlgorithmExact</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span>
+                <span class="n">dists</span> <span class="o">=</span> <span class="n">algorithm</span><span class="o">.</span><span class="n">geodesicDistances</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">all_dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">all_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_points</span><span class="p">)</span>
+                <span class="n">D_init</span><span class="p">[</span><span class="n">target_points</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">D_euc</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">D_euc</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="n">distances</span> <span class="o">=</span> <span class="n">D_init</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">wrap_row</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords_cart</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cartesian</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cartesian_pad_coords</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">out_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="o">.</span><span class="n">cortical</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;image&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cortical</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span> <span class="c1"># not bothering with pad coords here</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">out_coords</span> <span class="o">=</span> <span class="p">(</span><span class="n">out_coords</span> <span class="o">-</span> <span class="n">out_coords</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">out_coords</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">out_coords</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">wrap_row</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;image&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cortical</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cortical_pad_coords</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cartesian</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cartesian_pad_coords</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">out_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="o">.</span><span class="n">cartesian</span>
+
+            <span class="k">if</span> <span class="n">wrap_row</span><span class="p">:</span>
+                <span class="c1"># for log polar image cortical distances, we wrap along the row dimension (angles)</span>
+                <span class="n">row_dists</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">out_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">col_dists</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">out_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">max_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                <span class="n">mid_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_row</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="o">/</span><span class="mi">2</span>
+                <span class="n">wrap_inds</span> <span class="o">=</span> <span class="n">col_dists</span> <span class="o">&gt;</span> <span class="n">mid_row</span>
+                <span class="n">col_dists</span><span class="p">[</span><span class="n">wrap_inds</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_row</span> <span class="o">-</span> <span class="n">col_dists</span><span class="p">[</span><span class="n">wrap_inds</span><span class="p">]</span>
+                <span class="n">distances</span> <span class="o">=</span> <span class="p">(</span><span class="n">row_dists</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">col_dists</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">distances</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">distances</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="KNNPoolingLayer">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNPoolingLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">KNNBaseLayer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    K-Nearest Neighbors pooling layer for foveated vision.</span>
+<span class="sd">    </span>
+<span class="sd">    This layer performs pooling operations over k-nearest neighbors in either</span>
+<span class="sd">    visual or cortical space, supporting various pooling modes.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        k (int): Number of nearest neighbors to consider.</span>
+<span class="sd">        in_coords (SamplingCoords): Input sampling coordinates object.</span>
+<span class="sd">        out_coords (SamplingCoords): Output sampling coordinates object.</span>
+<span class="sd">        mode (str): Pooling mode (&#39;max&#39;, &#39;avg&#39;, &#39;sum&#39;, &#39;gaussian&#39;).</span>
+<span class="sd">        device (str): PyTorch device to run on.</span>
+<span class="sd">        sample_cortex (bool or str): Whether/how to sample cortical space:</span>
+<span class="sd">            - False: Sample visual field</span>
+<span class="sd">            - True: Sample cortical space using Euclidean distances (fast, approximate)</span>
+<span class="sd">            - &#39;geodesic&#39;: Sample cortical space using geodesic distances (slower, more accurate)</span>
+<span class="sd">        gauss_sigma (float): sigma for mode=&#39;gaussian&#39; pooling; not used for other modes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="KNNPoolingLayer.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">sample_cortex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gauss_sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span> <span class="o">=</span> <span class="n">in_coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span> <span class="o">=</span> <span class="n">out_coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;avg&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span> <span class="o">=</span> <span class="n">sample_cortex</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_coords</span><span class="p">,</span> <span class="n">SamplingCoords</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out_coords</span><span class="p">,</span> <span class="n">SamplingCoords</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="c1"># ensure k is not greater than the number of input coordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="c1"># compute distances in visual or cortical space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_distances</span><span class="p">()</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># k+1 to exclude self</span>
+
+        <span class="c1"># compute padding mask for use at inference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_pad_token_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_mask</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_pad_token_val</span> <span class="c1"># pad index</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gauss_sigma</span> <span class="o">=</span> <span class="n">gauss_sigma</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gaussian_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_gaussian_weights</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="KNNPoolingLayer._compute_gaussian_weights">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer._compute_gaussian_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_gaussian_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute Gaussian weights for local pooling based on distances between </span>
+<span class="sd">        output nodes and their input neighbors.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            sigma (float): Standard deviation of Gaussian kernel</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Gaussian weights of shape (k, num_output_nodes)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the distances for the k nearest neighbors</span>
+        <span class="n">k_distances</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">,</span> 
+            <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+            <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span>
+        <span class="p">)</span>  <span class="c1"># Shape: (k, num_output_nodes)</span>
+
+        <span class="c1"># Normalize over each neighborhood</span>
+        <span class="n">k_distances</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">k_distances</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Compute Gaussian weights: exp(-distance^2 / (2 * sigma^2))</span>
+        <span class="n">gaussian_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k_distances</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauss_sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        
+        <span class="c1"># Normalize weights so they sum to 1 for each output node</span>
+        <span class="n">gaussian_weights</span> <span class="o">=</span> <span class="n">gaussian_weights</span> <span class="o">/</span> <span class="p">(</span><span class="n">gaussian_weights</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">gaussian_weights</span></div>
+
+
+<div class="viewcode-block" id="KNNPoolingLayer.forward">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_l</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply KNN pooling to input features.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X_l (torch.Tensor): Input features of shape [batch_size, channels, num_nodes].</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Pooled features of shape [batch_size, channels, num_output_nodes].</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pad X_l with a single nan-value that will be indexed by padding units</span>
+        <span class="n">X_l</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X_l</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nan</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X_l</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_l</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">X_l</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">X_l</span><span class="o">.</span><span class="n">dtype</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Gather the k neighbors&#39; features for each node in layer l+1</span>
+        <span class="n">batch_size</span><span class="p">,</span> <span class="n">d_l</span><span class="p">,</span> <span class="n">N_l</span> <span class="o">=</span> <span class="n">X_l</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">N_l_plus_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">X_l</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">d_l</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="n">knn_features</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">d_l</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">,</span> <span class="n">N_l_plus_1</span><span class="p">)</span>
+
+        <span class="c1"># do pooling over the k neighbors, ignoring nans from the padding units</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;avg&#39;</span><span class="p">:</span>
+            <span class="n">X_out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">knn_features</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span>
+            <span class="n">knn_features</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">knn_features</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+            <span class="n">X_out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">knn_features</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;sum&#39;</span><span class="p">:</span>
+            <span class="n">X_out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">knn_features</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">:</span>
+            <span class="c1"># Apply Gaussian weighting: weighted average with Gaussian weights</span>
+            <span class="c1"># knn_features shape: (batch_size, d_l, k, N_l_plus_1)</span>
+            <span class="c1"># gaussian_weights shape: (k, N_l_plus_1)</span>
+
+            <span class="c1"># Handle NaN values by setting them to 0 and adjusting weights</span>
+            <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">knn_features</span><span class="p">)</span>
+            <span class="n">knn_features_clean</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">knn_features</span><span class="p">),</span> <span class="n">knn_features</span><span class="p">)</span>
+            
+            <span class="c1"># Adjust weights for NaN positions (set to 0)</span>
+            <span class="n">adjusted_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gaussian_weights</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># (1, 1, k, N_l_plus_1)</span>
+            <span class="n">adjusted_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">adjusted_weights</span><span class="p">),</span> <span class="n">adjusted_weights</span><span class="p">)</span>
+            
+            <span class="c1"># Renormalize weights after removing NaN contributions</span>
+            <span class="n">weight_sums</span> <span class="o">=</span> <span class="n">adjusted_weights</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># (batch_size, d_l, 1, N_l_plus_1)</span>
+            <span class="n">adjusted_weights</span> <span class="o">=</span> <span class="n">adjusted_weights</span> <span class="o">/</span> <span class="p">(</span><span class="n">weight_sums</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>
+            
+            <span class="c1"># Compute weighted average</span>
+            <span class="n">X_out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">knn_features_clean</span> <span class="o">*</span> <span class="n">adjusted_weights</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pooling style </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span>
+                
+        <span class="k">return</span> <span class="n">X_out</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;KNNPoolingLayer(</span><span class="se">\n\t</span><span class="s1">mode=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">k=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">in_coords=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">out_coords=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">sample_cortex=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span><span class="si">}</span><span class="se">\n</span><span class="s1">)&#39;</span></div>
+
+    
+
+<div class="viewcode-block" id="KNNConvLayer">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNConvLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">KNNBaseLayer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    K-Nearest Neighbors convolution layer for foveated vision.</span>
+<span class="sd">    </span>
+<span class="sd">    This layer performs convolution operations over k-nearest neighbors in either</span>
+<span class="sd">    visual or cortical space, with learnable filters aligned to spatial kernels.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        in_channels (int): Number of input channels.</span>
+<span class="sd">        out_channels (int): Number of output channels.</span>
+<span class="sd">        k (int): Number of nearest neighbors to consider.</span>
+<span class="sd">        in_coords (SamplingCoords): Input sampling coordinates object.</span>
+<span class="sd">        out_coords (SamplingCoords): Output sampling coordinates object.</span>
+<span class="sd">        device (str): PyTorch device to run on.</span>
+<span class="sd">        arch_flag (str): Architecture flag for reference coordinate computation.</span>
+<span class="sd">        sample_cortex (bool): Whether to sample cortical space.</span>
+<span class="sd">        bias (bool): Whether to use bias in convolution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="KNNConvLayer.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> 
+                 <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> 
+                 <span class="n">arch_flag</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                 <span class="n">sample_cortex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">ref_frame_side_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">=</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">=</span> <span class="n">out_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span> <span class="o">=</span> <span class="n">in_coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span> <span class="o">=</span> <span class="n">out_coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arch_flag</span> <span class="o">=</span> <span class="n">arch_flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span> <span class="o">=</span> <span class="n">sample_cortex</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_frame_side_length</span> <span class="o">=</span> <span class="n">ref_frame_side_length</span> <span class="c1"># if we want to specify manually</span>
+        
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_coords</span><span class="p">,</span> <span class="n">SamplingCoords</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out_coords</span><span class="p">,</span> <span class="n">SamplingCoords</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="c1"># ensure k is not greater than the number of input coordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="c1"># compute distances in visual or cortical space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_distances</span><span class="p">()</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># k+1 to exclude self</span>
+
+        <span class="c1"># compute padding mask for use at inference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_mask</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># pad index</span>
+
+        <span class="c1"># this will be updated to the correct size for a batch to be used for batches of the same size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_batch_cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span>
+
+        <span class="c1"># compute reference coordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_reference_coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arch_flag</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_conv_like</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_local_rf</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="KNNConvLayer._init_conv_like">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer._init_conv_like">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_conv_like</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize convolution-like parameters for the KNN layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># define the conv in terms of the reference coordinates</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">kaiming_normal_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize bias if requested</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;bias&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias_param</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias_param</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="KNNConvLayer._pad_and_gather_knns">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer._pad_and_gather_knns">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pad_and_gather_knns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_l</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pad input features and gather KNN features.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X_l (torch.Tensor): Input features.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Gathered KNN features.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Pad with zeros for padding units</span>
+        <span class="n">X_l_padded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X_l</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X_l</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_l</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">X_l</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">X_l</span><span class="o">.</span><span class="n">dtype</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Gather KNN features</span>
+        <span class="n">batch_size</span><span class="p">,</span> <span class="n">d_l</span><span class="p">,</span> <span class="n">N_l</span> <span class="o">=</span> <span class="n">X_l</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">N_l_plus_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">X_l_padded</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">d_l</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="n">knn_features</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">d_l</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">,</span> <span class="n">N_l_plus_1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">knn_features</span></div>
+
+
+<div class="viewcode-block" id="KNNConvLayer._apply_local_rf">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer._apply_local_rf">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_local_rf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_features</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reweights features according to local receptive field (i.e., kernel mapping to align KNNs and reference kernel)</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            knn_features (torch.Tensor): KNN features tensor to process</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Processed features after applying local receptive field</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_rf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">knn_features</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">knn_features</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="c1"># new einsum approach</span>
+        <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">knn_features</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_rf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="c1"># the permute makes einsum faster</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">knn_features</span><span class="p">,</span> <span class="s1">&#39;b d k n -&gt; (b d) n k&#39;</span><span class="p">)</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ank,nkv-&gt;anv&#39;</span><span class="p">,</span> <span class="n">knn_features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_rf</span><span class="p">)</span>
+                    
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">knn_features</span><span class="p">,</span> <span class="s1">&#39;(b d) n v -&gt; b n (d v)&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">knn_features</span> <span class="c1"># (batch, num_coords, k*d_l)</span></div>
+
+    
+<div class="viewcode-block" id="KNNConvLayer._apply_local_rf_to_weights">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer._apply_local_rf_to_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_local_rf_to_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reweight convolutional weights according to local receptive field (i.e kernel mapping to align KNNs and reference kernel)</span>
+
+<span class="sd">        Only used for visualization purposes; in the forward pass, we apply the local_rf to the KNN features instead</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="s1">&#39;d (c v) -&gt; d c v&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ref_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;dcv,nkv-&gt;ncdk&#39;</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_rf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weights</span> <span class="c1"># (neighborhoods, in_channels, out_channels, neighbors)</span></div>
+
+
+<div class="viewcode-block" id="KNNConvLayer.forward">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_l</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply convolution using k-nearest neighbors.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X_l: Node features from layer l [batch, d_l, N_l]</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            X_out: Node features from layer l+1 [batch, d_l+1, N_l+1]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pad_and_gather_knns</span><span class="p">(</span><span class="n">X_l</span><span class="p">)</span>
+
+        <span class="c1"># apply local RF.  shape: [batch, d_l, k, num_coords] -&gt; [batch, d_l, v, n], where v is the number of reference coordinates</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_local_rf</span><span class="p">(</span><span class="n">knn_features</span><span class="p">)</span>
+        
+        <span class="c1"># Apply the shared linear transformation to map to d_l+1 features</span>
+        <span class="n">X_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">knn_features</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Shape: [batch, d_l+1, num_coords]</span>
+        
+        <span class="k">return</span> <span class="n">X_out</span></div>
+
+
+<div class="viewcode-block" id="KNNConvLayer.compute_reference_coords">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer.compute_reference_coords">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_reference_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arch_flag</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute reference coordinates for the convolution kernel.</span>
+<span class="sd">        </span>
+<span class="sd">        The reference coordinates define the shape of the convolution kernel and can be:</span>
+<span class="sd">        - A square grid matching the KNN size</span>
+<span class="sd">        - A circular grid matching the KNN size </span>
+<span class="sd">        - The first neighborhood of coordinates (foveal reference)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            arch_flag (str): Architecture flag indicating reference coordinate style. Checks for containing:</span>
+<span class="sd">                - &#39;fovref&#39;: Use first neighborhood as reference (not typically used)</span>
+<span class="sd">                - &#39;circref&#39;: Use circular reference grid (not typically used)</span>
+<span class="sd">                - &#39;doubleres&#39;: Double the resolution of reference grid (smoother alignment)</span>
+<span class="sd">            - default: Use square reference grid of same total number of elemenets as the neighborhood </span>
+<span class="sd">        Sets:</span>
+<span class="sd">            self.ref_coords (torch.Tensor): Reference coordinates tensor of shape [num_ref_coords, 2]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_frame_side_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">arch_flag</span><span class="p">),</span> <span class="s1">&#39;self.ref_frame_side_length is incompatible with use of arch_flag&#39;</span>
+            <span class="n">side_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_frame_side_length</span>
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">side_length</span><span class="p">)</span>
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ref_coords</span><span class="p">,</span> <span class="n">ref_coords</span><span class="p">)</span>
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">ref_coords</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;fovref&#39;</span> <span class="ow">in</span> <span class="n">arch_flag</span><span class="p">:</span>
+            <span class="c1"># use the first neighborhood as the reference grid</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Cannot use fovref with cortex&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ref_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">cartesian</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]]</span>
+
+            <span class="k">assert</span> <span class="s1">&#39;doubleres&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arch_flag</span><span class="p">,</span> <span class="s1">&#39;doubleres not supported for fovref&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;circref&#39;</span> <span class="ow">in</span> <span class="n">arch_flag</span><span class="p">:</span>
+            <span class="c1"># circular reference grid of similar size to the KNN graph</span>
+            <span class="c1"># try to match area of the circle with a square of side length sqrt(k)</span>
+            <span class="c1"># set pi*r2 = k -&gt; r = sqrt(k/pi) -&gt; s_new = 2*r = 2*sqrt(k/pi)</span>
+            <span class="n">side_length</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="s1">&#39;doubleres&#39;</span> <span class="ow">in</span> <span class="n">arch_flag</span><span class="p">:</span>
+                <span class="n">side_length</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">side_length</span>
+
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">side_length</span><span class="p">)</span>
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ref_coords</span><span class="p">,</span> <span class="n">ref_coords</span><span class="p">)</span>
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">ref_coords</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">ref_coords</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ref_coords</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># square reference grid of similar size to the KNN graph</span>
+            <span class="n">side_length</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">))</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="s1">&#39;doubleres&#39;</span> <span class="ow">in</span> <span class="n">arch_flag</span><span class="p">:</span>
+                <span class="n">side_length</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">side_length</span>
+
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">side_length</span><span class="p">)</span>
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ref_coords</span><span class="p">,</span> <span class="n">ref_coords</span><span class="p">)</span>
+            <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">ref_coords</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_coords</span> <span class="o">=</span> <span class="n">ref_coords</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="KNNConvLayer.compute_local_rf">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNConvLayer.compute_local_rf">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_local_rf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute local receptive field weights for each output coordinate.</span>
+<span class="sd">        </span>
+<span class="sd">        This method computes the mapping between input KNN coordinates and reference coordinates</span>
+<span class="sd">        to determine how each input point contributes to the output. The weights are computed</span>
+<span class="sd">        using either:</span>
+<span class="sd">        - Nearest neighbor mapping (&#39;nnmap&#39; in arch_flag)</span>
+<span class="sd">        - Inverse distance weighted softmax (default)</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            eps (float, optional): Small constant for numerical stability. Defaults to 1e-6.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Local receptive field weights of shape [n_out, k, n_ref] where:</span>
+<span class="sd">                - n_out is number of output coordinates</span>
+<span class="sd">                - k is number of nearest neighbors</span>
+<span class="sd">                - n_ref is number of reference coordinates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># get all KNN coordinates</span>
+        <span class="n">knn_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span><span class="p">:</span>
+            <span class="n">out_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="o">.</span><span class="n">cortical</span>
+            <span class="n">out_coords_cart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="o">.</span><span class="n">cartesian</span>
+
+            <span class="c1"># make sure the RFs are aligned in cartesian space</span>
+            <span class="n">knn_coords_cart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_coords_cart</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span><span class="p">]</span>
+            <span class="n">tmp_theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">knn_coords_cart</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">out_coords_cart</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">knn_coords_cart</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">out_coords_cart</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#.squeeze()</span>
+            <span class="n">tmp_r</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">knn_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">tmp_r_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">out_coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">knn_coords</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">tmp_r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp_r_</span><span class="p">)</span>
+            <span class="n">tmp_r</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">tmp_r</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">tmp_r</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># only used for PartitioningPatchEmbedding, where we pad with non-padding units to fill neighborhoods to a standard size</span>
+            <span class="n">knn_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">tmp_r</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">tmp_theta</span><span class="p">),</span> <span class="n">tmp_r</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">tmp_theta</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># normalize KNN coords to -1,1 within each neighborhood</span>
+        <span class="n">knn_coords_min</span> <span class="o">=</span> <span class="n">knn_coords</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">knn_coords_max</span> <span class="o">=</span> <span class="n">knn_coords</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_coords</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">knn_coords</span> <span class="o">-</span> <span class="n">knn_coords_min</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">knn_coords_max</span> <span class="o">-</span> <span class="n">knn_coords_min</span> <span class="o">+</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># compute distance between KNN coords and reference coords</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_coords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_coords</span><span class="p">)</span> <span class="c1"># (k, n_out, n_ref)</span>
+        
+        <span class="c1"># compute weights as softmax over inverse distances: this weights according to inverse distance and ensures they sum to 1</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="s1">&#39;nnmap&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arch_flag</span><span class="p">:</span>
+            <span class="c1"># map the nearest neighbor on the reference grid to the output unit</span>
+            <span class="n">local_rf</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+            <span class="n">nn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span>
+            <span class="n">local_rf</span><span class="o">.</span><span class="n">scatter_</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">local_rf</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">distances</span> <span class="o">+</span> <span class="n">eps</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span>
+
+        <span class="n">local_rf</span> <span class="o">=</span> <span class="n">local_rf</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># (n_out, k, n_ref)</span>
+
+        <span class="k">return</span> <span class="n">local_rf</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;KNNConvLayer(</span><span class="se">\n\t</span><span class="s1">in_channels=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">out_channels=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">k=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">in_coords=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">out_coords=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">sample_cortex=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span><span class="si">}</span><span class="se">\n</span><span class="s1">)&#39;</span></div>
+
+    
+
+<div class="viewcode-block" id="KNNDepthwiseSeparableConvLayer">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseSeparableConvLayer">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNDepthwiseSeparableConvLayer</span><span class="p">(</span><span class="n">KNNConvLayer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Depthwise separable KNN convolution layer for foveated vision.</span>
+<span class="sd">    </span>
+<span class="sd">    This layer implements depthwise separable convolution over k-nearest neighbors,</span>
+<span class="sd">    which reduces computational complexity compared to standard KNN convolution.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        in_channels (int): Number of input channels.</span>
+<span class="sd">        out_channels (int): Number of output channels.</span>
+<span class="sd">        k (int): Number of nearest neighbors to consider.</span>
+<span class="sd">        in_coords (SamplingCoords): Input sampling coordinates object.</span>
+<span class="sd">        out_coords (SamplingCoords): Output sampling coordinates object.</span>
+<span class="sd">        device (str): PyTorch device to run on.</span>
+<span class="sd">        arch_flag (str): Architecture flag for reference coordinate computation.</span>
+<span class="sd">        sample_cortex (bool): Whether to sample cortical space.</span>
+<span class="sd">        bias (bool): Whether to use bias in convolution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="KNNDepthwiseSeparableConvLayer.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseSeparableConvLayer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> 
+                 <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> 
+                 <span class="n">arch_flag</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                 <span class="n">sample_cortex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="p">):</span>
+     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> 
+                 <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> 
+                 <span class="n">arch_flag</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                 <span class="n">sample_cortex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">arch_flag</span><span class="p">,</span> <span class="n">sample_cortex</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;out_channels must be divisible by in_channels for depthwise conv&#39;</span>
+
+        <span class="c1"># depthwise conv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dw_conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="o">//</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">))</span>
+
+        <span class="c1"># pointwise conv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize like conv layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_depthwise_separable_conv_like</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="KNNDepthwiseSeparableConvLayer._init_depthwise_separable_conv_like">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseSeparableConvLayer._init_depthwise_separable_conv_like">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_depthwise_separable_conv_like</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize depthwise separable conv like conv layers&quot;&quot;&quot;</span>
+        <span class="c1"># Initialize depthwise conv like a conv layer</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">kaiming_normal_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dw_conv</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;fan_out&#39;</span><span class="p">,</span> <span class="n">nonlinearity</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="c1"># this ensures the weight initialization range is the same regardless of whether we have a finer reference grid</span>
+        <span class="c1"># this is equivalent to default initialization when k=ref_coords.shape[0]</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dw_conv</span><span class="p">,</span> <span class="n">a</span><span class="o">=-</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">),</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">))</span>
+        <span class="c1"># Initialize pointwise conv like a conv layer</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_conv</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">a</span><span class="o">=-</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">),</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">))</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_conv</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_conv</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KNNDepthwiseSeparableConvLayer.forward">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseSeparableConvLayer.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_l</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply convolution using k-nearest neighbors.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X_l: Node features from layer l [batch, d_l, N_l]</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            X_out: Node features from layer l+1 [batch, d_l+1, N_l+1]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pad_and_gather_knns</span><span class="p">(</span><span class="n">X_l</span><span class="p">)</span>
+        <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">knn_features</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># apply local RF.  shape: [batch, d_l, k, num_coords] -&gt; [batch, d_l, v, n], where v is the number of reference coordinates</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_local_rf</span><span class="p">(</span><span class="n">knn_features</span><span class="p">)</span>
+        
+        <span class="c1"># apply depthwise conv (d_l+1 = d*g)</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">knn_features</span><span class="p">,</span><span class="s1">&#39;b d v n -&gt; b n d v&#39;</span><span class="p">)</span>
+        <span class="n">dw_features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;bndv,dvg-&gt;bndg&#39;</span><span class="p">,</span> <span class="n">knn_features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dw_conv</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># apply pointwise conv</span>
+        <span class="n">X_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_conv</span><span class="p">(</span><span class="n">dw_features</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Shape: [batch, d_l+1, num_coords]</span>
+        
+        <span class="k">return</span> <span class="n">X_out</span>     </div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;KNNDepthwiseSeparableConv(</span><span class="se">\n\t</span><span class="s1">in_channels=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">out_channels=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">k=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="s1">n</span><span class="se">\t</span><span class="s1">in_coords=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">out_coords=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">sample_cortex=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span><span class="si">}</span><span class="se">\n</span><span class="s1">)&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="KNNDepthwiseConvLayer">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseConvLayer">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNDepthwiseConvLayer</span><span class="p">(</span><span class="n">KNNConvLayer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Depthwise KNN convolution layer for foveated vision.</span>
+<span class="sd">    </span>
+<span class="sd">    This layer implements depthwise convolution over k-nearest neighbors,</span>
+<span class="sd">    where each input channel is convolved separately.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        in_channels (int): Number of input channels.</span>
+<span class="sd">        out_channels (int): Number of output channels.</span>
+<span class="sd">        k (int): Number of nearest neighbors to consider.</span>
+<span class="sd">        in_coords (SamplingCoords): Input sampling coordinates object.</span>
+<span class="sd">        out_coords (SamplingCoords): Output sampling coordinates object.</span>
+<span class="sd">        device (str): PyTorch device to run on.</span>
+<span class="sd">        arch_flag (str): Architecture flag for reference coordinate computation.</span>
+<span class="sd">        sample_cortex (bool): Whether to sample cortical space.</span>
+<span class="sd">        bias (bool): Whether to use bias in convolution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="KNNDepthwiseConvLayer.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseConvLayer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> 
+                 <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> 
+                 <span class="n">arch_flag</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                 <span class="n">sample_cortex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">arch_flag</span><span class="p">,</span> <span class="n">sample_cortex</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;out_channels must be divisible by in_channels for depthwise conv&#39;</span>
+
+        <span class="c1"># depthwise conv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="o">//</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">)</span>
+            
+        <span class="c1"># Initialize like a conv layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_depthwise_conv_like</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="KNNDepthwiseConvLayer._init_depthwise_conv_like">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseConvLayer._init_depthwise_conv_like">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_depthwise_conv_like</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize depthwise conv like a conv layer&quot;&quot;&quot;</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">a</span><span class="o">=-</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">),</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="KNNDepthwiseConvLayer.forward">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.KNNDepthwiseConvLayer.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_l</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply convolution using k-nearest neighbors.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X_l: Node features from layer l [batch, d_l, N_l]</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            X_out: Node features from layer l+1 [batch, d_l+1, N_l+1]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pad_and_gather_knns</span><span class="p">(</span><span class="n">X_l</span><span class="p">)</span>
+        <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">knn_features</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># apply local RF.  shape: [batch, d_l, k, num_coords] -&gt; [batch, d_l, v, n], where v is the number of reference coordinates</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_local_rf</span><span class="p">(</span><span class="n">knn_features</span><span class="p">)</span>
+
+        <span class="c1"># apply depthwise conv (d_l+1 = d*g)</span>
+        <span class="n">knn_features</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">knn_features</span><span class="p">,</span><span class="s1">&#39;b d v n -&gt; b n d v&#39;</span><span class="p">)</span>
+        <span class="n">X_out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;bndv,dvg-&gt;bndg&#39;</span><span class="p">,</span> <span class="n">knn_features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">X_out</span> <span class="o">=</span> <span class="n">X_out</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">X_out</span>            </div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;KNNDepthwiseConv(</span><span class="se">\n\t</span><span class="s1">in_channels=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">out_channels=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">k=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="s1">n</span><span class="se">\t</span><span class="s1">in_coords=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">out_coords=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">sample_cortex=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span><span class="si">}</span><span class="se">\n</span><span class="s1">)&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="compute_receptive_field">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.compute_receptive_field">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_receptive_field</span><span class="p">(</span><span class="n">knn_indices_list</span><span class="p">,</span> <span class="n">layer_of_interest</span><span class="p">,</span> <span class="n">unit_of_interest</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">plot_layer</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the effective receptive field of a unit mapped to the input space.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        knn_indices_list: List of `knn_indices` matrices for each layer.</span>
+<span class="sd">        layer_of_interest: Index of the layer where the unit of interest resides.</span>
+<span class="sd">        unit_of_interest: Index of the unit of interest in the layer of interest.</span>
+<span class="sd">        input_size: Total number of units in the input space.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Counter array of shape (input_size,) indicating the occurrence count of input units.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize the counter for input units</span>
+    <span class="n">input_counter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># Start with the unit of interest</span>
+    <span class="n">current_receptive_field</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">unit_of_interest</span><span class="p">])</span>
+
+    <span class="c1"># initialize empty knn_indices</span>
+    <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+    <span class="c1"># Iterate backward through the layers</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layer_of_interest</span><span class="p">,</span> <span class="n">plot_layer</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">knn_indices_list</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+        
+        <span class="c1"># Collect all units contributing to the current receptive field</span>
+        <span class="n">current_receptive_field</span> <span class="o">=</span> <span class="n">knn_indices</span><span class="p">[:,</span> <span class="n">current_receptive_field</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="c1"># remove pad token</span>
+        <span class="n">pad_token</span> <span class="o">=</span> <span class="n">knn_indices</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">current_receptive_field</span> <span class="o">=</span> <span class="n">current_receptive_field</span><span class="p">[</span><span class="n">current_receptive_field</span> <span class="o">!=</span> <span class="n">pad_token</span><span class="p">]</span>
+    
+    <span class="c1"># Count occurrences of input units in the receptive field</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">input_counter</span><span class="p">,</span> <span class="n">current_receptive_field</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">input_counter</span></div>
+
+
+
+<div class="viewcode-block" id="compute_binary_receptive_field">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.compute_binary_receptive_field">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_binary_receptive_field</span><span class="p">(</span><span class="n">knn_indices_list</span><span class="p">,</span> <span class="n">layer_of_interest</span><span class="p">,</span> <span class="n">unit_of_interest</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">plot_layer</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the receptive field of all units that contribute whatsoever to the unit of interest</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        knn_indices_list: List of `knn_indices` matrices for each layer.</span>
+<span class="sd">        layer_of_interest: Index of the layer where the unit of interest resides.</span>
+<span class="sd">        unit_of_interest: Index of the unit of interest in the layer of interest.</span>
+<span class="sd">        input_size: Total number of units in the input space.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Counter array of shape (input_size,) indicating the occurrence count of input units.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize the counter for input units</span>
+    <span class="n">input_counter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># Start with the unit of interest</span>
+    <span class="n">current_receptive_field</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">unit_of_interest</span><span class="p">])</span>
+
+    <span class="c1"># initialize empty knn_indices</span>
+    <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+    <span class="c1"># Iterate backward through the layers</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layer_of_interest</span><span class="p">,</span> <span class="n">plot_layer</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">knn_indices</span> <span class="o">=</span> <span class="n">knn_indices_list</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+        
+        <span class="c1"># Collect all units contributing to the current receptive field</span>
+        <span class="n">current_receptive_field</span> <span class="o">=</span> <span class="n">knn_indices</span><span class="p">[:,</span> <span class="n">current_receptive_field</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="c1"># remove pad token</span>
+        <span class="n">pad_token</span> <span class="o">=</span> <span class="n">knn_indices</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">current_receptive_field</span> <span class="o">=</span> <span class="n">current_receptive_field</span><span class="p">[</span><span class="n">current_receptive_field</span> <span class="o">!=</span> <span class="n">pad_token</span><span class="p">]</span>
+
+        <span class="n">current_receptive_field</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">current_receptive_field</span><span class="p">)</span>
+
+    <span class="n">input_counter</span><span class="p">[</span><span class="n">current_receptive_field</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">input_counter</span></div>
+
+
+
+<div class="viewcode-block" id="get_in_out_coords">
+<a class="viewcode-back" href="../../../api/foveation.arch.knn.html#foveation.arch.knn.get_in_out_coords">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_in_out_coords</span><span class="p">(</span><span class="n">in_res</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_cart_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">in_coords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_out_match_less_than</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_out_coord_val</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function to generate input and output coordinates for KNN layers.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        in_res (int): Input resolution.</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): a parameter in CMF: M(r) = 1/(r+a). Smaller = stronger foveation</span>
+<span class="sd">        stride (int): Stride factor for downsampling.</span>
+<span class="sd">        style (str, optional): Sampling style. Defaults to &#39;isotropic&#39;.</span>
+<span class="sd">        auto_match_cart_resources (int, optional): Auto-match parameter. Defaults to 1.</span>
+<span class="sd">        in_cart_res (int, optional): Input cartesian resolution. Defaults to None.</span>
+<span class="sd">        device (str, optional): PyTorch device. Defaults to &#39;cuda&#39;.</span>
+<span class="sd">        in_coords (SamplingCoords, optional): Pre-computed input coordinates. Defaults to None.</span>
+<span class="sd">        force_out_match_less_than (bool): if auto_match_cart_resources, this determines whether the output number is constrained to not be greater than the target cartesian resolution (if false, chooses the closest match, which could be greater)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            - SamplingCoords: Input coordinates</span>
+<span class="sd">            - SamplingCoords: Output coordinates</span>
+<span class="sd">            - int: output cartesian resolution</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate input coordinates if not provided</span>
+    <span class="k">if</span> <span class="n">in_coords</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">auto_match_cart_resources</span><span class="p">:</span>
+            <span class="n">in_res</span><span class="p">,</span> <span class="n">in_cart_res</span> <span class="o">=</span> <span class="n">auto_match_num_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">in_cart_res</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">in_coords</span> <span class="o">=</span> <span class="n">SamplingCoords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">in_res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">max_out_coord_val</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+        <span class="n">tmp_max_val</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tmp_max_val</span> <span class="o">=</span> <span class="n">max_out_coord_val</span>
+    
+    <span class="c1"># Generate output coordinates with stride</span>
+    <span class="n">out_coords</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">out_cart_res</span> <span class="o">=</span> <span class="n">in_coords</span><span class="o">.</span><span class="n">get_strided_coords</span><span class="p">(</span><span class="n">stride</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">in_cart_res</span><span class="o">=</span><span class="n">in_cart_res</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="n">force_out_match_less_than</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">tmp_max_val</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">max_out_coord_val</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+        <span class="c1"># adjust to put between final two radii</span>
+        <span class="n">final_out_coord_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">out_coords</span><span class="o">.</span><span class="n">polar</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">out_coords</span><span class="o">.</span><span class="n">polar</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+        
+        <span class="n">out_coords</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">out_cart_res</span> <span class="o">=</span> <span class="n">in_coords</span><span class="o">.</span><span class="n">get_strided_coords</span><span class="p">(</span><span class="n">stride</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">in_cart_res</span><span class="o">=</span><span class="n">in_cart_res</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="n">force_out_match_less_than</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">final_out_coord_val</span><span class="p">)</span>
+
+    
+    <span class="k">return</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">out_cart_res</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.arch.knn &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="foveation.arch.knnalexnet" href="foveation.arch.knnalexnet.html" />
+    <link rel="prev" title="foveation.arch.dinov3" href="foveation.arch.dinov3.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="foveation.arch.html">foveation.arch package</a></li>
+      <li class="breadcrumb-item active">foveation.arch.knn</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/foveation.arch.knn.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-foveation.arch.knn">
+<span id="foveation-arch-knn"></span><h1>foveation.arch.knn<a class="headerlink" href="#module-foveation.arch.knn" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNBaseLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.knn.</span></span><span class="sig-name descname"><span class="pre">KNNBaseLayer</span></span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNBaseLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNBaseLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Abstract base class implementing basic KNN functionalities for foveated vision.</p>
+<p>This class provides the foundation for KNN-based operations in foveated neural networks,
+including distance computation in both visual and cortical spaces.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNBaseLayer._compute_distances">
+<span class="sig-name descname"><span class="pre">_compute_distances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNBaseLayer._compute_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNBaseLayer._compute_distances" title="Link to this definition"></a></dt>
+<dd><p>Compute distances between input and output coordinates in visual or cortical space.</p>
+<p>This method supports multiple distance computation strategies:
+- Euclidean distances in visual space (interesting baseline)
+- Euclidean distances in cortical space (most typical – fast and bio-plausible)
+- Geodesic distances on cortical surface (slower, more ideal, but very well approximated by euclidean for typical small local RFs, so not typically necessary. we tend to use it for ViTs where there are fewer coordinates with larger kernels and only one KNNConv, but not for CNNs where there are many layers of KNNConvs and more coordinates with smaller kernels.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Distance matrix between input and output coordinates.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNPoolingLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.knn.</span></span><span class="sig-name descname"><span class="pre">KNNPoolingLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gauss_sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNPoolingLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNPoolingLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a>, <a class="reference internal" href="#foveation.arch.knn.KNNBaseLayer" title="foveation.arch.knn.KNNBaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">KNNBaseLayer</span></code></a></p>
+<p>K-Nearest Neighbors pooling layer for foveated vision.</p>
+<p>This layer performs pooling operations over k-nearest neighbors in either
+visual or cortical space, supporting various pooling modes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of nearest neighbors to consider.</p></li>
+<li><p><strong>in_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Input sampling coordinates object.</p></li>
+<li><p><strong>out_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Output sampling coordinates object.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Pooling mode (‘max’, ‘avg’, ‘sum’, ‘gaussian’).</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – PyTorch device to run on.</p></li>
+<li><p><strong>sample_cortex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Whether/how to sample cortical space:
+- False: Sample visual field
+- True: Sample cortical space using Euclidean distances (fast, approximate)
+- ‘geodesic’: Sample cortical space using geodesic distances (slower, more accurate)</p></li>
+<li><p><strong>gauss_sigma</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – sigma for mode=’gaussian’ pooling; not used for other modes</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNPoolingLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gauss_sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNPoolingLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNPoolingLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNPoolingLayer._compute_gaussian_weights">
+<span class="sig-name descname"><span class="pre">_compute_gaussian_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNPoolingLayer._compute_gaussian_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNPoolingLayer._compute_gaussian_weights" title="Link to this definition"></a></dt>
+<dd><p>Compute Gaussian weights for local pooling based on distances between
+output nodes and their input neighbors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sigma</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Standard deviation of Gaussian kernel</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Gaussian weights of shape (k, num_output_nodes)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNPoolingLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNPoolingLayer.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNPoolingLayer.forward" title="Link to this definition"></a></dt>
+<dd><p>Apply KNN pooling to input features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X_l</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Input features of shape [batch_size, channels, num_nodes].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pooled features of shape [batch_size, channels, num_output_nodes].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNConvLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.knn.</span></span><span class="sig-name descname"><span class="pre">KNNConvLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arch_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_frame_side_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNConvLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNConvLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a>, <a class="reference internal" href="#foveation.arch.knn.KNNBaseLayer" title="foveation.arch.knn.KNNBaseLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">KNNBaseLayer</span></code></a></p>
+<p>K-Nearest Neighbors convolution layer for foveated vision.</p>
+<p>This layer performs convolution operations over k-nearest neighbors in either
+visual or cortical space, with learnable filters aligned to spatial kernels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of input channels.</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of output channels.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of nearest neighbors to consider.</p></li>
+<li><p><strong>in_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Input sampling coordinates object.</p></li>
+<li><p><strong>out_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Output sampling coordinates object.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – PyTorch device to run on.</p></li>
+<li><p><strong>arch_flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Architecture flag for reference coordinate computation.</p></li>
+<li><p><strong>sample_cortex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to sample cortical space.</p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to use bias in convolution.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNConvLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arch_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_frame_side_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNConvLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNConvLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNConvLayer._init_conv_like">
+<span class="sig-name descname"><span class="pre">_init_conv_like</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNConvLayer._init_conv_like"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNConvLayer._init_conv_like" title="Link to this definition"></a></dt>
+<dd><p>Initialize convolution-like parameters for the KNN layer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNConvLayer._pad_and_gather_knns">
+<span class="sig-name descname"><span class="pre">_pad_and_gather_knns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNConvLayer._pad_and_gather_knns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNConvLayer._pad_and_gather_knns" title="Link to this definition"></a></dt>
+<dd><p>Pad input features and gather KNN features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X_l</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Input features.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Gathered KNN features.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNConvLayer._apply_local_rf">
+<span class="sig-name descname"><span class="pre">_apply_local_rf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knn_features</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNConvLayer._apply_local_rf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNConvLayer._apply_local_rf" title="Link to this definition"></a></dt>
+<dd><p>Reweights features according to local receptive field (i.e., kernel mapping to align KNNs and reference kernel)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>knn_features</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – KNN features tensor to process</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed features after applying local receptive field</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNConvLayer._apply_local_rf_to_weights">
+<span class="sig-name descname"><span class="pre">_apply_local_rf_to_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNConvLayer._apply_local_rf_to_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNConvLayer._apply_local_rf_to_weights" title="Link to this definition"></a></dt>
+<dd><p>Reweight convolutional weights according to local receptive field (i.e kernel mapping to align KNNs and reference kernel)</p>
+<p>Only used for visualization purposes; in the forward pass, we apply the local_rf to the KNN features instead</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNConvLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNConvLayer.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNConvLayer.forward" title="Link to this definition"></a></dt>
+<dd><p>Apply convolution using k-nearest neighbors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X_l</strong> – Node features from layer l [batch, d_l, N_l]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Node features from layer l+1 [batch, d_l+1, N_l+1]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>X_out</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNConvLayer.compute_reference_coords">
+<span class="sig-name descname"><span class="pre">compute_reference_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arch_flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNConvLayer.compute_reference_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNConvLayer.compute_reference_coords" title="Link to this definition"></a></dt>
+<dd><p>Compute reference coordinates for the convolution kernel.</p>
+<p>The reference coordinates define the shape of the convolution kernel and can be:
+- A square grid matching the KNN size
+- A circular grid matching the KNN size
+- The first neighborhood of coordinates (foveal reference)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arch_flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Architecture flag indicating reference coordinate style. Checks for containing:
+- ‘fovref’: Use first neighborhood as reference (not typically used)
+- ‘circref’: Use circular reference grid (not typically used)
+- ‘doubleres’: Double the resolution of reference grid (smoother alignment)</p></li>
+<li><p><strong>default</strong> (<em>-</em>) – Use square reference grid of same total number of elemenets as the neighborhood</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Sets:</dt><dd><p>self.ref_coords (torch.Tensor): Reference coordinates tensor of shape [num_ref_coords, 2]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNConvLayer.compute_local_rf">
+<span class="sig-name descname"><span class="pre">compute_local_rf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNConvLayer.compute_local_rf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNConvLayer.compute_local_rf" title="Link to this definition"></a></dt>
+<dd><p>Compute local receptive field weights for each output coordinate.</p>
+<p>This method computes the mapping between input KNN coordinates and reference coordinates
+to determine how each input point contributes to the output. The weights are computed
+using either:
+- Nearest neighbor mapping (‘nnmap’ in arch_flag)
+- Inverse distance weighted softmax (default)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Small constant for numerical stability. Defaults to 1e-6.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Local receptive field weights of shape [n_out, k, n_ref] where:</dt><dd><ul class="simple">
+<li><p>n_out is number of output coordinates</p></li>
+<li><p>k is number of nearest neighbors</p></li>
+<li><p>n_ref is number of reference coordinates</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNDepthwiseSeparableConvLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.knn.</span></span><span class="sig-name descname"><span class="pre">KNNDepthwiseSeparableConvLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arch_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNDepthwiseSeparableConvLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNDepthwiseSeparableConvLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#foveation.arch.knn.KNNConvLayer" title="foveation.arch.knn.KNNConvLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">KNNConvLayer</span></code></a></p>
+<p>Depthwise separable KNN convolution layer for foveated vision.</p>
+<p>This layer implements depthwise separable convolution over k-nearest neighbors,
+which reduces computational complexity compared to standard KNN convolution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of input channels.</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of output channels.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of nearest neighbors to consider.</p></li>
+<li><p><strong>in_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Input sampling coordinates object.</p></li>
+<li><p><strong>out_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Output sampling coordinates object.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – PyTorch device to run on.</p></li>
+<li><p><strong>arch_flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Architecture flag for reference coordinate computation.</p></li>
+<li><p><strong>sample_cortex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to sample cortical space.</p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to use bias in convolution.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNDepthwiseSeparableConvLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arch_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNDepthwiseSeparableConvLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNDepthwiseSeparableConvLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNDepthwiseSeparableConvLayer._init_depthwise_separable_conv_like">
+<span class="sig-name descname"><span class="pre">_init_depthwise_separable_conv_like</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNDepthwiseSeparableConvLayer._init_depthwise_separable_conv_like"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNDepthwiseSeparableConvLayer._init_depthwise_separable_conv_like" title="Link to this definition"></a></dt>
+<dd><p>Initialize depthwise separable conv like conv layers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNDepthwiseSeparableConvLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNDepthwiseSeparableConvLayer.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNDepthwiseSeparableConvLayer.forward" title="Link to this definition"></a></dt>
+<dd><p>Apply convolution using k-nearest neighbors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X_l</strong> – Node features from layer l [batch, d_l, N_l]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Node features from layer l+1 [batch, d_l+1, N_l+1]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>X_out</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNDepthwiseConvLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.knn.</span></span><span class="sig-name descname"><span class="pre">KNNDepthwiseConvLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arch_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNDepthwiseConvLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNDepthwiseConvLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#foveation.arch.knn.KNNConvLayer" title="foveation.arch.knn.KNNConvLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">KNNConvLayer</span></code></a></p>
+<p>Depthwise KNN convolution layer for foveated vision.</p>
+<p>This layer implements depthwise convolution over k-nearest neighbors,
+where each input channel is convolved separately.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of input channels.</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of output channels.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of nearest neighbors to consider.</p></li>
+<li><p><strong>in_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Input sampling coordinates object.</p></li>
+<li><p><strong>out_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Output sampling coordinates object.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – PyTorch device to run on.</p></li>
+<li><p><strong>arch_flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Architecture flag for reference coordinate computation.</p></li>
+<li><p><strong>sample_cortex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to sample cortical space.</p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to use bias in convolution.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNDepthwiseConvLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arch_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNDepthwiseConvLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNDepthwiseConvLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNDepthwiseConvLayer._init_depthwise_conv_like">
+<span class="sig-name descname"><span class="pre">_init_depthwise_conv_like</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNDepthwiseConvLayer._init_depthwise_conv_like"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNDepthwiseConvLayer._init_depthwise_conv_like" title="Link to this definition"></a></dt>
+<dd><p>Initialize depthwise conv like a conv layer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.arch.knn.KNNDepthwiseConvLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#KNNDepthwiseConvLayer.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.KNNDepthwiseConvLayer.forward" title="Link to this definition"></a></dt>
+<dd><p>Apply convolution using k-nearest neighbors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X_l</strong> – Node features from layer l [batch, d_l, N_l]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Node features from layer l+1 [batch, d_l+1, N_l+1]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>X_out</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.knn.compute_receptive_field">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.knn.</span></span><span class="sig-name descname"><span class="pre">compute_receptive_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knn_indices_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_of_interest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_of_interest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#compute_receptive_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.compute_receptive_field" title="Link to this definition"></a></dt>
+<dd><p>Compute the effective receptive field of a unit mapped to the input space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knn_indices_list</strong> – List of <cite>knn_indices</cite> matrices for each layer.</p></li>
+<li><p><strong>layer_of_interest</strong> – Index of the layer where the unit of interest resides.</p></li>
+<li><p><strong>unit_of_interest</strong> – Index of the unit of interest in the layer of interest.</p></li>
+<li><p><strong>input_size</strong> – Total number of units in the input space.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Counter array of shape (input_size,) indicating the occurrence count of input units.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.knn.compute_binary_receptive_field">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.knn.</span></span><span class="sig-name descname"><span class="pre">compute_binary_receptive_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knn_indices_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_of_interest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_of_interest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#compute_binary_receptive_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.compute_binary_receptive_field" title="Link to this definition"></a></dt>
+<dd><p>Compute the receptive field of all units that contribute whatsoever to the unit of interest</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knn_indices_list</strong> – List of <cite>knn_indices</cite> matrices for each layer.</p></li>
+<li><p><strong>layer_of_interest</strong> – Index of the layer where the unit of interest resides.</p></li>
+<li><p><strong>unit_of_interest</strong> – Index of the unit of interest in the layer of interest.</p></li>
+<li><p><strong>input_size</strong> – Total number of units in the input space.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Counter array of shape (input_size,) indicating the occurrence count of input units.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="foveation.arch.knn.get_in_out_coords">
+<span class="sig-prename descclassname"><span class="pre">foveation.arch.knn.</span></span><span class="sig-name descname"><span class="pre">get_in_out_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'isotropic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_match_cart_resources</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_cart_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_out_match_less_than</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_out_coord_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#get_in_out_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.get_in_out_coords" title="Link to this definition"></a></dt>
+<dd><p>Convenience function to generate input and output coordinates for KNN layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input resolution.</p></li>
+<li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Field of view diameter in degrees.</p></li>
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – a parameter in CMF: M(r) = 1/(r+a). Smaller = stronger foveation</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Stride factor for downsampling.</p></li>
+<li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Sampling style. Defaults to ‘isotropic’.</p></li>
+<li><p><strong>auto_match_cart_resources</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Auto-match parameter. Defaults to 1.</p></li>
+<li><p><strong>in_cart_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Input cartesian resolution. Defaults to None.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – PyTorch device. Defaults to ‘cuda’.</p></li>
+<li><p><strong>in_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a><em>, </em><em>optional</em>) – Pre-computed input coordinates. Defaults to None.</p></li>
+<li><p><strong>force_out_match_less_than</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – if auto_match_cart_resources, this determines whether the output number is constrained to not be greater than the target cartesian resolution (if false, chooses the closest match, which could be greater)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>SamplingCoords: Input coordinates</p></li>
+<li><p>SamplingCoords: Output coordinates</p></li>
+<li><p>int: output cartesian resolution</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="foveation.arch.dinov3.html" class="btn btn-neutral float-left" title="foveation.arch.dinov3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="foveation.arch.knnalexnet.html" class="btn btn-neutral float-right" title="foveation.arch.knnalexnet" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

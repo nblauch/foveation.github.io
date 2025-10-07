@@ -1,0 +1,578 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.arch.knnvit &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.arch.knnvit</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.arch.knnvit</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">einops</span><span class="w"> </span><span class="kn">import</span> <span class="n">rearrange</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.knn</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNConvLayer</span><span class="p">,</span> <span class="n">get_in_out_coords</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..sensing.coords</span><span class="w"> </span><span class="kn">import</span> <span class="n">xy_to_rowcol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.vit</span><span class="w"> </span><span class="kn">import</span> <span class="n">VisionTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_all</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="KNNPatchEmbedding">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNPatchEmbedding</span><span class="p">(</span><span class="n">KNNConvLayer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    KNN-based patch embedding layer that replaces standard patch embedding in Vision Transformers.</span>
+<span class="sd">    </span>
+<span class="sd">    Instead of dividing the image into uniform non-overlapping patches, this layer divides a foveated manifold into nearly non-overlapping KNNs to create patches. </span>
+
+<span class="sd">    It then performs a standard KNNConv operation for the patch embedding.</span>
+
+<span class="sd">    We typically prefer KNNPartitioningPatchEmbedding, which builds on this, as it provides an optimal tiling of patches without any visual inspection. </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="KNNPatchEmbedding.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">embed_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">in_res</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">fov</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">cmf_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">,</span>
+                 <span class="n">auto_match_cart_resources</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">in_cart_res</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
+                 <span class="n">cart_patch_size</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+                 <span class="n">patch_overlap_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+                 <span class="n">force_patches_less_than_matched</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">new_parameterization</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">transposed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">max_coord_val</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">sample_cortex</span><span class="o">=</span><span class="s1">&#39;geodesic&#39;</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                 <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize KNN tokenization layer.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            in_channels (int): Number of input channels</span>
+<span class="sd">            embed_dim (int): Embedding dimension for tokens</span>
+<span class="sd">            in_coords (SamplingCoords): Input sampling coordinates object</span>
+<span class="sd">            in_cart_res (int): Resolution of input cartesian grid</span>
+<span class="sd">            downsample_factor (int, optional): Factor to downsample coordinates by. Defaults to 16.</span>
+<span class="sd">            k (int, optional): Number of nearest neighbors for KNN. Defaults to 16^2.</span>
+<span class="sd">            **kwargs: Additional arguments passed to parent class</span>
+<span class="sd">        &quot;&quot;&quot;</span>    
+
+        <span class="k">if</span> <span class="n">new_parameterization</span><span class="p">:</span>
+            <span class="c1"># k is fixed, resolution is adapted to match overlap factor</span>
+            <span class="n">stride</span> <span class="o">=</span> <span class="n">cart_patch_size</span><span class="o">/</span><span class="n">patch_overlap_factor</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">cart_patch_size</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># resolution is fixed, k is adapted to match overlap factor</span>
+            <span class="n">stride</span> <span class="o">=</span> <span class="n">cart_patch_size</span>
+
+        <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">out_cart_res</span> <span class="o">=</span> <span class="n">get_in_out_coords</span><span class="p">(</span><span class="n">in_res</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">in_cart_res</span><span class="o">=</span><span class="n">in_cart_res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">force_out_match_less_than</span><span class="o">=</span><span class="n">force_patches_less_than_matched</span><span class="p">,</span> <span class="n">max_out_coord_val</span><span class="o">=</span><span class="n">max_coord_val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_parameterization</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cart_patch_size</span><span class="o">*</span><span class="p">(</span><span class="n">out_cart_res</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_coords</span><span class="p">)))</span><span class="o">*</span><span class="n">patch_overlap_factor</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># int((cart_patch_size*patch_overlap_factor)**2)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">sample_cortex</span><span class="o">=</span><span class="n">sample_cortex</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">transposed</span> <span class="o">=</span> <span class="n">transposed</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span> <span class="c1"># for compatibility with dino</span></div>
+
+
+<div class="viewcode-block" id="KNNPatchEmbedding.forward">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># reshape tokens from grid if needed</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;b n h w -&gt; b n (h w)&#39;</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># flip seq and embed dims to match standard transformer style</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">transposed</span><span class="p">:</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="s1">&#39;b d n -&gt; b n d&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tokens</span></div>
+
+    
+<div class="viewcode-block" id="KNNPatchEmbedding.load_weights">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding.load_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">repr_parent</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">repr_parent</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;KNNConvLayer&#39;</span><span class="p">,</span> <span class="s1">&#39;KNNPatchEmbedding&#39;</span><span class="p">)</span></div>
+
+        <span class="c1"># return f&quot;KNNPatchEmbedding(in_channels={self.in_channels}, embed_dim={self.out_channels}, k={self.k})&quot;</span>
+
+<div class="viewcode-block" id="PartitioningPatchEmbedding">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.PartitioningPatchEmbedding">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PartitioningPatchEmbedding</span><span class="p">(</span><span class="n">KNNPatchEmbedding</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Partitioning patch embedding layer that replaces standard patch embedding in Vision Transformers.</span>
+<span class="sd">    </span>
+<span class="sd">    This layer divides a foveated manifold into non-overlapping neighborhoods to create patches. </span>
+
+<span class="sd">    It turns these neighborhoods into KNNs with padding</span>
+
+<span class="sd">    It then performs a standard KNNConv operation for the patch embedding.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="PartitioningPatchEmbedding.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.PartitioningPatchEmbedding.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">embed_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">in_res</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">fov</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">cmf_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">,</span>
+                 <span class="n">auto_match_cart_resources</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">force_patches_less_than_matched</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">in_cart_res</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
+                 <span class="n">cart_patch_size</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+                 <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+                 <span class="n">transposed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">max_coord_val</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">ref_frame_side_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">sample_cortex</span><span class="o">=</span><span class="s1">&#39;geodesic&#39;</span><span class="p">,</span>
+                 <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">arch_flag</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+                 <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize KNN tokenization layer.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            in_channels (int): Number of input channels</span>
+<span class="sd">            embed_dim (int): Embedding dimension for tokens</span>
+<span class="sd">            in_coords (SamplingCoords): Input sampling coordinates object</span>
+<span class="sd">            in_cart_res (int): Resolution of input cartesian grid</span>
+<span class="sd">            downsample_factor (int, optional): Factor to downsample coordinates by. Defaults to 16.</span>
+<span class="sd">            k (int, optional): Number of nearest neighbors for KNN. Defaults to 16^2.</span>
+<span class="sd">            **kwargs: Additional arguments passed to parent class</span>
+<span class="sd">        &quot;&quot;&quot;</span>    
+
+        <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="n">stride</span> <span class="o">=</span> <span class="n">cart_patch_size</span> <span class="c1"># match number of tokens exactly with cartesian version</span>
+
+        <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">out_cart_res</span> <span class="o">=</span> <span class="n">get_in_out_coords</span><span class="p">(</span><span class="n">in_res</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">in_cart_res</span><span class="o">=</span><span class="n">in_cart_res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">force_out_match_less_than</span><span class="o">=</span><span class="n">force_patches_less_than_matched</span><span class="p">,</span> <span class="n">max_out_coord_val</span><span class="o">=</span><span class="n">max_coord_val</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">=</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">=</span> <span class="n">embed_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span> <span class="o">=</span> <span class="n">in_coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_coords</span> <span class="o">=</span> <span class="n">out_coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arch_flag</span> <span class="o">=</span> <span class="n">arch_flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span> <span class="o">=</span> <span class="n">sample_cortex</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_frame_side_length</span> <span class="o">=</span> <span class="n">ref_frame_side_length</span> <span class="c1"># if we want to specify manually</span>
+    
+        <span class="c1"># compute distances in visual or cortical space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">in_coords</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_coords</span><span class="p">))</span> <span class="c1"># set temporary k for use in geodesic dist computation, if necessary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_distances</span><span class="p">()</span>
+        
+        <span class="c1"># compute unit partitioning</span>
+        <span class="n">distances_nopad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">[:(</span><span class="nb">len</span><span class="p">(</span><span class="n">in_coords</span><span class="p">))]</span> <span class="c1"># don&#39;t need padding coords in partition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">partitioning</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances_nopad</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">rfs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_coords</span><span class="p">)):</span>
+            <span class="n">rfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partitioning</span> <span class="o">==</span> <span class="n">ii</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+        <span class="n">max_len</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span> <span class="k">for</span> <span class="n">rf</span> <span class="ow">in</span> <span class="n">rfs</span><span class="p">]))</span>
+        <span class="c1"># pad RFs up to max len. -1 is the &quot;index padding&quot; token, whereas len(in_coords) is the &quot;spatial padding&quot; token for KNNs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_pad_index_token_val</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_pad_token_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_pad_index_token_val</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">max_len</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_coords</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> 
+        <span class="c1"># fill in RFs </span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_coords</span><span class="p">)):</span>
+            <span class="n">indices</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">rfs</span><span class="p">[</span><span class="n">ii</span><span class="p">]),</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">rfs</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">=</span> <span class="n">indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">max_len</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="c1"># compute padding mask for use at inference - compatibility with KNNConv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_mask</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_pad_token_val</span> <span class="c1"># pad index</span>
+        <span class="c1"># this will be updated to the correct size for a batch to be used for batches of the same size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_batch_cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_indices_pad_token</span>
+
+        <span class="c1"># compute reference coordinates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_reference_coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arch_flag</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize like a conv layer (Kaiming normal with fan_out mode)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_conv_like</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_local_rf</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">transposed</span> <span class="o">=</span> <span class="n">transposed</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">repr_parent</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">repr_parent</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;KNNPatchEmbedding&#39;</span><span class="p">,</span> <span class="s1">&#39;PartitioningPatchEmbedding&#39;</span><span class="p">)</span></div>
+
+        <span class="c1"># return f&quot;KNNPatchEmbedding(in_channels={self.in_channels}, embed_dim={self.out_channels}, k={self.k})&quot;</span>
+
+<div class="viewcode-block" id="KNNPartitioningPatchEmbedding">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPartitioningPatchEmbedding">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNPartitioningPatchEmbedding</span><span class="p">(</span><span class="n">KNNPatchEmbedding</span><span class="p">):</span>
+<div class="viewcode-block" id="KNNPartitioningPatchEmbedding.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPartitioningPatchEmbedding.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                <span class="n">embed_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                <span class="n">in_res</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                <span class="n">fov</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="n">cmf_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">,</span>
+                <span class="n">auto_match_cart_resources</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">in_cart_res</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
+                <span class="n">cart_patch_size</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+                <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+                <span class="n">force_patches_less_than_matched</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">transposed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">max_coord_val</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                <span class="n">sample_cortex</span><span class="o">=</span><span class="s1">&#39;geodesic&#39;</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize KNN tokenization layer.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            in_channels (int): Number of input channels</span>
+<span class="sd">            embed_dim (int): Embedding dimension for tokens</span>
+<span class="sd">            in_coords (SamplingCoords): Input sampling coordinates object</span>
+<span class="sd">            in_cart_res (int): Resolution of input cartesian grid</span>
+<span class="sd">            downsample_factor (int, optional): Factor to downsample coordinates by. Defaults to 16.</span>
+<span class="sd">            k (int, optional): Number of nearest neighbors for KNN. Defaults to 16^2.</span>
+<span class="sd">            **kwargs: Additional arguments passed to parent class</span>
+<span class="sd">        &quot;&quot;&quot;</span>    
+
+        <span class="n">stride</span> <span class="o">=</span> <span class="n">cart_patch_size</span> <span class="c1"># match number of tokens exactly with cartesian version</span>
+
+        <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">out_cart_res</span> <span class="o">=</span> <span class="n">get_in_out_coords</span><span class="p">(</span><span class="n">in_res</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">in_cart_res</span><span class="o">=</span><span class="n">in_cart_res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">force_out_match_less_than</span><span class="o">=</span><span class="n">force_patches_less_than_matched</span><span class="p">,</span> <span class="n">max_out_coord_val</span><span class="o">=</span><span class="n">max_coord_val</span><span class="p">)</span>
+
+        <span class="c1"># compute a partitioning, then use the maximum RF size to set k</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">in_coords</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_coords</span><span class="p">))</span> <span class="c1"># set temporary k for use in geodesic dist computation, if necessary</span>
+        <span class="n">KNNConvLayer</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">sample_cortex</span><span class="o">=</span><span class="n">sample_cortex</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># temporary init to set distances</span>
+
+        <span class="n">distances_nopad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">[:(</span><span class="nb">len</span><span class="p">(</span><span class="n">in_coords</span><span class="p">))]</span> <span class="c1"># don&#39;t need padding coords in partition</span>
+        <span class="n">partitioning</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances_nopad</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">rfs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_coords</span><span class="p">)):</span>
+            <span class="n">rf</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">partitioning</span> <span class="o">==</span> <span class="n">ii</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+            <span class="n">dists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">[</span><span class="n">rf</span><span class="p">,</span><span class="n">ii</span><span class="p">]</span>
+            <span class="n">max_dist</span> <span class="o">=</span> <span class="n">dists</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="n">new_rf</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_dist</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+            <span class="n">rfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_rf</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span> <span class="k">for</span> <span class="n">rf</span> <span class="ow">in</span> <span class="n">rfs</span><span class="p">]))</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="n">KNNConvLayer</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">in_coords</span><span class="p">,</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">sample_cortex</span><span class="o">=</span><span class="n">sample_cortex</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">transposed</span> <span class="o">=</span> <span class="n">transposed</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span> <span class="c1"># for compatibility with dino     </span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">repr_parent</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">repr_parent</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;KNNPatchEmbedding&#39;</span><span class="p">,</span> <span class="s1">&#39;KNNPartitioningPatchEmbedding&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="KNNViT">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNViT">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">KNNViT</span><span class="p">(</span><span class="n">VisionTransformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vision Transformer that uses KNN-based tokenization instead of patch embedding.</span>
+<span class="sd">    </span>
+<span class="sd">    This model inherits from VisionTransformer and only overrides the patch embedding</span>
+<span class="sd">    to use KNN-based tokenization that creates tokens based on spatial relationships </span>
+<span class="sd">    in the foveated coordinate system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="KNNViT.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNViT.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">fov</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">cmf_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">style</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">img_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
+                 <span class="n">patch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+                 <span class="n">patch_overlap_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                 <span class="n">embed_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">768</span><span class="p">,</span>
+                 <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+                 <span class="n">num_layers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+                 <span class="n">mlp_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">4.0</span><span class="p">,</span>
+                 <span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+                 <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+                 <span class="n">arch_flag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                 <span class="n">sample_cortex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="s1">&#39;geodesic&#39;</span><span class="p">,</span>
+                 <span class="n">pos_emb_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;absolute&#39;</span><span class="p">,</span>
+                 <span class="n">force_patches_less_than_matched</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize KNNViT model.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            fov: Field of view parameter for foveated sampling</span>
+<span class="sd">            cmf_a: a parameter controlling foveated sampling via the CMF; smaller = stronger foveation</span>
+<span class="sd">            style: Sampling style (&#39;isotropic&#39;, etc.)</span>
+<span class="sd">            img_size: Size of input image</span>
+<span class="sd">            patch_size: Size of each patch</span>
+<span class="sd">            patch_overlap_factor: Factor for patch overlap</span>
+<span class="sd">            in_channels: Number of input channels</span>
+<span class="sd">            embed_dim: Embedding dimension</span>
+<span class="sd">            num_heads: Number of attention heads</span>
+<span class="sd">            num_layers: Number of transformer layers</span>
+<span class="sd">            mlp_ratio: Ratio of MLP hidden dim to embed dim</span>
+<span class="sd">            dropout: Dropout rate</span>
+<span class="sd">            num_classes: Number of output classes</span>
+<span class="sd">            device: Device to run on</span>
+<span class="sd">            arch_flag: Architecture flag</span>
+<span class="sd">            sample_cortex: Whether to sample in cortical space</span>
+<span class="sd">            pos_emb_type: Type of positional embedding (&#39;absolute&#39; or &#39;rope&#39;)</span>
+<span class="sd">            force_patches_less_than_matched: whether to force the number of patches to be less than a matched cartesian model, or just match as close as possible</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Store KNN-specific parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="n">fov</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span> <span class="o">=</span> <span class="n">cmf_a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patch_overlap_factor</span> <span class="o">=</span> <span class="n">patch_overlap_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arch_flag</span> <span class="o">=</span> <span class="n">arch_flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_cortex</span> <span class="o">=</span> <span class="n">sample_cortex</span>
+        
+        <span class="c1"># Create KNN patch embedding</span>
+        <span class="n">patch_embed</span> <span class="o">=</span> <span class="n">KNNPatchEmbedding</span><span class="p">(</span>
+            <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">embed_dim</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span>
+            <span class="n">in_res</span><span class="o">=</span><span class="n">img_size</span><span class="p">,</span>
+            <span class="n">fov</span><span class="o">=</span><span class="n">fov</span><span class="p">,</span>
+            <span class="n">cmf_a</span><span class="o">=</span><span class="n">cmf_a</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
+            <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">in_cart_res</span><span class="o">=</span><span class="n">img_size</span><span class="p">,</span>
+            <span class="n">cart_patch_size</span><span class="o">=</span><span class="n">patch_size</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">arch_flag</span><span class="o">=</span><span class="n">arch_flag</span><span class="p">,</span>
+            <span class="n">sample_cortex</span><span class="o">=</span><span class="n">sample_cortex</span><span class="p">,</span>
+            <span class="n">patch_overlap_factor</span><span class="o">=</span><span class="n">patch_overlap_factor</span><span class="p">,</span>
+            <span class="n">force_patches_less_than_matched</span><span class="o">=</span><span class="n">force_patches_less_than_matched</span><span class="p">,</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Get cartesian coordinates for positional encoding</span>
+        <span class="n">cartesian_coords</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">out_coords</span><span class="o">.</span><span class="n">cartesian</span>
+        
+        <span class="c1"># Initialize parent class with custom patch embedding and positional encoding</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">img_size</span><span class="o">=</span><span class="n">img_size</span><span class="p">,</span>
+            <span class="n">patch_size</span><span class="o">=</span><span class="n">patch_size</span><span class="p">,</span>
+            <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">embed_dim</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span>
+            <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+            <span class="n">num_layers</span><span class="o">=</span><span class="n">num_layers</span><span class="p">,</span>
+            <span class="n">mlp_ratio</span><span class="o">=</span><span class="n">mlp_ratio</span><span class="p">,</span>
+            <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span>
+            <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+            <span class="n">pos_emb_type</span><span class="o">=</span><span class="n">pos_emb_type</span><span class="p">,</span>
+            <span class="n">coords</span><span class="o">=</span><span class="n">cartesian_coords</span><span class="p">,</span>
+            <span class="n">patch_embed</span><span class="o">=</span><span class="n">patch_embed</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="KNNViT.forward">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNViT.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass through KNNViT.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input features [batch_size, in_channels, in_coords]</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            output: Model output [batch_size, num_classes] or [batch_size, embed_dim]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Use parent class forward method</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        
+        <span class="c1"># Format in expected manner: [batch_size, 1, embed_dim]</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">output</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;KNNViT(embed_dim=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span><span class="si">}</span><span class="s2">, num_layers=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span><span class="si">}</span><span class="s2">, num_classes=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="si">}</span><span class="s2">, pos_emb_type=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_emb_type</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="DinoV3RoPE">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.DinoV3RoPE">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DinoV3RoPE</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">inv_freq</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+
+<div class="viewcode-block" id="DinoV3RoPE.__init__">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.DinoV3RoPE.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">head_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">coords</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">head_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">xy_to_rowcol</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;-11&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+
+        <span class="n">inv_freq</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">**</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># (head_dim / 4,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;inv_freq&quot;</span><span class="p">,</span> <span class="n">inv_freq</span><span class="p">,</span> <span class="n">persistent</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DinoV3RoPE.forward">
+<a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.DinoV3RoPE.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pixel_values</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">pixel_values</span><span class="o">.</span><span class="n">device</span>
+        <span class="n">device_type</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;mps&quot;</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">autocast</span><span class="p">(</span><span class="n">device_type</span><span class="o">=</span><span class="n">device_type</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>  <span class="c1"># Force float32</span>
+            <span class="c1"># (height * width, 2, head_dim / 4) -&gt; (height * width, head_dim / 2) -&gt; (height * width, head_dim)</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">inv_freq</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">cos</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
+            <span class="n">sin</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
+
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">pixel_values</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="k">return</span> <span class="n">cos</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">),</span> <span class="n">sin</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,651 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.arch.architectures &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.arch.architectures</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.arch.architectures</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.knnalexnet</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNAlexNet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.alexnet</span><span class="w"> </span><span class="kn">import</span> <span class="n">baseline_alexnet_kernels</span><span class="p">,</span> <span class="n">alexnet2023_baseline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.knnresnet</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNResNet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.knn</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNDepthwiseSeparableConvLayer</span><span class="p">,</span> <span class="n">KNNConvLayer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.wrapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackboneProjectorWrapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.knnvit</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNViT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.vit</span><span class="w"> </span><span class="kn">import</span> <span class="n">VisionTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dinov3</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_dinov3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.mlp</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_mlp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">resnet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..sensing.retina</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_min_cmf_a</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">HiddenPrints</span><span class="p">,</span> <span class="n">add_to_all</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="saccadenet_alexnet2023_baseline">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_alexnet2023_baseline">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_alexnet2023_baseline</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span> 
+    <span class="n">kernels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">kk</span><span class="p">)</span> <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="n">baseline_alexnet_kernels</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch_spec</span><span class="p">)]]</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">k_mult</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kernels</span><span class="p">)):</span>
+            <span class="n">kernels</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">k_mult</span><span class="o">*</span><span class="n">kernels</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="mi">1</span><span class="p">])])</span>
+
+    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span> <span class="n">dropout_all</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout_all</span><span class="p">)</span>
+    <span class="n">backbone_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">channel_mult</span><span class="p">)</span> <span class="c1"># multiply # of channels in each layer by this factor</span>
+
+    <span class="k">if</span> <span class="s1">&#39;batch&#39;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span><span class="p">:</span>
+        <span class="n">backbone_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">idx</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;group&#39;</span><span class="p">:</span>
+        <span class="n">num_groups</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="n">backbone_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">idx</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">(</span><span class="n">num_groups</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span> <span class="ow">or</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span> <span class="o">==</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;norm_mlp should be False if norm is None&quot;</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;norm type </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span><span class="si">}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">final_grid_size</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">avgpool</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">avgpool</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool2d</span><span class="p">((</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">final_grid_size</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">final_grid_size</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">kernels</span><span class="p">)</span>
+
+    <span class="n">polar</span><span class="o">=</span><span class="s1">&#39;polar&#39;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span> <span class="ow">and</span> <span class="s1">&#39;comp&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">alexnet2023_baseline</span><span class="p">(</span><span class="n">mlp_kwargs</span><span class="o">=</span><span class="n">mlp_kwargs</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span>
+                                            <span class="n">avgpool</span><span class="o">=</span><span class="n">avgpool</span><span class="p">,</span>
+                                            <span class="n">img_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="p">,</span>
+                                            <span class="o">**</span><span class="n">backbone_kwargs</span><span class="p">,</span>
+                                            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">network</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_alexnet2023_knn">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_alexnet2023_knn">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_alexnet2023_knn</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+    <span class="n">kernels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">kk</span><span class="p">)</span> <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="n">baseline_alexnet_kernels</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch_spec</span><span class="p">)]]</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">k_mult</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kernels</span><span class="p">)):</span>
+            <span class="n">kernels</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">k_mult</span><span class="o">*</span><span class="n">kernels</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="mi">1</span><span class="p">])])</span>
+
+    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span> <span class="n">dropout_all</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout_all</span><span class="p">,)</span>
+
+    <span class="n">num_groups</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;force_batch&#39;</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">kernels</span><span class="p">)</span>
+
+    <span class="c1"># (channels, k_neighbors, stride, padding, groups)</span>
+    <span class="c1"># padding and groups are ignored</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">kk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">channel_mult</span><span class="p">)])</span> <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="n">kernels</span><span class="p">]</span>
+    <span class="n">ks</span> <span class="o">=</span> <span class="p">[</span><span class="n">kk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="n">kernels</span><span class="p">]</span> <span class="c1"># we square k to go from square kernel side-length to neighborhood size</span>
+    <span class="n">strides</span> <span class="o">=</span> <span class="p">[</span><span class="n">kk</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="n">kernels</span><span class="p">]</span>
+    <span class="n">pool_after</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="c1"># as in alexnet; pooling after last layer will automatically be done to match final_grid_size</span>
+
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">rescale_fov</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+    <span class="n">knn</span> <span class="o">=</span> <span class="n">KNNAlexNet</span><span class="p">(</span>
+        <span class="n">in_res</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="p">,</span>
+        <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">auto_match_cart_resources</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">features_per_layer</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+        <span class="n">stride_per_layer</span><span class="o">=</span><span class="n">strides</span><span class="p">,</span>
+        <span class="n">pool_after</span><span class="o">=</span><span class="n">pool_after</span><span class="p">,</span>
+        <span class="n">k_per_layer</span><span class="o">=</span><span class="n">ks</span><span class="p">,</span>
+        <span class="n">out_res</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">out_grid_size</span><span class="p">,</span>
+        <span class="n">fov</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span>
+        <span class="n">cmf_a</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">,</span>
+        <span class="n">norm_type</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span>
+        <span class="n">arch_flag</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch_flag</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+        <span class="n">sample_cortex</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">sample_cortex</span><span class="p">,</span>
+        <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># full MLP for learning over space</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+    <span class="c1"># position-wise MLP for SSL</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="o">!=</span> <span class="s1">&#39;supervised&#39;</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">with</span> <span class="n">HiddenPrints</span><span class="p">():</span>
+        <span class="n">network</span> <span class="o">=</span> <span class="n">BackboneProjectorWrapper</span><span class="p">(</span><span class="n">knn</span><span class="p">,</span> <span class="n">mlp</span><span class="p">,</span> <span class="n">mlp_ssl</span><span class="p">)</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">network</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_resnet_baseline</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+    <span class="n">fc_num_classes</span> <span class="o">=</span> <span class="n">fc_num_classes</span> <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;supervised&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="ow">and</span> <span class="n">fc_num_classes</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span> <span class="n">dropout_all</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout_all</span><span class="p">)</span>
+    <span class="n">backbone_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">channel_mult</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">modelchannel_mult</span><span class="p">)</span> <span class="c1"># multiply # of channels in each layer by this factor</span>
+
+    <span class="k">if</span> <span class="s1">&#39;batch&#39;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span><span class="p">:</span>
+        <span class="n">backbone_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm_layer</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">channels</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">channels</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;group&#39;</span><span class="p">:</span>
+        <span class="n">num_groups</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="n">backbone_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm_layer</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">channels</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">(</span><span class="n">num_groups</span><span class="p">,</span> <span class="n">channels</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span> <span class="ow">or</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span> <span class="o">==</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;norm_mlp should be False if norm is None&quot;</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;norm type </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span><span class="si">}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">k_mult</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;variable kernel size not implemented for resnet&#39;</span>
+    <span class="k">assert</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch_spec</span> <span class="o">==</span> <span class="s1">&#39;base&#39;</span><span class="p">,</span> <span class="s1">&#39;variable architecture not implemented for resnet&#39;</span>
+    <span class="k">assert</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch_flag</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch_flag</span><span class="p">),</span> <span class="s1">&#39;variable architecture flag not implemented for resnet&#39;</span>
+
+    <span class="n">polar</span><span class="o">=</span><span class="s1">&#39;polar&#39;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span> <span class="ow">and</span> <span class="s1">&#39;comp&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">resnet</span><span class="o">.</span><span class="n">resnet_ssl</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span> <span class="n">mlp_kwargs</span><span class="o">=</span><span class="n">mlp_kwargs</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">,</span>
+                                            <span class="n">out_map_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">final_grid_size</span><span class="p">,</span>
+                                            <span class="o">**</span><span class="n">backbone_kwargs</span><span class="p">,</span>
+                                            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">network</span>
+
+<div class="viewcode-block" id="saccadenet_resnet18_baseline">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_resnet18_baseline">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_resnet18_baseline</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_resnet_baseline</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_resnet34_baseline">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_resnet34_baseline">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_resnet34_baseline</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_resnet_baseline</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">34</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_resnet50_baseline">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_resnet50_baseline">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_resnet50_baseline</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_resnet_baseline</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_knnresnet">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnresnet</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span>
+                        <span class="n">in_conv_stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                        <span class="n">in_pool_stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                        <span class="n">depthwise_sep_conv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                        <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+                        <span class="p">):</span>
+    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span> <span class="n">dropout_all</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout_all</span><span class="p">)</span>
+    <span class="n">num_groups</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;force_batch&#39;</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">rescale_fov</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+    <span class="n">knn</span> <span class="o">=</span> <span class="n">KNNResNet</span><span class="p">(</span>
+                 <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
+                 <span class="n">in_conv_stride</span><span class="o">=</span><span class="n">in_conv_stride</span><span class="p">,</span>
+                 <span class="n">in_pool_stride</span><span class="o">=</span><span class="n">in_pool_stride</span><span class="p">,</span>
+                 <span class="n">fov</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span>
+                 <span class="n">cmf_a</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">,</span>
+                 <span class="n">in_res</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="p">,</span>
+                 <span class="n">style</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+                 <span class="n">norm_type</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span>
+                 <span class="n">arch_flag</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch_flag</span><span class="p">,</span>
+                 <span class="n">sample_cortex</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">sample_cortex</span><span class="p">,</span>
+                 <span class="n">conv_layer</span><span class="o">=</span><span class="n">KNNDepthwiseSeparableConvLayer</span> <span class="k">if</span> <span class="n">depthwise_sep_conv</span> <span class="k">else</span> <span class="n">KNNConvLayer</span><span class="p">,</span>
+                 <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+                 <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">auto_match_cart_resources</span><span class="p">,</span>
+                 <span class="n">num_classes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># full MLP for learning over space</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+    <span class="c1"># position-wise MLP for SSL</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="o">!=</span> <span class="s1">&#39;supervised&#39;</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">with</span> <span class="n">HiddenPrints</span><span class="p">():</span>
+        <span class="n">network</span> <span class="o">=</span> <span class="n">BackboneProjectorWrapper</span><span class="p">(</span><span class="n">knn</span><span class="p">,</span> <span class="n">mlp</span><span class="p">,</span> <span class="n">mlp_ssl</span><span class="p">)</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">network</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_knnresnet9">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet9">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnresnet9</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnresnet</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_knnresnet9_lowres">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet9_lowres">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnresnet9_lowres</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnresnet</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">in_conv_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_pool_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_knnresnet18">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet18">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnresnet18</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnresnet</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_knnresnet18_lowres">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet18_lowres">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnresnet18_lowres</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnresnet</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">in_conv_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_pool_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_knnresnet9_dwsep">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet9_dwsep">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnresnet9_dwsep</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnresnet</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">depthwise_sep_conv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_knnresnet9_dwsep_lowres">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet9_dwsep_lowres">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnresnet9_dwsep_lowres</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnresnet</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">in_conv_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_pool_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depthwise_sep_conv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_knnresnet18_dwsep">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet18_dwsep">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnresnet18_dwsep</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnresnet</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">depthwise_sep_conv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="saccadenet_knnresnet18_dwsep_lowres">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnresnet18_dwsep_lowres">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnresnet18_dwsep_lowres</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnresnet</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">in_conv_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_pool_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depthwise_sep_conv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="saccadenet_knnvit">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnvit">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnvit</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SaccadeNet with KNNViT backbone.</span>
+<span class="sd">    </span>
+<span class="sd">    This model uses KNN-based tokenization instead of standard patch embedding,</span>
+<span class="sd">    creating tokens based on spatial relationships in the foveated coordinate system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span> <span class="n">dropout_all</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout_all</span><span class="p">)</span>
+    <span class="n">num_groups</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;force_batch&#39;</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Adjust FOV based on fixation size</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">rescale_fov</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+    
+    <span class="c1"># Create KNNViT backbone</span>
+    <span class="n">backbone</span> <span class="o">=</span> <span class="n">KNNViT</span><span class="p">(</span>
+        <span class="n">fov</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span>
+        <span class="n">cmf_a</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+        <span class="n">img_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="p">,</span>
+        <span class="n">patch_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_size</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># RGB input</span>
+        <span class="n">embed_dim</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+        <span class="n">num_layers</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">num_layers</span><span class="p">,</span>
+        <span class="n">mlp_ratio</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">mlp_ratio</span><span class="p">,</span>
+        <span class="n">dropout</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span>
+        <span class="n">num_classes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># No classification head in backbone</span>
+        <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+        <span class="n">arch_flag</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch_flag</span><span class="p">,</span>
+        <span class="n">sample_cortex</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">sample_cortex</span><span class="p">,</span>
+        <span class="n">patch_overlap_factor</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_overlap_factor</span><span class="p">,</span>
+        <span class="n">pos_emb_type</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">pos_emb_type</span><span class="p">,</span>
+        <span class="n">force_patches_less_than_matched</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">force_patches_less_than_matched</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># full MLP for learning over space</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+    <span class="c1"># position-wise MLP for SSL</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="o">!=</span> <span class="s1">&#39;supervised&#39;</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">with</span> <span class="n">HiddenPrints</span><span class="p">():</span>
+        <span class="n">network</span> <span class="o">=</span> <span class="n">BackboneProjectorWrapper</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="n">mlp</span><span class="p">,</span> <span class="n">mlp_ssl</span><span class="p">)</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">network</span></div>
+
+
+
+<div class="viewcode-block" id="saccadenet_knnvit_base">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnvit_base">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnvit_base</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;KNNViT-Base configuration (l layers, 768 dim, 12 heads)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnvit</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">768</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="saccadenet_knnvit_small">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnvit_small">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnvit_small</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;KNNViT-Small configuration (l layers, 384 dim, 6 heads)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnvit</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">384</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="saccadenet_knnvit_tiny">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_knnvit_tiny">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_knnvit_tiny</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;KNNViT-Tiny configuration (l layers, 192 dim, 3 heads)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">saccadenet_knnvit</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">192</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="saccadenet_vit">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_vit">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_vit</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SaccadeNet with standard Vision Transformer backbone.</span>
+<span class="sd">    </span>
+<span class="sd">    This model uses the classic ViT architecture with patch embedding.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Create standard ViT backbone</span>
+    <span class="n">backbone</span> <span class="o">=</span> <span class="n">VisionTransformer</span><span class="p">(</span>
+        <span class="n">img_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">resize_size</span><span class="p">,</span>
+        <span class="n">patch_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_size</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># RGB input</span>
+        <span class="n">embed_dim</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+        <span class="n">num_layers</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">num_layers</span><span class="p">,</span>
+        <span class="n">mlp_ratio</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">mlp_ratio</span><span class="p">,</span>
+        <span class="n">dropout</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span>
+        <span class="n">num_classes</span><span class="o">=</span><span class="mi">0</span>  <span class="c1"># No classification head in backbone</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Create MLP head for final classification/representation</span>
+    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">embed_dim</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">embed_dim</span><span class="o">//</span><span class="mi">2</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">num_classes</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">))</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+    
+    <span class="c1"># Create SSL MLP if needed</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="o">!=</span> <span class="s1">&#39;supervised&#39;</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="c1"># Create wrapper network</span>
+    <span class="k">with</span> <span class="n">HiddenPrints</span><span class="p">():</span>
+        <span class="n">network</span> <span class="o">=</span> <span class="n">BackboneProjectorWrapper</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="n">mlp</span><span class="p">,</span> <span class="n">mlp_ssl</span><span class="p">)</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">network</span></div>
+
+
+
+<div class="viewcode-block" id="saccadenet_vit_base">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_vit_base">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_vit_base</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ViT-Base configuration (l layers, 768 dim, 12 heads)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">saccadenet_vit</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">768</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="saccadenet_vit_small">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_vit_small">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_vit_small</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ViT-Small configuration (l layers, 384 dim, 6 heads)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">saccadenet_vit</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">384</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="saccadenet_vit_tiny">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_vit_tiny">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_vit_tiny</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ViT-Tiny configuration (l layers, 192 dim, 3 heads)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">saccadenet_vit</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">embed_dim</span><span class="o">=</span><span class="mi">192</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="saccadenet_dinov3">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.saccadenet_dinov3">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_dinov3</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    pre-trained dinov3 -- architectural differences in the dinov3 model are specified via cfg.pretrained_model.path</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">build_dinov3</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">arch_wrapper</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">network</span></div>
+
+
+
+<div class="viewcode-block" id="arch_wrapper">
+<a class="viewcode-back" href="../../../api/foveation.arch.architectures.html#foveation.arch.architectures.arch_wrapper">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">arch_wrapper</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build SaccadeNet-ready architecture from an arbitrary backbone network and configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span> <span class="n">dropout_all</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout_all</span><span class="p">)</span>
+    <span class="n">num_groups</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;force_batch&#39;</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Adjust FOV based on fixation size</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">rescale_fov</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+    
+    <span class="c1"># full MLP for learning over space</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+
+    <span class="c1"># position-wise MLP for SSL</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="o">!=</span> <span class="s1">&#39;supervised&#39;</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">with</span> <span class="n">HiddenPrints</span><span class="p">():</span>
+        <span class="n">network</span> <span class="o">=</span> <span class="n">BackboneProjectorWrapper</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="n">mlp</span><span class="p">,</span> <span class="n">mlp_ssl</span><span class="p">)</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">network</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rescale_fov</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ugly helper function for rescaling fov - should refactor this at some point</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">full_fov</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fov</span>
+    <span class="n">fov</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fov</span>
+    <span class="n">cmf_a</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">cmf_a</span>
+    <span class="n">crop_area_range</span> <span class="o">=</span> <span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size_min_frac</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size_max_frac</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">cmf_a</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">cmf_a</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span> <span class="ow">or</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">rescale_fov</span><span class="p">:</span>
+        <span class="c1"># need to determine cmf_a here so we can pass it to KNN, which is called before the RetinalTransform is initialized</span>
+        <span class="k">assert</span> <span class="n">crop_area_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">crop_area_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;only allow single sized training crops when rescaling FOV (either with rescale_fov or with auto cmf_a)&#39;</span>
+        <span class="n">crop_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">crop_area_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size</span>
+        <span class="k">if</span> <span class="n">cmf_a</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">cmf_a</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+            <span class="n">cmf_a</span> <span class="o">=</span> <span class="n">get_min_cmf_a</span><span class="p">(</span><span class="n">crop_size</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size</span><span class="p">,</span> <span class="n">fov</span><span class="o">=</span><span class="n">fov</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+        <span class="c1"># auto FOV assumes the field-of-view is adjusted based on the crop size. this should always be the case, but for backwards compatibility it is not.</span>
+        <span class="n">fov</span> <span class="o">=</span> <span class="n">fov</span><span class="o">*</span><span class="p">(</span><span class="n">crop_size</span><span class="o">/</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># backwards compatibility, adjusting only based on the fixation size, not considering the crop_area_range</span>
+        <span class="n">fov</span> <span class="o">=</span> <span class="n">fov</span><span class="o">*</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size</span><span class="o">/</span><span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;adjusting FOV for fixation: </span><span class="si">{</span><span class="n">fov</span><span class="si">}</span><span class="s1"> (full: </span><span class="si">{</span><span class="n">full_fov</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">cmf_a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfg</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

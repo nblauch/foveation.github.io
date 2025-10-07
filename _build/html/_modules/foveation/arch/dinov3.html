@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.arch.dinov3 &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.arch.dinov3</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.arch.dinov3</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">login</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoImageProcessor</span><span class="p">,</span> <span class="n">AutoModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.lora</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_lora</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_all</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.knnvit</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNPatchEmbedding</span><span class="p">,</span> <span class="n">PartitioningPatchEmbedding</span><span class="p">,</span> <span class="n">KNNPartitioningPatchEmbedding</span><span class="p">,</span> <span class="n">DinoV3RoPE</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="load_dinov3">
+<a class="viewcode-back" href="../../../api/foveation.arch.dinov3.html#foveation.arch.dinov3.load_dinov3">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_dinov3</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">log_in</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">log_in</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">login</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HUGGINGFACE_TOKEN&#39;</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;HUGGINGFACE_TOKEN not found as an environment variable. Go to https://huggingface.co/settings/tokens and acquire a token, then set the environment variable to the token value, either in the current session or in your startup script (e.g. .bashrc or .bash_profile)&#39;</span><span class="p">)</span>
+    <span class="n">processor</span> <span class="o">=</span> <span class="n">AutoImageProcessor</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">AutoModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">device_map</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="c1">#&quot;auto&quot;)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">processor</span></div>
+
+
+
+<div class="viewcode-block" id="build_dinov3">
+<a class="viewcode-back" href="../../../api/foveation.arch.dinov3.html#foveation.arch.dinov3.build_dinov3">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_dinov3</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">log_in</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+
+    <span class="n">model</span><span class="p">,</span> <span class="n">processor</span> <span class="o">=</span> <span class="n">load_dinov3</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">log_in</span><span class="o">=</span><span class="n">log_in</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;as_grid&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">partitioning_patches</span> <span class="o">==</span> <span class="s1">&#39;KNN&#39;</span><span class="p">:</span>
+            <span class="n">patch_cls</span> <span class="o">=</span> <span class="n">KNNPartitioningPatchEmbedding</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">cart_patch_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_size</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">partitioning_patches</span><span class="p">:</span>
+            <span class="n">patch_cls</span> <span class="o">=</span> <span class="n">PartitioningPatchEmbedding</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">cart_patch_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_size</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">patch_cls</span> <span class="o">=</span> <span class="n">KNNPatchEmbedding</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">patch_overlap_factor</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_overlap_factor</span><span class="p">,</span>
+                <span class="n">new_parameterization</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">new_parameterization</span><span class="p">,</span>
+                <span class="n">cart_patch_size</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_size</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="n">patch_embed</span> <span class="o">=</span> <span class="n">patch_cls</span><span class="p">(</span>
+            <span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">embed_dim</span><span class="o">=</span><span class="mi">384</span><span class="p">,</span> <span class="c1"># note: this needs to be generalized to use non ViT-S variants</span>
+            <span class="n">in_res</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="p">,</span>
+            <span class="n">fov</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span>
+            <span class="n">cmf_a</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">,</span>   
+            <span class="n">style</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+            <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">in_cart_res</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="p">,</span>
+            <span class="n">max_coord_val</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">arch_flag</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">sample_cortex</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">sample_cortex</span><span class="p">,</span>
+            <span class="n">force_patches_less_than_matched</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">force_patches_less_than_matched</span><span class="p">,</span>
+            <span class="n">ref_frame_side_length</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">patch_size</span><span class="p">,</span>
+            <span class="n">transposed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># load in pretrained weights to foveated patch embedding</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">use_patch_weights</span><span class="p">:</span>
+            <span class="c1"># resample if needed</span>
+            <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">patch_size</span> <span class="o">!=</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+                <span class="c1"># resample patch embedding to desired size</span>
+                <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">patch_size</span> <span class="o">&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;bilinear&#39;</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span> <span class="o">=</span> <span class="n">resample_patch_embed_conv</span><span class="p">(</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="p">,</span>
+                    <span class="n">target_hw</span> <span class="o">=</span> <span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">patch_size</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">patch_size</span><span class="p">),</span>
+                    <span class="n">preserve_kernel_norm</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="p">,</span> <span class="s1">&#39;preserve_patch_norm&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+                    <span class="n">align_corners</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;nearest&#39;</span> <span class="k">else</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">pretrained_weights</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">patch_embed</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">pretrained_weights</span><span class="p">)</span>
+
+        <span class="c1"># replace standard patch embedding with foveated version</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span> <span class="o">=</span> <span class="n">patch_embed</span>
+
+        <span class="c1"># initialize new rope encodings</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">rope_embeddings</span> <span class="o">=</span> <span class="n">DinoV3RoPE</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rope_theta</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">//</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_attention_heads</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">out_coords</span><span class="o">.</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+         <span class="c1"># convenience access to total number of outputs units</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">total_embed_dim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">out_coords</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">total_embed_dim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">*</span> <span class="p">((</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="o">//</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_size</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">use_patch_weights</span><span class="p">:</span>
+            <span class="c1"># reinit patch weights</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">kaiming_normal_</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+
+        <span class="c1"># resample patch embedding to desired size</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span> <span class="o">=</span> <span class="n">resample_patch_embed_conv</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="p">,</span>
+            <span class="n">target_hw</span> <span class="o">=</span> <span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_size</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_size</span><span class="p">),</span>
+            <span class="n">preserve_kernel_norm</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="p">,</span> <span class="s1">&#39;preserve_patch_norm&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># create wrapper to make a saccadenet model</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">forward_head</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="c1"># just replace the forward_head function with an identity mapper</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">forward_</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">forward</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">forward_</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">pooler_output</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">prep_dinov3_finetuning</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+
+<div class="viewcode-block" id="prep_dinov3_finetuning">
+<a class="viewcode-back" href="../../../api/foveation.arch.dinov3.html#foveation.arch.dinov3.prep_dinov3_finetuning">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prep_dinov3_finetuning</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">freeze_backbone</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">freeze_patch_embed</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">unfreeze_norm</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">unfreeze_layers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">unfreeze_layers</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">unfreeze_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">unfreeze_layers</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">unfreeze_layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">layer_module</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">layer_module</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">layer_module</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>       
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">unfreeze_all_norms</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">layer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="p">[</span><span class="n">layer</span><span class="o">.</span><span class="n">norm1</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">norm2</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">layer_scale1</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">layer_scale2</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ln</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                        <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>   
+
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">layers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ii</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># patch embedding -- just has a single weight, no sublayers</span>
+                <span class="n">layer</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span>
+                <span class="n">apply_lora</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">layer</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">sublayer</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">sublayers</span><span class="p">:</span>
+                <span class="n">parent</span><span class="p">,</span> <span class="n">child</span> <span class="o">=</span> <span class="n">sublayer</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                <span class="n">apply_lora</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">parent</span><span class="p">),</span> <span class="n">child</span><span class="p">),</span> <span class="n">r</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+
+<div class="viewcode-block" id="resample_patch_embed_conv">
+<a class="viewcode-back" href="../../../api/foveation.arch.dinov3.html#foveation.arch.dinov3.resample_patch_embed_conv">[docs]</a>
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">resample_patch_embed_conv</span><span class="p">(</span>
+    <span class="n">conv</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">,</span>
+    <span class="n">target_hw</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bicubic&quot;</span><span class="p">,</span>
+    <span class="n">align_corners</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">preserve_kernel_norm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resample a patch-embedding Conv2d&#39;s kernels from (kH, kW) -&gt; target_hw and</span>
+<span class="sd">    return a NEW Conv2d with kernel_size=stride=target_hw. Supports both upsampling</span>
+<span class="sd">    and downsampling. Assumes:</span>
+<span class="sd">      - stride == kernel_size (patch embedding)</span>
+<span class="sd">      - padding == 0, groups == 1, dilation == 1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">)</span>
+    <span class="n">kH</span><span class="p">,</span> <span class="n">kW</span> <span class="o">=</span> <span class="n">conv</span><span class="o">.</span><span class="n">kernel_size</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">conv</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">)</span>
+    <span class="n">sH</span><span class="p">,</span> <span class="n">sW</span> <span class="o">=</span> <span class="n">conv</span><span class="o">.</span><span class="n">stride</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span> <span class="n">conv</span><span class="o">.</span><span class="n">stride</span><span class="p">)</span>
+
+    <span class="c1"># sanity checks for patch embedding</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">kH</span><span class="p">,</span> <span class="n">kW</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">sH</span><span class="p">,</span> <span class="n">sW</span><span class="p">),</span> <span class="s2">&quot;Expected stride == kernel_size for patch embedding.&quot;</span>
+    <span class="k">assert</span> <span class="n">conv</span><span class="o">.</span><span class="n">padding</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">padding</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">conv</span><span class="o">.</span><span class="n">padding</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Expected no padding.&quot;</span>
+    <span class="k">assert</span> <span class="n">conv</span><span class="o">.</span><span class="n">groups</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Expected groups == 1 for patch embedding.&quot;</span>
+    <span class="k">assert</span> <span class="n">conv</span><span class="o">.</span><span class="n">dilation</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">dilation</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">conv</span><span class="o">.</span><span class="n">dilation</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Expected dilation == 1.&quot;</span>
+
+    <span class="n">device</span> <span class="o">=</span> <span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">device</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span>
+    <span class="n">c_out</span><span class="p">,</span> <span class="n">c_in</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span>
+    
+    <span class="c1"># flatten kernels to NCHW for interpolation: N = c_out*c_in, C=1</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">c_out</span> <span class="o">*</span> <span class="n">c_in</span>
+    <span class="n">w_flat</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kH</span><span class="p">,</span> <span class="n">kW</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># resample (works for both upsampling and downsampling)</span>
+    <span class="n">w_resampled</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">w_flat</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">target_hw</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="n">align_corners</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">preserve_kernel_norm</span><span class="p">:</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-12</span>
+        <span class="n">old_norm</span> <span class="o">=</span> <span class="n">w_flat</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">clamp_min</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span>
+        <span class="n">new_norm</span> <span class="o">=</span> <span class="n">w_resampled</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">clamp_min</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span>
+        <span class="n">w_resampled</span> <span class="o">=</span> <span class="n">w_resampled</span> <span class="o">*</span> <span class="p">(</span><span class="n">old_norm</span> <span class="o">/</span> <span class="n">new_norm</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># restore shape</span>
+    <span class="n">w_resampled</span> <span class="o">=</span> <span class="n">w_resampled</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">c_out</span><span class="p">,</span> <span class="n">c_in</span><span class="p">,</span> <span class="n">target_hw</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target_hw</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># build the new patch-embed conv with kernel_size == stride == target_hw</span>
+    <span class="n">new_conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span>
+        <span class="n">in_channels</span><span class="o">=</span><span class="n">conv</span><span class="o">.</span><span class="n">in_channels</span><span class="p">,</span>
+        <span class="n">out_channels</span><span class="o">=</span><span class="n">conv</span><span class="o">.</span><span class="n">out_channels</span><span class="p">,</span>
+        <span class="n">kernel_size</span><span class="o">=</span><span class="n">target_hw</span><span class="p">,</span>
+        <span class="n">stride</span><span class="o">=</span><span class="n">target_hw</span><span class="p">,</span>
+        <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">bias</span><span class="o">=</span><span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">new_conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">w_resampled</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">conv</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">new_conv</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">new_conv</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

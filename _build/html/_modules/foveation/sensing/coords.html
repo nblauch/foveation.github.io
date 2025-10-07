@@ -1,0 +1,892 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.sensing.coords &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+      <li class="breadcrumb-item active">foveation.sensing.coords</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.sensing.coords</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalize</span><span class="p">,</span> <span class="n">add_to_all</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.manifold</span><span class="w"> </span><span class="kn">import</span> <span class="n">vis_cartesian_to_cortical_cartesian_coords</span> <span class="k">as</span> <span class="n">vis_to_sensor_manifold</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="SamplingCoords">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SamplingCoords</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object for storing multiple coordinate systems relevant to a set of visual field samples</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): field-of-view in degrees</span>
+<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        res (int): resolution, corresponding to the side length of a cartesian grid or the number of radii in polar (before any adjustments are made to match a target cartesian grid)</span>
+<span class="sd">        device (str): what device to operate on</span>
+<span class="sd">        style (str): what type of sampling</span>
+<span class="sd">        dtype (torch.dtype): what data type to use</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SamplingCoords.__init__">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> 
+                 <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">,</span>
+                 <span class="n">max_val</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="n">fov</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span> <span class="o">=</span> <span class="n">cmf_a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">res</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span> <span class="o">=</span> <span class="n">max_val</span>
+
+        <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">polar</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plotting</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">plotting</span> <span class="o">=</span> <span class="n">get_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+            <span class="c1"># image format (row, col)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_rowcol</span> <span class="o">=</span> <span class="n">xy_to_rowcol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;-11&#39;</span><span class="p">)</span>
+            <span class="c1"># grid_sample format (col, row)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_colrow</span> <span class="o">=</span> <span class="n">xy_to_colrow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;-11&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_pad_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad_cartesian</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;logpolar&#39;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+                <span class="c1"># log polar image, meaning it does not use the proper sensor manifold, but a simplified one</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+                <span class="n">radius</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">.5</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span>
+                <span class="n">cmf_a_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">radius</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">)</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cmf_a_tensor</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">cmf_a_tensor</span><span class="p">)</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cmf_a_tensor</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cortical</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plotting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># cortical coordinates to be used for sampling RFs</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span> <span class="o">=</span> <span class="n">vis_to_sensor_manifold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">as_tensor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">cortical_pad_coords</span> <span class="o">=</span> <span class="n">vis_to_sensor_manifold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cartesian_pad_coords</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">as_tensor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="o">.</span><span class="n">shape</span></div>
+
+    
+<div class="viewcode-block" id="SamplingCoords.pad_cartesian">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.pad_cartesian">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pad_cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">padding_distance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate additional cartesian coordinates for padding around the sampling grid.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            padding_distance (float): Distance to extend beyond the current sampling area.</span>
+<span class="sd">            device (str, optional): Device to place the coordinates on. Defaults to None.</span>
+<span class="sd">            dtype (torch.dtype, optional): Data type for the coordinates. Defaults to None.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Additional cartesian coordinates for padding.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pad_coords</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sorted_radii</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polar</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]))</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">radius_diff</span> <span class="o">=</span> <span class="n">sorted_radii</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">sorted_radii</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">start_radius</span> <span class="o">=</span> <span class="n">sorted_radii</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius_diff</span>
+        <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start_radius</span><span class="p">,</span> <span class="n">start_radius</span><span class="o">+</span><span class="n">padding_distance</span><span class="p">,</span> <span class="n">radius_diff</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">angle</span> <span class="ow">in</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">radius_diff</span><span class="p">):</span>
+                <span class="n">pad_coords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">radius</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">radius</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)]))</span>
+        <span class="n">pad_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">pad_coords</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pad_coords</span></div>
+
+
+<div class="viewcode-block" id="SamplingCoords.get_strided_coords">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.get_strided_coords">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_strided_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">in_cart_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a strided version of the coordinates.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            stride (int): Stride factor for downsampling coordinates.</span>
+<span class="sd">            auto_match_cart_resources (int): Automatic matching parameter for cartesian resources.</span>
+<span class="sd">            in_cart_res (int, optional): Input cartesian resolution. Required for &#39;fixn&#39; style.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            SamplingCoords: New SamplingCoords object with strided coordinates.</span>
+<span class="sd">            out_radii: # of output radii</span>
+<span class="sd">            out_cart_res: corresponding output cartesian resolution</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out_cart_res</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s1">&#39;fixn&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">:</span> 
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            fixn means to fix the number (n) of sampling coordinates exactly to that of the target cartesian grid</span>
+<span class="sd">            this requires adding in some additional samples across radii, deviating a bit from local isotropy</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">assert</span> <span class="n">in_cart_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;in_cart_res must be provided if using fixn style&#39;</span>
+            <span class="n">out_radii</span> <span class="o">=</span> <span class="n">in_cart_res</span><span class="o">//</span><span class="n">stride</span>
+            <span class="n">out_cart_res</span> <span class="o">=</span> <span class="n">in_cart_res</span><span class="o">//</span><span class="n">stride</span>
+        <span class="k">elif</span> <span class="n">auto_match_cart_resources</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s1">&#39;fixn&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="ow">and</span> <span class="n">in_cart_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            this means to get as close as possible to resolution of the cartesian grid (same or less), while maintaining isotropic sampling</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">assert</span> <span class="n">in_cart_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;in_cart_res must be provided if auto_match_cart_resources is True&#39;</span>
+            <span class="n">out_cart_res</span> <span class="o">=</span> <span class="n">in_cart_res</span><span class="o">//</span><span class="n">stride</span>
+            <span class="n">out_radii</span><span class="p">,</span> <span class="n">num_coords</span> <span class="o">=</span> <span class="n">find_desired_res</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">,</span> <span class="n">out_cart_res</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="n">force_less_than</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            no matching to cartesian sampling resolution -- not recommended since it makes comparisons very difficult</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">out_radii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">//</span> <span class="n">stride</span>
+        <span class="k">if</span> <span class="n">out_radii</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Out radii decreased to less than 1: </span><span class="si">{</span><span class="n">out_radii</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="n">out_coords</span> <span class="o">=</span> <span class="n">SamplingCoords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">,</span> <span class="n">out_radii</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out_coords</span><span class="p">,</span> <span class="n">out_radii</span><span class="p">,</span> <span class="n">out_cart_res</span></div>
+
+    
+<div class="viewcode-block" id="SamplingCoords.to">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.to">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the SamplingCoords object to a different device and/or change data type.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            device (str, optional): Target device. Defaults to None.</span>
+<span class="sd">            dtype (torch.dtype, optional): Target data type. Defaults to None.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            SamplingCoords: SamplingCoords object on the specified device/dtype.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dtype</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cortical</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    
+<div class="viewcode-block" id="SamplingCoords.get_scatter_sizes">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.get_scatter_sizes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_scatter_sizes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate approximate size to be used for plotting in scatter plots.</span>
+
+<span class="sd">        Scales linearly with eccentricity, as occurs in KNN-sampling of the sensor manifold. </span>
+
+<span class="sd">        However, this is not precisely tuned to the particular warping parameters. </span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Receptive field sizes for each sampling point.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Calculate RF sizes based on eccentricity</span>
+        <span class="n">sizes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polar</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">radius</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polar</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="c1"># RF size increases with eccentricity</span>
+            <span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
+        <span class="k">return</span> <span class="n">sizes</span></div>
+
+    
+<div class="viewcode-block" id="SamplingCoords.clone">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.clone">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a deep copy of the SamplingCoords object.&quot;&quot;&quot;</span>
+        <span class="n">new_coords</span> <span class="o">=</span> <span class="n">SamplingCoords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_coords</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the number of sampling coordinates.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cartesian</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;String representation of the SamplingCoords object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;SamplingCoords(length=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s1">, fov=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="si">}</span><span class="s1">, cmf_a=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span><span class="si">}</span><span class="s1">, resolution=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s1">, style=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="si">}</span><span class="s1">)&#39;</span></div>
+
+
+<div class="viewcode-block" id="get_isotropic_sampling_coords">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.get_isotropic_sampling_coords">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_isotropic_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">constant_num_angles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_norm_rad</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sample coordinates isotropically with the cortical magnification function of the complex log mapping w=log(z+a), where z=x+iy</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): a parameter in the CMF controlling foveation; smaller = stronger foveation</span>
+<span class="sd">        res (int): Number of sampling points.</span>
+<span class="sd">        circular (bool, optional): If True, the sampling is circular, otherwise it is square. Defaults to True.</span>
+<span class="sd">        device (str, optional): Device to run the computation on. Defaults to &#39;cpu&#39;.</span>
+<span class="sd">        constant_num_angles (bool, optional): If True, the number of angles is constant for all radii, implementing log polar image sampling. Defaults to False.</span>
+<span class="sd">        force_n_points (int, optional): If not None, forces the number of points to exactly this value. Useful for controlled comparisons with other sensors. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            - torch.Tensor: Sampling cartesian coordinates in visual space, normalized to (-1,1)</span>
+<span class="sd">            - torch.Tensor: Sampling polar coordinates in visual space</span>
+<span class="sd">            - torch.Tensor: Plotting coordinates in complex log space, useful for visualizing the sampling</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">force_n_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">res</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">find_desired_res</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">force_n_points</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># compute log-sampled radii, and angles for each radius</span>
+    <span class="n">radius</span><span class="p">,</span> <span class="n">n_angles</span> <span class="o">=</span> <span class="n">_compute_isotropic_r_and_num_theta</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="n">circular</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">constant_num_angles</span><span class="p">:</span>
+        <span class="c1"># overwrite isotropic angle sampling to use standard log polar image sampling</span>
+        <span class="n">n_angles</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">res</span><span class="p">]</span><span class="o">*</span><span class="n">res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">max_norm_rad</span>
+
+    <span class="c1"># if force_n_points is not None, we need to adjust the number of angles for the last radius</span>
+    <span class="k">if</span> <span class="n">force_n_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># fix # of points by removing angles evenly across radii</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">n_angles</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">force_n_points</span>
+        <span class="c1"># insert/remove new radii</span>
+        <span class="k">if</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">add</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="s1">&#39;removing&#39;</span>
+            <span class="n">verb</span> <span class="o">=</span> <span class="s1">&#39;from&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">add</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="s1">&#39;adding&#39;</span>
+            <span class="n">verb</span> <span class="o">=</span> <span class="s1">&#39;to&#39;</span>
+        <span class="k">if</span> <span class="n">diff</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">rad_idx</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">rad_idx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">):</span>
+                <span class="n">this_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">rad_idx</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">this_diff</span><span class="si">}</span><span class="s1"> angles </span><span class="si">{</span><span class="n">verb</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span><span class="si">}</span><span class="s1"> radii&#39;</span><span class="p">)</span>
+                <span class="c1"># set some heuristic choices for which radii to presever</span>
+                <span class="n">rad_min</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.2</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">radius</span><span class="p">))</span>
+                <span class="n">rad_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">rad_idx</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">rad_min</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">radius</span><span class="p">)),</span> <span class="n">size</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">this_diff</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span><span class="o">-</span><span class="n">rad_min</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)])</span>
+            <span class="n">rad_idx</span> <span class="o">=</span> <span class="n">rad_idx</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">)):</span>
+                <span class="c1"># make sure we don&#39;t remove the only angle from a radius</span>
+                <span class="n">this_idx</span> <span class="o">=</span> <span class="n">rad_idx</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+                <span class="k">while</span> <span class="n">n_angles</span><span class="p">[</span><span class="n">this_idx</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;removing&#39;</span><span class="p">:</span>
+                    <span class="n">this_idx</span> <span class="o">=</span> <span class="n">this_idx</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">n_angles</span><span class="p">[</span><span class="n">this_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_angles</span><span class="p">[</span><span class="n">this_idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">add</span>
+            <span class="k">assert</span> <span class="n">n_angles</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;some radii have no angles&#39;</span>
+                
+    <span class="c1"># compute angles and store coordinates</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">polar_coords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">hemi_inds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">radius_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">radius</span><span class="p">):</span>
+        <span class="n">angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">n_angles</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">angles</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">angle</span> <span class="ow">in</span> <span class="n">angles</span><span class="p">:</span>
+            <span class="n">polar_coords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">radius_i</span><span class="p">,</span> <span class="n">angle</span><span class="p">]))</span>
+            <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">radius_i</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">radius_i</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)]))</span>
+            <span class="c1"># ensure right goes to 0, left goes to 1</span>
+            <span class="n">hh</span> <span class="o">=</span> <span class="n">radius_i</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> 
+            <span class="n">hemi_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hh</span><span class="p">)</span>
+
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+    <span class="n">polar_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">polar_coords</span><span class="p">)</span>
+    <span class="n">hemi_inds</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">hemi_inds</span><span class="p">)</span>
+
+    <span class="c1"># use log(z+a) model to compute plotting coordinates (i.e. cortical visualization) </span>
+    <span class="n">fov_coords</span> <span class="o">=</span> <span class="n">coords</span><span class="o">*</span><span class="p">(</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plotting_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fov_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fov_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cmf_a</span><span class="p">)</span>
+    <span class="n">plotting_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">plotting_coords</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="o">-</span><span class="n">plotting_coords</span><span class="o">.</span><span class="n">imag</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">max_fov_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">cmf_a</span><span class="p">)</span>
+    
+    <span class="c1"># make plotting coords separated nicely across hemifields/hemispheres</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">plotting_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mf">.5</span>
+    <span class="n">plotting_coords</span><span class="p">[</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span> <span class="o">+</span> <span class="n">max_fov_rad</span> <span class="o">-</span> <span class="n">plotting_coords</span><span class="p">[</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">plotting_coords</span><span class="p">[</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">plotting_coords</span><span class="p">[</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">std</span> <span class="o">+</span> <span class="n">max_fov_rad</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">polar_coords</span><span class="p">,</span> <span class="n">plotting_coords</span></div>
+
+
+<div class="viewcode-block" id="get_logpolar_image_sampling_coords">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.get_logpolar_image_sampling_coords">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_logpolar_image_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_norm_rad</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience wrapper for log polar image sampling. </span>
+<span class="sd">    Sample coordinates with the cortical magnification function of the complex log mapping w=log(z+a), where and z=x+iy</span>
+<span class="sd">    This is not isotropic, rather, it produces a square log polar image using an equal number of anglular samples for all radii. </span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): field of view diameter in degrees</span>
+<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        res (int): number of sampling points</span>
+<span class="sd">        circular (bool): if True, the sampling is circular, otherwise it is square</span>
+<span class="sd">        device (str): device to run the computation on</span>
+<span class="sd">        force_n_points (int): if not None, the number of points is forced to be exactly this, useful for controlled comparisons with other sensors</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        coords (torch.Tensor): sampling cartesian coordinates in visual space, normalized to (-1,1)</span>
+<span class="sd">        polar_coords (torch.Tensor): sampling polar coordinates in visual space </span>
+<span class="sd">        plotting_coords (torch.Tensor): plotting coordinates in complex log space, useful for visualizing the sampling</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_isotropic_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">constant_num_angles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="n">force_n_points</span><span class="p">,</span> <span class="n">max_norm_rad</span><span class="o">=</span><span class="n">max_norm_rad</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_compute_isotropic_r_and_num_theta">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords._compute_isotropic_r_and_num_theta">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_isotropic_r_and_num_theta</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the radii and angles for isotropic logarithmic sampling.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        res (int): Number of sampling radii.</span>
+<span class="sd">        circular (bool, optional): If True, use circular sampling. Defaults to True.</span>
+<span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            - torch.Tensor: Radii for each sampling ring</span>
+<span class="sd">            - torch.Tensor: Number of angles for each radius</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fov</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">r_max</span> <span class="o">=</span> <span class="p">(</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span> <span class="k">if</span> <span class="n">circular</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">r_max</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">max_norm_radius</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">circular</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1"># sample evenly in cortical radius (w=log(r + cmf_a)) and solve for visual radius (r = exp(w) - cmf_a)</span>
+    <span class="n">w_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">)</span>
+    <span class="n">w_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">r_max</span> <span class="o">+</span> <span class="n">cmf_a</span><span class="p">)</span>
+    <span class="c1"># add one extra point to cortical radius so that we can accurately compute the angle delta for the last visual radius</span>
+    <span class="n">w_delta</span> <span class="o">=</span> <span class="p">(</span><span class="n">w_max</span> <span class="o">-</span> <span class="n">w_min</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">res</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">w_min</span><span class="p">,</span> <span class="n">w_max</span><span class="o">+</span><span class="n">w_delta</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">res</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="c1"># even sampling in the cortical radius</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">-</span> <span class="n">cmf_a</span> <span class="c1"># back-projection into visual radius</span>
+
+    <span class="c1"># fulfill approximate isotropy: make the difference between neighboring angles equal to the difference in neighboring radii</span>
+    <span class="n">n_angles_init</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">n_angles</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_angles_init</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">res</span><span class="p">):</span>
+        <span class="c1"># average curr to prev and curr to next radius dists</span>
+        <span class="n">radius_diff</span> <span class="o">=</span> <span class="p">((</span><span class="n">radius</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="n">radius</span><span class="p">[</span><span class="n">ii</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span><span class="p">[</span><span class="n">ii</span><span class="p">]))</span> <span class="o">/</span> <span class="mi">2</span> 
+        <span class="n">angles</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">radius</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span><span class="n">radius_diff</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">radius</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+        <span class="n">n_angles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">angles</span><span class="p">))</span>
+    <span class="n">n_angles</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">n_angles</span><span class="p">)</span>  
+
+    <span class="c1"># remove extra radius</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># normalize to [0,1]</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">max_norm_radius</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius</span> <span class="o">/</span> <span class="p">(</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">radius</span><span class="p">,</span> <span class="n">n_angles</span></div>
+
+    
+
+<div class="viewcode-block" id="num_sampling_coords_isotropic">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.num_sampling_coords_isotropic">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">num_sampling_coords_isotropic</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quickly compute the number of sampling coordinates for isotropic sampling.</span>
+
+<span class="sd">    Useful for optimizing the res (# of radii) to match a certain output n (# of points)</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        res (int): Number of sampling radii.</span>
+<span class="sd">        circular (bool, optional): If True, use circular sampling. Defaults to True.</span>
+<span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Total number of sampling coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">radius</span><span class="p">,</span> <span class="n">n_angles</span> <span class="o">=</span> <span class="n">_compute_isotropic_r_and_num_theta</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="n">circular</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n_angles</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="find_desired_res">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.find_desired_res">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_desired_res</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">n_points_desired</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1000</span><span class="p">),</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the resolution that gives the desired number of sampling points using binary search.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        n_points_desired (int): Desired number of sampling points.</span>
+<span class="sd">        style (str): which sampling style, e.g. &#39;isotropic&#39;</span>
+<span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
+<span class="sd">        bounds (tuple, optional): Bounds for resolution search. Defaults to (1,1000).</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            - int: Resolution that gives the desired number of points</span>
+<span class="sd">            - int: Actual number of points achieved</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Try a range of integer values directly instead of using minimize_scalar</span>
+    <span class="n">best_res</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">best_diff</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Binary search through the range since the function is monotonic</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">bounds</span>
+    <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">num_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">mid</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">n_points_desired</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="n">best_diff</span><span class="p">:</span>
+            <span class="n">best_diff</span> <span class="o">=</span> <span class="n">diff</span>
+            <span class="n">best_res</span> <span class="o">=</span> <span class="n">mid</span>
+            
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">n_points_desired</span><span class="p">:</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
+    
+    <span class="n">n</span> <span class="o">=</span> <span class="n">num_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">best_res</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">force_less_than</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">n_points_desired</span><span class="p">:</span>
+            <span class="n">best_res</span> <span class="o">=</span> <span class="n">best_res</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">num_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">best_res</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">n_points_desired</span><span class="p">:</span>
+            <span class="c1"># make sure we overshoot slightly so that we can remove angles rather than adding them</span>
+            <span class="n">best_res</span> <span class="o">=</span> <span class="n">best_res</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">num_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">best_res</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;found resolution </span><span class="si">{</span><span class="n">best_res</span><span class="si">}</span><span class="s1"> giving </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1"> points (desired: </span><span class="si">{</span><span class="n">n_points_desired</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">best_res</span><span class="p">,</span> <span class="n">n</span></div>
+
+
+
+<div class="viewcode-block" id="get_sampling_coords">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.get_sampling_coords">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate sampling coordinates based on the specified style.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        res (int): Resolution parameter.</span>
+<span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
+<span class="sd">        style (str): Sampling style (&#39;isotropic&#39;, &#39;logpolar&#39;, &#39;isotropic_fixn&#39;, &#39;uniform&#39;, &#39;uniform_as_grid&#39;, &#39;logpolar_as_grid&#39;).</span>
+<span class="sd">        max_val (float, optional): maximum x/y value, defaults to 1</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            - torch.Tensor: Cartesian coordinates</span>
+<span class="sd">            - torch.Tensor: Polar coordinates</span>
+<span class="sd">            - torch.Tensor: Plotting coordinates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> <span class="s1">&#39;logpolar&#39;</span><span class="p">,</span> <span class="s1">&#39;isotropic_fixn&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform_as_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;logpolar_as_grid&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span> <span class="ow">or</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;uniform_as_grid&#39;</span><span class="p">:</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">max_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">coords</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">polar_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plotting_coords</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="s1">&#39;isotropic&#39;</span> <span class="ow">in</span> <span class="n">style</span> <span class="ow">or</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;logpolar&#39;</span> <span class="ow">or</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;logpolar_as_grid&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;fixn&#39;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+            <span class="n">force_n_points</span> <span class="o">=</span> <span class="n">res</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">force_n_points</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;logpolar&#39;</span> <span class="ow">or</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;logpolar_as_grid&#39;</span><span class="p">:</span>
+            <span class="n">coords</span><span class="p">,</span> <span class="n">polar_coords</span><span class="p">,</span> <span class="n">plotting_coords</span> <span class="o">=</span> <span class="n">get_logpolar_image_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_norm_rad</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">coords</span><span class="p">,</span> <span class="n">polar_coords</span><span class="p">,</span> <span class="n">plotting_coords</span> <span class="o">=</span> <span class="n">get_isotropic_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="n">force_n_points</span><span class="p">,</span> <span class="n">max_norm_rad</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;fixn&#39;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">res</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">polar_coords</span><span class="p">,</span> <span class="n">plotting_coords</span></div>
+
+
+
+<div class="viewcode-block" id="rowcol_to_xy">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.rowcol_to_xy">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rowcol_to_xy</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;01&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert row-column coordinates to xy coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        coords (torch.Tensor): Input coordinates in row-column format.</span>
+<span class="sd">        do_norm (bool, optional): Whether to normalize coordinates. Defaults to True.</span>
+<span class="sd">        format (str): Coordinate format (&#39;01&#39; for [0,1] or &#39;-11&#39; for [-1,1]). Defaults to &#39;01&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Coordinates in xy format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;01&#39;</span><span class="p">,</span> <span class="s1">&#39;-11&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;01&#39;</span><span class="p">:</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">do_norm</span><span class="p">:</span>   
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="nb">max</span><span class="p">)</span>
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">col</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;01&#39;</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">row</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">row</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="xy_to_rowcol">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.xy_to_rowcol">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">xy_to_rowcol</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;01&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert xy coordinates to row-column coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        coords (torch.Tensor): Input coordinates in xy format.</span>
+<span class="sd">        do_norm (bool, optional): Whether to normalize coordinates. Defaults to True.</span>
+<span class="sd">        format (str): Coordinate format (&#39;01&#39; for [0,1] or &#39;-11&#39; for [-1,1]). Defaults to &#39;01&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Coordinates in row-column format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;01&#39;</span><span class="p">,</span> <span class="s1">&#39;-11&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;01&#39;</span><span class="p">:</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">do_norm</span><span class="p">:</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="nb">max</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;01&#39;</span><span class="p">:</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">y</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="o">-</span><span class="n">y</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="xy_to_colrow">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.xy_to_colrow">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">xy_to_colrow</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;01&#39;</span><span class="p">):</span>
+    <span class="n">rowcol</span> <span class="o">=</span> <span class="n">xy_to_rowcol</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="n">do_norm</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">rowcol</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">rowcol</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">colrow</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">colrow</span></div>
+
+
+
+<div class="viewcode-block" id="num_sampling_coords">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.num_sampling_coords">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">num_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the number of sampling coordinates for a given style.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        res (int): Resolution parameter.</span>
+<span class="sd">        style (str): Sampling style. Defaults to &#39;isotropic&#39;.</span>
+<span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Number of sampling coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">num_sampling_coords_isotropic</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;logpolar&#39;</span><span class="p">,</span> <span class="s1">&#39;logpolar_as_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;isotropic_fixn&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform_as_grid&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Style </span><span class="si">{</span><span class="n">style</span><span class="si">}</span><span class="s1"> not recognized&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="transform_sampling_grid">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.transform_sampling_grid">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transform_sampling_grid</span><span class="p">(</span><span class="n">sampling_grid</span><span class="p">,</span> <span class="n">fix_loc</span><span class="p">,</span> <span class="n">fixation_size</span><span class="p">,</span> <span class="n">image_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transform sampling grid coordinates from fixation space to full image space.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sampling_grid (torch.Tensor): Sampling grid of shape (1, n_coords, 2) in [-1, 1] range. It is in (x,y) format.</span>
+<span class="sd">        fixation_location (tuple): Fixation center in normalized image coordinates (h, w), e.g., (0.5, 0.5).</span>
+<span class="sd">        fixation_size (tuple): Size of the fixation region in pixels (fix_h, fix_w).</span>
+<span class="sd">        image_size (tuple): Full image size (H, W).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Transformed sampling grid in the full image space.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fix_loc</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fix_loc</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">fix_loc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">fix_loc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fix_loc</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">fix_loc</span> <span class="o">=</span> <span class="n">fix_loc</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">fix_loc</span> <span class="o">=</span> <span class="n">fix_loc</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fixation_size</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fixation_size</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">fixation_size</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">fixation_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fixation_size</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">fixation_size</span> <span class="o">=</span> <span class="n">fixation_size</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">fixation_size</span> <span class="o">=</span> <span class="n">fixation_size</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sampling_grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">sampling_grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">sampling_grid</span><span class="p">)</span>
+
+    <span class="c1"># Unpack inputs</span>
+    <span class="n">fix_center_h</span> <span class="o">=</span> <span class="n">fix_loc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">sampling_grid</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">fix_center_w</span> <span class="o">=</span> <span class="n">fix_loc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">sampling_grid</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">fix_h</span> <span class="o">=</span> <span class="n">fixation_size</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">sampling_grid</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">fix_w</span> <span class="o">=</span> <span class="n">fixation_size</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">sampling_grid</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">image_size</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">fix_center_h</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Convert fixation center from normalized to pixel space</span>
+    <span class="n">fix_center_w</span> <span class="o">*=</span> <span class="n">W</span>
+    <span class="n">fix_center_h</span> <span class="o">*=</span> <span class="n">H</span>
+
+    <span class="c1"># Scale grid from [-1, 1] to fixation size in pixels</span>
+    <span class="n">scaled_grid</span> <span class="o">=</span> <span class="n">sampling_grid</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">scaled_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">scaled_grid</span> <span class="o">=</span> <span class="n">scaled_grid</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">scaled_grid</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="p">(</span><span class="n">fix_w</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Scale x-coordinates</span>
+    <span class="n">scaled_grid</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="p">(</span><span class="n">fix_h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Scale y-coordinates</span>
+
+    <span class="c1"># Offset grid by fixation center</span>
+    <span class="n">scaled_grid</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">fix_center_w</span>  <span class="c1"># Shift x-coordinates</span>
+    <span class="n">scaled_grid</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">fix_center_h</span>  <span class="c1"># Shift y-coordinates</span>
+
+    <span class="n">scaled_grid</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">scaled_grid</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">W</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># Normalize x-coordinates</span>
+    <span class="n">scaled_grid</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">scaled_grid</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">H</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># Normalize y-coordinates</span>
+
+    <span class="k">return</span> <span class="n">scaled_grid</span></div>
+
+
+
+<div class="viewcode-block" id="auto_match_num_coords">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.auto_match_num_coords">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">auto_match_num_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">cart_res</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;fixn&#39;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+        <span class="n">in_res</span> <span class="o">=</span> <span class="n">cart_res</span>
+    <span class="k">elif</span> <span class="n">auto_match_cart_resources</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s1">&#39;fixn&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+        <span class="c1"># -1: auto-match in_res, 0: no auto-matching, &gt;0: auto-match everything</span>
+        <span class="n">in_res</span><span class="p">,</span> <span class="n">num_coords</span> <span class="o">=</span> <span class="n">find_desired_res</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">cart_res</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="n">force_less_than</span><span class="p">)</span>
+        <span class="c1"># print(f&#39;Auto-matched in_res to {in_res} ({num_coords} sampling coordinates) to best match {cart_res}**2={cart_res**2} cartesian pixels.&#39;)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">in_res</span> <span class="o">=</span> <span class="n">cart_res</span>
+    <span class="k">return</span> <span class="n">in_res</span><span class="p">,</span> <span class="n">cart_res</span></div>
+
+
+
+<div class="viewcode-block" id="logpolar_radius">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.logpolar_radius">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">logpolar_radius</span><span class="p">(</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    utility for computing logpolar radius from normalized cartesian coordinates</span>
+<span class="sd">    Args:</span>
+<span class="sd">        cartesian: (nx2) cartesian coordinates normalized to (-1,1)</span>
+<span class="sd">        fov: field-of-view diameter in degrees</span>
+<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        log_radius: (nx1) log radius as in logpolar mapping</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="p">((</span><span class="n">cartesian</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">cartesian</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">.5</span><span class="p">)</span><span class="o">*</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">cmf_a_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">)</span>
+    <span class="n">log_radius</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">radius</span> <span class="o">+</span> <span class="n">cmf_a</span><span class="p">)</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cmf_a_tensor</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">cmf_a_tensor</span><span class="p">)</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cmf_a_tensor</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">log_radius</span></div>
+
+
+
+<div class="viewcode-block" id="cart_to_polar">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.cart_to_polar">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cart_to_polar</span><span class="p">(</span><span class="n">cartesian</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">cartesian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">cartesian</span><span class="p">)</span>
+    <span class="n">polar_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cartesian</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">cartesian</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> 
+        <span class="n">torch</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">cartesian</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">cartesian</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">polar_coords</span></div>
+
+
+
+<div class="viewcode-block" id="polar_to_cart">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.polar_to_cart">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">polar_to_cart</span><span class="p">(</span><span class="n">polar</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">polar</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">polar</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">polar</span><span class="p">)</span>
+    <span class="n">cartesian_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span>
+        <span class="n">polar</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">polar</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">polar</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">polar</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cartesian_coords</span></div>
+
+
+
+<div class="viewcode-block" id="cart_to_complex_log">
+<a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.cart_to_complex_log">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cart_to_complex_log</span><span class="p">(</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">postproc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">cartesian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">cartesian</span><span class="p">)</span>
+
+    <span class="c1"># compute hemisphere indices based on x coordinate sign</span>
+    <span class="n">hemi_inds</span> <span class="o">=</span> <span class="p">(</span><span class="n">cartesian</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># use log(z+a) model to compute plotting coordinates (i.e. cortical visualization) </span>
+    <span class="n">fov_coords</span> <span class="o">=</span> <span class="n">cartesian</span><span class="o">*</span><span class="p">(</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plotting_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fov_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fov_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cmf_a</span><span class="p">)</span>
+    <span class="n">plotting_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">plotting_coords</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="o">-</span><span class="n">plotting_coords</span><span class="o">.</span><span class="n">imag</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># make plotting coords separated nicely across hemifields/hemispheres</span>
+    <span class="k">if</span> <span class="n">postproc</span><span class="p">:</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">plotting_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mf">.5</span>
+        <span class="n">add</span> <span class="o">=</span> <span class="n">std</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">plotting_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">plotting_coords</span><span class="p">[</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">add</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">plotting_coords</span><span class="p">[</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span>  <span class="n">add</span> <span class="o">-</span> <span class="n">plotting_coords</span><span class="p">[</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">plotting_coords</span><span class="p">[</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">plotting_coords</span><span class="p">[</span><span class="n">hemi_inds</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sub</span>
+
+    <span class="k">return</span> <span class="n">plotting_coords</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

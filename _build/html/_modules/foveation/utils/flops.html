@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>foveation.utils.flops &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../foveation.html">foveation</a></li>
+          <li class="breadcrumb-item"><a href="../utils.html">foveation.utils</a></li>
+      <li class="breadcrumb-item active">foveation.utils.flops</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for foveation.utils.flops</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fvcore.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlopCountAnalysis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">parametrize</span> <span class="k">as</span> <span class="n">P</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fvcore.nn.jit_handles</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_shape</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">nullcontext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statistics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean</span><span class="p">,</span> <span class="n">median</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_trainer_from_base_fn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_all</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_parametrizations</span><span class="p">(</span><span class="n">trainer</span><span class="p">):</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">cfg</span>
+    <span class="n">saccadenet</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">model</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">layers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ii</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># patch embedding -- just has a single weight, no sublayers</span>
+                <span class="n">layer</span> <span class="o">=</span> <span class="n">saccadenet</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span>
+                <span class="n">P</span><span class="o">.</span><span class="n">remove_parametrizations</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="n">leave_parametrized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">layer</span> <span class="o">=</span> <span class="n">saccadenet</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">sublayer</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">lora</span><span class="o">.</span><span class="n">sublayers</span><span class="p">:</span>
+                <span class="n">parent</span><span class="p">,</span> <span class="n">child</span> <span class="o">=</span> <span class="n">sublayer</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                <span class="n">P</span><span class="o">.</span><span class="n">remove_parametrizations</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">parent</span><span class="p">),</span> <span class="n">child</span><span class="p">),</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="n">leave_parametrized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_as_value</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># Return the first torch._C.Value whether x is a single Value or a list/tuple of them</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="k">else</span> <span class="n">x</span>
+
+<div class="viewcode-block" id="_int_list_from_value">
+<a class="viewcode-back" href="../../../api/foveation.utils.flops.html#foveation.utils.flops._int_list_from_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_int_list_from_value</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list[int] from JIT Value that’s either:</span>
+<span class="sd">      - prim::Constant with int or tuple/list of ints</span>
+<span class="sd">      - prim::ListConstruct of prim::Constant ints</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">node</span><span class="p">()</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">kind</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;prim::Constant&quot;</span><span class="p">:</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">toIValue</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">iv</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">iv</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;prim::ListConstruct&quot;</span><span class="p">:</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">inputs</span><span class="p">():</span>
+                <span class="n">vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">toIValue</span><span class="p">()))</span>
+            <span class="k">return</span> <span class="n">vals</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">isnan_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">elemwise_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">nanmean_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+    <span class="c1"># reduction over the input tensor (masking cost usually negligible vs matmuls)</span>
+    <span class="k">return</span> <span class="n">reduction_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pad_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+    <span class="c1"># padding is data movement; count 0 FLOPs</span>
+    <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">max_pool2d_precise_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    FLOPs for max pool = number of comparisons.</span>
+<span class="sd">    Each output element is the max over a kH x kW window: (kH*kW - 1) comparisons.</span>
+<span class="sd">    Total = (kH*kW - 1) * B * C * Hout * Wout</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">v_out</span> <span class="o">=</span> <span class="n">_as_value</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+    <span class="n">out_shape</span> <span class="o">=</span> <span class="n">get_shape</span><span class="p">(</span><span class="n">v_out</span><span class="p">)</span>  <span class="c1"># [B, C, Hout, Wout]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">out_shape</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_shape</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="c1"># fallback: 1 compare per output element</span>
+        <span class="k">return</span> <span class="n">elemwise_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+    <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">Hout</span><span class="p">,</span> <span class="n">Wout</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">out_shape</span><span class="p">)</span>
+
+    <span class="c1"># aten::max_pool2d signature:</span>
+    <span class="c1"># (Tensor self, int[2] kernel_size, int[2] stride, int[2] padding, int[2] dilation, bool ceil_mode)</span>
+    <span class="n">ks</span> <span class="o">=</span> <span class="n">_int_list_from_value</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ks</span><span class="p">:</span>
+        <span class="c1"># If stride is None it defaults to kernel_size; but if we can’t parse ks, fallback</span>
+        <span class="k">return</span> <span class="n">elemwise_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">kH</span> <span class="o">=</span> <span class="n">kW</span> <span class="o">=</span> <span class="n">ks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">kH</span><span class="p">,</span> <span class="n">kW</span> <span class="o">=</span> <span class="n">ks</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">per_out_compares</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">kH</span> <span class="o">*</span> <span class="n">kW</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">per_out_compares</span> <span class="o">*</span> <span class="n">B</span> <span class="o">*</span> <span class="n">C</span> <span class="o">*</span> <span class="n">Hout</span> <span class="o">*</span> <span class="n">Wout</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_numel_value</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">get_shape</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>  <span class="c1"># returns a list/tuple of ints or None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">shape</span><span class="p">:</span>         <span class="c1"># None or []</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shape</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">*=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">zero_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">elemwise_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+    <span class="c1"># Count per output element (cheap default for pointwise ops)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">_as_value</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_numel_value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reduction_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+    <span class="c1"># Count per input element (cheap default for reductions)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">_as_value</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_numel_value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sdpa_flops</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+    <span class="c1"># aten::scaled_dot_product_attention(q, k, v, ...)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">_as_value</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>          <span class="c1"># q</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="n">q_shape</span> <span class="o">=</span> <span class="n">get_shape</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>   <span class="c1"># [B, H, S_q, D]</span>
+    <span class="n">k_shape</span> <span class="o">=</span> <span class="n">get_shape</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>   <span class="c1"># [B, H, S_k, D]</span>
+    <span class="n">v_shape</span> <span class="o">=</span> <span class="n">get_shape</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>   <span class="c1"># [B, H, S_k, D_v]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">q_shape</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">k_shape</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">v_shape</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>  <span class="c1"># fall back if shape unknown</span>
+
+    <span class="n">B</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">S_q</span><span class="p">,</span> <span class="n">D</span>   <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">q_shape</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">S_k</span><span class="p">,</span> <span class="n">Dk</span>  <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">k_shape</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">D_v</span>   <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">v_shape</span><span class="p">)</span>
+
+    <span class="c1"># MACs convention (1 MAC = 1 op). If you want FLOPs=2*MACs, multiply by 2 afterwards.</span>
+    <span class="n">macs_qk</span> <span class="o">=</span> <span class="n">B</span> <span class="o">*</span> <span class="n">H</span> <span class="o">*</span> <span class="n">S_q</span> <span class="o">*</span> <span class="n">S_k</span> <span class="o">*</span> <span class="n">D</span>        <span class="c1"># Q @ K^T</span>
+    <span class="n">macs_av</span> <span class="o">=</span> <span class="n">B</span> <span class="o">*</span> <span class="n">H</span> <span class="o">*</span> <span class="n">S_q</span> <span class="o">*</span> <span class="n">S_k</span> <span class="o">*</span> <span class="n">D_v</span>      <span class="c1"># softmax(QK) @ V</span>
+    <span class="n">softmax</span> <span class="o">=</span> <span class="n">B</span> <span class="o">*</span> <span class="n">H</span> <span class="o">*</span> <span class="n">S_q</span> <span class="o">*</span> <span class="n">S_k</span>            <span class="c1"># optional, small vs matmuls</span>
+
+    <span class="k">return</span> <span class="n">macs_qk</span> <span class="o">+</span> <span class="n">macs_av</span> <span class="o">+</span> <span class="n">softmax</span>
+
+
+<div class="viewcode-block" id="make_flop_counter">
+<a class="viewcode-back" href="../../../api/foveation.utils.flops.html#foveation.utils.flops.make_flop_counter">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_flop_counter</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">include_pointwise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_reductions</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">FlopCountAnalysis</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+
+    <span class="c1"># 0-FLOP ops: allocations/meta</span>
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="s2">&quot;aten::lift_fresh&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::clone&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::new_ones&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;aten::ones_like&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::tile&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::repeat&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::index_copy&quot;</span>
+    <span class="p">]:</span>
+        <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">zero_flops</span><span class="p">)</span>
+
+    <span class="c1"># Pointwise (1 per output element by default)</span>
+    <span class="k">if</span> <span class="n">include_pointwise</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;aten::add&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::add_&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::sub&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::sub_&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;aten::mul&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::mul_&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::div&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::div_&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;aten::rsub&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::neg&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::where&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;aten::sin&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::cos&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::gelu&quot;</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">elemwise_flops</span><span class="p">)</span>
+
+    <span class="c1"># Reductions (1 per input element by default)</span>
+    <span class="k">if</span> <span class="n">include_reductions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;aten::sum&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::mean&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::min&quot;</span><span class="p">]:</span>
+            <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">reduction_flops</span><span class="p">)</span>
+
+    <span class="c1"># Randomness / dropout</span>
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;aten::bernoulli_&quot;</span><span class="p">,</span> <span class="s2">&quot;aten::uniform_&quot;</span><span class="p">]:</span>
+        <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">zero_flops</span><span class="p">)</span>  <span class="c1"># or elemwise_flops if you prefer</span>
+
+    <span class="c1"># Scaled Dot-Product Attention</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="s2">&quot;aten::scaled_dot_product_attention&quot;</span><span class="p">,</span> <span class="n">sdpa_flops</span><span class="p">)</span>
+
+    <span class="c1"># Indexing/select (approximate by output size)</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="s2">&quot;aten::index_select&quot;</span><span class="p">,</span> <span class="n">elemwise_flops</span><span class="p">)</span>
+
+    <span class="c1"># elementwise not-equal</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="s2">&quot;aten::ne&quot;</span><span class="p">,</span> <span class="n">elemwise_flops</span><span class="p">)</span> <span class="c1"># 1 per element</span>
+
+    <span class="c1"># simple approximation for elementwise floating‐point modulus</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="s2">&quot;aten::fmod&quot;</span><span class="p">,</span>  <span class="n">elemwise_flops</span><span class="p">)</span> <span class="c1"># simple: 1/elt</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="s2">&quot;aten::fmod_&quot;</span><span class="p">,</span>  <span class="n">elemwise_flops</span><span class="p">)</span> <span class="c1"># simple: 1/elt</span>
+
+    <span class="c1"># nan processing</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="s2">&quot;aten::isnan&quot;</span><span class="p">,</span> <span class="n">isnan_flops</span><span class="p">)</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="s2">&quot;aten::nanmean&quot;</span><span class="p">,</span> <span class="n">nanmean_flops</span><span class="p">)</span>
+
+    <span class="c1"># padding</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="s2">&quot;aten::pad&quot;</span><span class="p">,</span> <span class="n">pad_flops</span><span class="p">)</span>
+
+    <span class="c1"># max pool</span>
+    <span class="n">flops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">set_op_handle</span><span class="p">(</span><span class="s2">&quot;aten::max_pool2d&quot;</span><span class="p">,</span> <span class="n">max_pool2d_precise_flops</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">flops</span></div>
+
+
+
+<div class="viewcode-block" id="FlopWrapper">
+<a class="viewcode-back" href="../../../api/foveation.utils.flops.html#foveation.utils.flops.FlopWrapper">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FlopWrapper</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="FlopWrapper.__init__">
+<a class="viewcode-back" href="../../../api/foveation.utils.flops.html#foveation.utils.flops.FlopWrapper.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">setting</span><span class="o">=</span><span class="s1">&#39;supervised&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainer</span> <span class="o">=</span> <span class="n">trainer</span>
+        <span class="c1"># remove parametrizations: we don&#39;t want these to influence flops, since they can easily be removed after training</span>
+        <span class="n">remove_parametrizations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trainer</span><span class="p">)</span>
+        <span class="c1"># Set requires_grad to False for all parameters in the model</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;setting&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">setting</span></div>
+
+
+<div class="viewcode-block" id="FlopWrapper.get_inputs">
+<a class="viewcode-back" href="../../../api/foveation.utils.flops.html#foveation.utils.flops.FlopWrapper.get_inputs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loader</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">loader</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">return</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="FlopWrapper.forward">
+<a class="viewcode-back" href="../../../api/foveation.utils.flops.html#foveation.utils.flops.FlopWrapper.forward">[docs]</a>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="p">,</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">outputs</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="measure_latency">
+<a class="viewcode-back" href="../../../api/foveation.utils.flops.html#foveation.utils.flops.measure_latency">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">measure_latency</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">warmup</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">iters</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">use_autocast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>           <span class="c1"># set to &quot;fp16&quot; or True to enable autocast on CUDA</span>
+    <span class="n">use_cuda_events</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>         <span class="c1"># more accurate on GPU</span>
+    <span class="n">use_inference_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>      <span class="c1"># no grad + a few micro-optimizations</span>
+    <span class="n">cudnn_benchmark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>         <span class="c1"># helps for fixed input sizes</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a dict with latency stats in milliseconds.&quot;&quot;&quot;</span>
+    <span class="c1"># device = device or next(model.parameters()).device</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span><span class="p">(</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">cudnn</span><span class="o">.</span><span class="n">benchmark</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">cudnn_benchmark</span><span class="p">)</span>
+
+    <span class="c1"># Choose contexts</span>
+    <span class="n">amp_dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float16</span> <span class="k">if</span> <span class="n">use_autocast</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;fp16&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span> <span class="k">if</span> <span class="n">use_autocast</span> <span class="o">==</span> <span class="s2">&quot;bf16&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">amp_ctx</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">autocast</span><span class="p">(</span><span class="n">device_type</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">amp_dtype</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span> <span class="ow">and</span> <span class="n">amp_dtype</span><span class="p">)</span>
+               <span class="k">else</span> <span class="n">nullcontext</span><span class="p">())</span>
+    <span class="n">infer_ctx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">()</span> <span class="k">if</span> <span class="n">use_inference_mode</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+
+    <span class="c1"># Warmup</span>
+    <span class="k">with</span> <span class="n">infer_ctx</span><span class="p">,</span> <span class="n">amp_ctx</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">warmup</span><span class="p">):</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+
+    <span class="c1"># Measure</span>
+    <span class="n">times_ms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span> <span class="ow">and</span> <span class="n">use_cuda_events</span><span class="p">:</span>
+        <span class="n">starter</span><span class="p">,</span> <span class="n">ender</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">Event</span><span class="p">(</span><span class="n">enable_timing</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">Event</span><span class="p">(</span><span class="n">enable_timing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">infer_ctx</span><span class="p">,</span> <span class="n">amp_ctx</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iters</span><span class="p">):</span>
+                <span class="n">starter</span><span class="o">.</span><span class="n">record</span><span class="p">()</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+                <span class="n">ender</span><span class="o">.</span><span class="n">record</span><span class="p">()</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+                <span class="n">times_ms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">starter</span><span class="o">.</span><span class="n">elapsed_time</span><span class="p">(</span><span class="n">ender</span><span class="p">))</span>  <span class="c1"># ms</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">infer_ctx</span><span class="p">,</span> <span class="n">amp_ctx</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iters</span><span class="p">):</span>
+                <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+                <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+                <span class="n">times_ms</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">t1</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">)</span>
+
+    <span class="n">times_ms</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">p50</span> <span class="o">=</span> <span class="n">median</span><span class="p">(</span><span class="n">times_ms</span><span class="p">)</span>
+    <span class="n">p90</span> <span class="o">=</span> <span class="n">times_ms</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.90</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">times_ms</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))]</span>
+    <span class="n">p95</span> <span class="o">=</span> <span class="n">times_ms</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.95</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">times_ms</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))]</span>
+    <span class="n">p99</span> <span class="o">=</span> <span class="n">times_ms</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.99</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">times_ms</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))]</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;mean_ms&quot;</span><span class="p">:</span> <span class="n">mean</span><span class="p">(</span><span class="n">times_ms</span><span class="p">),</span>
+        <span class="s2">&quot;median_ms&quot;</span><span class="p">:</span> <span class="n">p50</span><span class="p">,</span>
+        <span class="s2">&quot;p90_ms&quot;</span><span class="p">:</span> <span class="n">p90</span><span class="p">,</span>
+        <span class="s2">&quot;p95_ms&quot;</span><span class="p">:</span> <span class="n">p95</span><span class="p">,</span>
+        <span class="s2">&quot;p99_ms&quot;</span><span class="p">:</span> <span class="n">p99</span><span class="p">,</span>
+        <span class="s2">&quot;min_ms&quot;</span><span class="p">:</span> <span class="n">times_ms</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s2">&quot;max_ms&quot;</span><span class="p">:</span> <span class="n">times_ms</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;iters&quot;</span><span class="p">:</span> <span class="n">iters</span><span class="p">,</span>
+        <span class="s2">&quot;warmup&quot;</span><span class="p">:</span> <span class="n">warmup</span><span class="p">,</span>
+        <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">device</span><span class="p">),</span>
+        <span class="s2">&quot;autocast&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">amp_dtype</span><span class="p">),</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">amp_dtype</span><span class="p">)</span> <span class="k">if</span> <span class="n">amp_dtype</span> <span class="k">else</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cuda_events&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span> <span class="ow">and</span> <span class="n">use_cuda_events</span><span class="p">),</span>
+    <span class="p">}</span></div>
+
+    
+
+<div class="viewcode-block" id="get_flops_df">
+<a class="viewcode-back" href="../../../api/foveation.utils.flops.html#foveation.utils.flops.get_flops_df">[docs]</a>
+<span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_flops_df</span><span class="p">(</span><span class="n">runs_df</span><span class="p">,</span> <span class="n">include_keys</span><span class="p">,</span> <span class="n">compute_latency</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">flops_df</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;GFLOPS&#39;</span><span class="p">:[],</span> <span class="s1">&#39;num_patches&#39;</span><span class="p">:[],</span> <span class="s1">&#39;num_pixels&#39;</span><span class="p">:[],</span> <span class="s1">&#39;GFLOPS/sample&#39;</span><span class="p">:[]}</span>
+    <span class="k">if</span> <span class="n">compute_latency</span><span class="p">:</span>
+        <span class="n">flops_df</span><span class="p">[</span><span class="s1">&#39;latency (ms)&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">include_keys</span><span class="p">:</span>
+        <span class="n">short_key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">flops_df</span><span class="p">[</span><span class="n">short_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">runs_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">base_fn</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;logging.base_fn&#39;</span><span class="p">]</span>
+        <span class="n">trainer</span> <span class="o">=</span> <span class="n">get_trainer_from_base_fn</span><span class="p">(</span><span class="n">base_fn</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">cfg</span>
+        <span class="n">wrapper</span> <span class="o">=</span> <span class="n">FlopWrapper</span><span class="p">(</span><span class="n">trainer</span><span class="p">)</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">wrapper</span><span class="o">.</span><span class="n">get_inputs</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">val_loader</span><span class="p">)</span>
+        <span class="n">flops</span> <span class="o">=</span> <span class="n">make_flop_counter</span><span class="p">(</span><span class="n">wrapper</span><span class="p">,</span> <span class="p">(</span><span class="n">inputs</span><span class="p">,))</span>   <span class="c1"># or inputs tuple matching your </span>
+        <span class="n">gflops</span> <span class="o">=</span> <span class="n">flops</span><span class="o">.</span><span class="n">total</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e9</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># KNN patch embedding</span>
+            <span class="n">num_patches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">out_coords</span><span class="p">)</span>
+            <span class="n">num_pix</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">patch_embeddings</span><span class="o">.</span><span class="n">in_coords</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c1"># standard patch embedding</span>
+            <span class="n">num_patches</span> <span class="o">=</span> <span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span> <span class="o">//</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">patch_size</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">num_pix</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">resize_size</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">flops_df</span><span class="p">[</span><span class="s1">&#39;GFLOPS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gflops</span><span class="p">)</span>
+        <span class="n">flops_df</span><span class="p">[</span><span class="s1">&#39;num_patches&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num_patches</span><span class="p">)</span>
+        <span class="n">flops_df</span><span class="p">[</span><span class="s1">&#39;num_pixels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num_pix</span><span class="p">)</span>
+        <span class="n">flops_df</span><span class="p">[</span><span class="s1">&#39;GFLOPS/sample&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gflops</span><span class="o">/</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">compute_latency</span><span class="p">:</span>
+            <span class="n">latency</span> <span class="o">=</span> <span class="n">measure_latency</span><span class="p">(</span><span class="n">wrapper</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+            <span class="n">flops_df</span><span class="p">[</span><span class="s1">&#39;latency (ms)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latency</span><span class="p">[</span><span class="s1">&#39;median_ms&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">include_keys</span><span class="p">:</span>
+            <span class="n">short_key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">flops_df</span><span class="p">[</span><span class="n">short_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="n">flops_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">flops_df</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">flops_df</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,572 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foveated ViTs and adapting pre-trained models (DINOv3) &mdash; foveation 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            foveation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A biologically-inspired foveated interface for deep vision models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Example notebooks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.sensing.html">foveation.sensing package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.arch.html">foveation.arch package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.saccadenet.html">foveation.saccadenet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.trainer.html">foveation.trainer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities &amp; Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foveation.utils.html">foveation.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.demo.html">foveation.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.paths.html">foveation.paths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.probes.html">foveation.probes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="foveation.visualizer.html">foveation.visualizer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">foveation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Foveated ViTs and adapting pre-trained models (DINOv3)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/step3_dinov3.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Foveated-ViTs-and-adapting-pre-trained-models-(DINOv3)">
+<h1>Foveated ViTs and adapting pre-trained models (DINOv3)<a class="headerlink" href="#Foveated-ViTs-and-adapting-pre-trained-models-(DINOv3)" title="Link to this heading"></a></h1>
+<p>Last, we will show how to build a foveated ViT with our code-base, walk through our approach to adapting pre-trained models, and load in our adapted foveated variant of DINOv3</p>
+<p>Foveated ViTs are much simpler to build than foveated CNNs. In a foveated ViT, we simply modify the sensor and patch embedding, and then the architecture is a standard ViT!</p>
+<p>Let’s look at the patch embedding</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.cm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cm</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">visualize_patch_embed</span><span class="p">(</span><span class="n">patch_embed</span><span class="p">):</span>
+    <span class="n">in_coords</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">in_coords</span>
+    <span class="n">out_coords</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">out_coords</span>
+    <span class="n">in_cart_coords</span> <span class="o">=</span> <span class="n">in_coords</span><span class="o">.</span><span class="n">cartesian</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">in_plotting_coords</span> <span class="o">=</span> <span class="n">in_coords</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">out_cart_coords</span> <span class="o">=</span> <span class="n">out_coords</span><span class="o">.</span><span class="n">cartesian</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">out_plotting_coords</span> <span class="o">=</span> <span class="n">out_coords</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">knns</span> <span class="o">=</span> <span class="n">patch_embed</span><span class="o">.</span><span class="n">knn_indices</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;tab20b&#39;</span><span class="p">)</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">rf_scalar</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+    <span class="c1"># plot output unit coordinates</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;width_ratios&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">out_plotting_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">out_plotting_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">out_cart_coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">out_cart_coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">rf_size</span> <span class="o">=</span> <span class="n">in_coords</span><span class="o">.</span><span class="n">polar</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">rf_size</span> <span class="o">=</span> <span class="n">rf_size</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">rf_size</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># add second smallest value</span>
+    <span class="n">rf_size</span> <span class="o">=</span> <span class="n">rf_scalar</span><span class="o">*</span><span class="p">(</span><span class="n">rf_size</span> <span class="o">/</span> <span class="n">rf_size</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+
+    <span class="c1"># plot input kNNs</span>
+    <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">knns</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">knn</span> <span class="o">=</span> <span class="n">knns</span><span class="p">[:,</span><span class="n">jj</span><span class="p">]</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">patch_embed</span><span class="o">.</span><span class="n">knn_indices_pad_mask</span><span class="p">[:,</span><span class="n">jj</span><span class="p">])</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+        <span class="n">knn</span> <span class="o">=</span> <span class="n">knn</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="c1"># remove padding tokens</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">knns</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">knns</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># Normalize to [0,1] range</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">in_plotting_coords</span><span class="p">[</span><span class="n">knn</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">in_plotting_coords</span><span class="p">[</span><span class="n">knn</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">in_cart_coords</span><span class="p">[</span><span class="n">knn</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">in_cart_coords</span><span class="p">[</span><span class="n">knn</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="n">rf_size</span><span class="p">[</span><span class="n">knn</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>We will demonstrate three choices for patch embeddings.</p>
+<ul class="simple">
+<li><p><strong>KNNPatchEmbedding</strong>: this is the most direct translation of a KNNConv layer to the patch embedding setting.</p></li>
+<li><p><strong>PartitioningPatchEmbedding</strong>: this embedding yields a non-overlapping partition of the input coordinate space into output tokens. This produces some odd shapes around the boundaries.</p></li>
+<li><p><strong>KNNPartitioningPatchEmbedding</strong>: this uses the partitioning solution from a PartitioningPatchEmbedding to discover the minimum geodesic distance on the sensor manifold, and thereby <span class="math notranslate nohighlight">\(k\)</span> value, needed for all input units to be assigned into output kNNs, producing slight overlap due to the circular nature of kNNs. We prefer this embedding due to the consistent patch shapes, and ease of parameterization relative to KNNPatchEmbedding.</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">foveation.arch.knnvit</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNPartitioningPatchEmbedding</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="n">resolution</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">fov</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">cmf_a</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">patch_embed</span> <span class="o">=</span> <span class="n">KNNPartitioningPatchEmbedding</span><span class="p">(</span>
+    <span class="mi">3</span><span class="p">,</span>
+    <span class="mi">384</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="p">,</span>
+    <span class="n">fov</span><span class="p">,</span>
+    <span class="n">cmf_a</span><span class="p">,</span>
+    <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">in_cart_res</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">cart_patch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+    <span class="n">force_patches_less_than_matched</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_coord_val</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+    <span class="n">sample_cortex</span><span class="o">=</span><span class="s1">&#39;geodesic&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">visualize_patch_embed</span><span class="p">(</span><span class="n">patch_embed</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+found resolution 46 giving 4068 points (desired: 4096)
+found resolution 6 giving 59 points (desired: 64)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/nblauch/git/foveation-private/foveation/arch/knn.py:39: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  num_neighbors = torch.minimum(torch.tensor(self.k*m), torch.tensor(self.in_coords.shape[0]))
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+found resolution 6 giving 59 points (desired: 64)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 59/59 [00:00&lt;00:00, 639.85it/s]
+/opt/homebrew/Caskroom/miniforge/base/envs/knnconv1/lib/python3.13/site-packages/torch/functional.py:554: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/native/TensorShape.cpp:4324.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+100%|██████████| 59/59 [00:00&lt;00:00, 322.48it/s]
+/var/folders/7_/_gp8wy0500ggx8dgwvfm7_cr0000gn/T/ipykernel_72369/3433196042.py:10: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+  cmap = cm.get_cmap(&#39;tab20b&#39;)
+Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits.
+Ignoring fixed x limits to fulfill fixed data aspect with adjustable data limits.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/api_step3_dinov3_4_4.png" src="../_images/api_step3_dinov3_4_4.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">foveation.arch.knnvit</span><span class="w"> </span><span class="kn">import</span> <span class="n">PartitioningPatchEmbedding</span>
+<span class="n">alt_patch_embed</span> <span class="o">=</span> <span class="n">PartitioningPatchEmbedding</span><span class="p">(</span>
+    <span class="mi">3</span><span class="p">,</span>
+    <span class="mi">384</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="p">,</span>
+    <span class="n">fov</span><span class="p">,</span>
+    <span class="n">cmf_a</span><span class="p">,</span>
+    <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">in_cart_res</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">cart_patch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+    <span class="n">force_patches_less_than_matched</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_coord_val</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+    <span class="n">sample_cortex</span><span class="o">=</span><span class="s1">&#39;geodesic&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">visualize_patch_embed</span><span class="p">(</span><span class="n">alt_patch_embed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+found resolution 46 giving 4068 points (desired: 4096)
+found resolution 6 giving 59 points (desired: 64)
+found resolution 6 giving 59 points (desired: 64)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 59/59 [00:00&lt;00:00, 654.70it/s]
+/Users/nblauch/git/foveation-private/foveation/arch/knnvit.py:178: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.k = torch.tensor(max_len)
+/var/folders/7_/_gp8wy0500ggx8dgwvfm7_cr0000gn/T/ipykernel_72369/3433196042.py:10: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+  cmap = cm.get_cmap(&#39;tab20b&#39;)
+Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits.
+Ignoring fixed x limits to fulfill fixed data aspect with adjustable data limits.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/api_step3_dinov3_5_2.png" src="../_images/api_step3_dinov3_5_2.png" />
+</div>
+</div>
+</section>
+<section id="load-a-pre-trained-Foveated-DINOv3">
+<h1>load a pre-trained Foveated DINOv3<a class="headerlink" href="#load-a-pre-trained-Foveated-DINOv3" title="Link to this heading"></a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">foveation</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">foveation.saccadenet</span><span class="w"> </span><span class="kn">import</span> <span class="n">SaccadeNet</span>
+
+<span class="n">base_fn</span> <span class="o">=</span> <span class="s1">&#39;fovknndinov3-s_a-2.78_res-64_in1k&#39;</span>
+<span class="n">config</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">,</span> <span class="n">model_key</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">base_fn</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;../models&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SaccadeNet</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="n">model_key</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+found resolution 44 giving 3976 points (desired: 4096)
+found resolution 6 giving 64 points (desired: 64)
+found resolution 6 giving 64 points (desired: 64)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 64/64 [00:00&lt;00:00, 701.53it/s]
+100%|██████████| 64/64 [00:00&lt;00:00, 376.09it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+adjusting FOV for fixation: 16.0 (full: 16.0)
+WARNING: horizontal flip always done in the loader, regardless of where other transforms are done
+loader_transforms: Compose(
+    ToTorchImage(device=cpu, dtype=torch.float32, from_numpy=True)
+    RandomHorizontalFlip(p=0.5, seed=None)
+)
+pre_transforms: Compose(
+    RandomColorJitter(p=0.8, hue=[-0.1, 0.1], saturation=[0.8, 1.2], value=[0.6, 1.4], contrast=[0.6, 1.4], seed=None)
+    RandomGrayscale(p=0.2, num_output_channels=3, seed=None)
+    NormalizeGPU(mean=tensor([0.4850, 0.4560, 0.4060], dtype=torch.float64), std=tensor([0.2290, 0.2240, 0.2250], dtype=torch.float64), inplace=True)
+)
+post_transforms: None
+found resolution 44 giving 3976 points (desired: 4096)
+Auto-matched resolution to 44 (3976 sampling coordinates) to best match 4096 cartesian pixels.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/nblauch/git/foveation-private/foveation/sensing/retina.py:106: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  fix_loc = torch.tensor(self._check_fix_loc(fix_loc, x.shape[0]), dtype=self.dtype, device=self.device)
+/opt/homebrew/Caskroom/miniforge/base/envs/knnconv1/lib/python3.13/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of &#39;cuda&#39;, but CUDA is not available. Disabling
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ssl_fixator:
+NoSaccadePolicy(retinal_transform=RetinalTransform(
+  (foveal_color): GaussianColorDecay(sigma=None)
+  (sampler): GridSampler(fov=16.0, cmf_a=2.785765, style=isotropic, resolution=44, mode=nearest, n=3976)
+))
+
+sup_fixator:
+MultiRandomSaccadePolicy(retinal_transform=RetinalTransform(
+  (foveal_color): GaussianColorDecay(sigma=None)
+  (sampler): GridSampler(fov=16.0, cmf_a=2.785765, style=isotropic, resolution=44, mode=nearest, n=3976)
+), n_fixations=4)
+
+LINEAR PROBE NUM CLASSES: 1000
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;All keys matched successfully&gt;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+SaccadeNet(
+  (network): BackboneProjectorWrapper(
+    (backbone): DINOv3ViTModel(
+      (embeddings): DINOv3ViTEmbeddings(
+        (patch_embeddings): KNNPartitioningPatchEmbedding(
+                in_channels=3
+                out_channels=384
+                k=103
+                in_coords=SamplingCoords(length=3976, fov=16.0, cmf_a=2.785765, resolution=44, style=isotropic)
+                out_coords=SamplingCoords(length=64, fov=16.0, cmf_a=2.785765, resolution=6, style=isotropic)
+                sample_cortex=geodesic
+        )
+      )
+      (rope_embeddings): DinoV3RoPE()
+      (layer): ModuleList(
+        (0-5): 6 x DINOv3ViTLayer(
+          (norm1): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+          (attention): DINOv3ViTAttention(
+            (k_proj): ParametrizedLinear(
+              in_features=384, out_features=384, bias=False
+              (parametrizations): ModuleDict(
+                (weight): ParametrizationList(
+                  (0): LoRAParam()
+                )
+              )
+            )
+            (v_proj): ParametrizedLinear(
+              in_features=384, out_features=384, bias=True
+              (parametrizations): ModuleDict(
+                (weight): ParametrizationList(
+                  (0): LoRAParam()
+                )
+              )
+            )
+            (q_proj): ParametrizedLinear(
+              in_features=384, out_features=384, bias=True
+              (parametrizations): ModuleDict(
+                (weight): ParametrizationList(
+                  (0): LoRAParam()
+                )
+              )
+            )
+            (o_proj): ParametrizedLinear(
+              in_features=384, out_features=384, bias=True
+              (parametrizations): ModuleDict(
+                (weight): ParametrizationList(
+                  (0): LoRAParam()
+                )
+              )
+            )
+          )
+          (layer_scale1): DINOv3ViTLayerScale()
+          (drop_path): Identity()
+          (norm2): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+          (mlp): DINOv3ViTMLP(
+            (up_proj): ParametrizedLinear(
+              in_features=384, out_features=1536, bias=True
+              (parametrizations): ModuleDict(
+                (weight): ParametrizationList(
+                  (0): LoRAParam()
+                )
+              )
+            )
+            (down_proj): ParametrizedLinear(
+              in_features=1536, out_features=384, bias=True
+              (parametrizations): ModuleDict(
+                (weight): ParametrizationList(
+                  (0): LoRAParam()
+                )
+              )
+            )
+            (act_fn): GELUActivation()
+          )
+          (layer_scale2): DINOv3ViTLayerScale()
+        )
+        (6-11): 6 x DINOv3ViTLayer(
+          (norm1): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+          (attention): DINOv3ViTAttention(
+            (k_proj): Linear(in_features=384, out_features=384, bias=False)
+            (v_proj): Linear(in_features=384, out_features=384, bias=True)
+            (q_proj): Linear(in_features=384, out_features=384, bias=True)
+            (o_proj): Linear(in_features=384, out_features=384, bias=True)
+          )
+          (layer_scale1): DINOv3ViTLayerScale()
+          (drop_path): Identity()
+          (norm2): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+          (mlp): DINOv3ViTMLP(
+            (up_proj): Linear(in_features=384, out_features=1536, bias=True)
+            (down_proj): Linear(in_features=1536, out_features=384, bias=True)
+            (act_fn): GELUActivation()
+          )
+          (layer_scale2): DINOv3ViTLayerScale()
+        )
+      )
+      (norm): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+    )
+    (projector): MLPWrapper(
+      (layers): Sequential(
+        (fc_block_6): LayerBlock(
+          (0): Dropout(p=0.5, inplace=False)
+          (1): Linear(in_features=384, out_features=1024, bias=False)
+          (2): ReLU(inplace=True)
+        )
+      )
+    )
+  )
+  (retinal_transform): RetinalTransform(
+    (foveal_color): GaussianColorDecay(sigma=None)
+    (sampler): GridSampler(fov=16.0, cmf_a=2.785765, style=isotropic, resolution=44, mode=nearest, n=3976)
+  )
+  (ssl_fixator): NoSaccadePolicy(retinal_transform=RetinalTransform(
+    (foveal_color): GaussianColorDecay(sigma=None)
+    (sampler): GridSampler(fov=16.0, cmf_a=2.785765, style=isotropic, resolution=44, mode=nearest, n=3976)
+  ))
+  (sup_fixator): MultiRandomSaccadePolicy(retinal_transform=RetinalTransform(
+    (foveal_color): GaussianColorDecay(sigma=None)
+    (sampler): GridSampler(fov=16.0, cmf_a=2.785765, style=isotropic, resolution=44, mode=nearest, n=3976)
+  ), n_fixations=4)
+  (head): SaccadeNetProbe(
+    (fix_projector): LinearProbe(
+      (dropout): Dropout(p=0.5, inplace=False)
+      (probe): Linear(in_features=1024, out_features=1000, bias=True)
+    )
+  )
+)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
