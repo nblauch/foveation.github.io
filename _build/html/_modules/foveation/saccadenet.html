@@ -43,7 +43,7 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../read_me.html">A biologically-inspired foveated interface for deep vision models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Example notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
 <ul>
@@ -457,6 +457,113 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;post_transforms: </span><span class="si">{</span><span class="n">post_transforms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">loader_transforms</span><span class="p">},</span> <span class="n">pre_transforms</span><span class="p">,</span> <span class="n">post_transforms</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNet.setup_activation_hooks">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.setup_activation_hooks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_activation_hooks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set up hooks to capture activations from the specified layer.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            layer_name (str): Name of the layer to capture activations from.</span>
+<span class="sd">                            Can be a full path like &#39;network.projector.layers.fc_block_6&#39;</span>
+<span class="sd">                            or just the layer name like &#39;fc_block_6&#39;</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Dictionary containing hook handles and captured activations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hooks</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">captured_activations</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="c1"># Find the target layer by name</span>
+        <span class="n">target_layer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">target_layer_name</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="c1"># First try to find by full path</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">target_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span>
+            <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">layer_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+                <span class="n">target_layer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">target_layer</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
+            <span class="n">target_layer_name</span> <span class="o">=</span> <span class="n">layer_name</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c1"># If full path fails, search through all named modules</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="n">layer_name</span><span class="p">:</span>
+                    <span class="n">target_layer</span> <span class="o">=</span> <span class="n">module</span>
+                    <span class="n">target_layer_name</span> <span class="o">=</span> <span class="n">name</span>
+                    <span class="k">break</span>
+        
+        <span class="k">if</span> <span class="n">target_layer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># List available layer names for debugging</span>
+            <span class="n">available_layers</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;bias&#39;</span><span class="p">):</span>  <span class="c1"># Only actual layers</span>
+                    <span class="n">available_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Layer &#39;</span><span class="si">{</span><span class="n">layer_name</span><span class="si">}</span><span class="s2">&#39; not found. Available layers: </span><span class="si">{</span><span class="n">available_layers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Define hook function to capture activations</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">hook_fn</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+            <span class="c1"># Store the output after this layer (this matches what MLPWrapper does)</span>
+            <span class="n">captured_activations</span><span class="p">[</span><span class="s1">&#39;activation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+        
+        <span class="c1"># Register the hook</span>
+        <span class="n">hook_handle</span> <span class="o">=</span> <span class="n">target_layer</span><span class="o">.</span><span class="n">register_forward_hook</span><span class="p">(</span><span class="n">hook_fn</span><span class="p">)</span>
+        
+        <span class="n">hooks</span><span class="p">[</span><span class="s1">&#39;handle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hook_handle</span>
+        <span class="n">hooks</span><span class="p">[</span><span class="s1">&#39;activations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">captured_activations</span>
+        <span class="n">hooks</span><span class="p">[</span><span class="s1">&#39;target_layer_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_layer_name</span>
+        
+        <span class="k">return</span> <span class="n">hooks</span></div>
+
+    
+<div class="viewcode-block" id="SaccadeNet.get_captured_activations">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_captured_activations">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_captured_activations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hooks</span><span class="p">,</span> <span class="n">layer_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the captured activations from hooks.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            hooks (dict): Hook dictionary returned by setup_activation_hooks</span>
+<span class="sd">            layer_name (str, optional): Layer name (for validation)</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Captured activations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;activation&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">[</span><span class="s1">&#39;activations&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No activations captured by hooks. Make sure forward pass was executed.&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">hooks</span><span class="p">[</span><span class="s1">&#39;activations&#39;</span><span class="p">][</span><span class="s1">&#39;activation&#39;</span><span class="p">]</span></div>
+
+    
+<div class="viewcode-block" id="SaccadeNet.cleanup_activation_hooks">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.cleanup_activation_hooks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_activation_hooks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hooks</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clean up registered hooks to prevent memory leaks.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            hooks (dict): Hook dictionary returned by setup_activation_hooks</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;handle&#39;</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">:</span>
+            <span class="n">hooks</span><span class="p">[</span><span class="s1">&#39;handle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="SaccadeNet.list_available_layers">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.list_available_layers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_available_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List all available layer names in the network for debugging purposes.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of layer names that can be used with setup_activation_hooks</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">available_layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;bias&#39;</span><span class="p">):</span>  <span class="c1"># Only actual layers</span>
+                <span class="n">available_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">available_layers</span></div>
 </div>
 
 </pre></div>

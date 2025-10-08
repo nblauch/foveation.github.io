@@ -43,7 +43,7 @@
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="read_me.html">A biologically-inspired foveated interface for deep vision models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Example notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Core Components</span></p>
 <ul>
@@ -569,6 +569,8 @@
 </li>
       <li><a href="api/foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.CircularMask">CircularMask (class in foveation.utils.fastaugs.transforms)</a>
 </li>
+      <li><a href="api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.cleanup_activation_hooks">cleanup_activation_hooks() (foveation.saccadenet.SaccadeNet method)</a>
+</li>
       <li><a href="api/foveation.trainer.html#foveation.trainer.Trainer.cleanup_distributed">cleanup_distributed() (foveation.trainer.Trainer method)</a>
 </li>
       <li><a href="api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.clone">clone() (foveation.sensing.coords.SamplingCoords method)</a>
@@ -605,14 +607,14 @@
 </li>
       <li><a href="api/foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnext_pico">convnext_pico() (in module foveation.arch.convnextv2)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/foveation.arch.convnextv2.html#foveation.arch.convnextv2.ConvNeXtV2">ConvNeXtV2 (class in foveation.arch.convnextv2)</a>
 
       <ul>
         <li><a href="api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.ConvNeXtV2">(class in foveation.arch.knnconvnextv2)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnextv2_atto">convnextv2_atto() (in module foveation.arch.convnextv2)</a>
 </li>
       <li><a href="api/foveation.arch.convnextv2.html#foveation.arch.convnextv2.convnextv2_base">convnextv2_base() (in module foveation.arch.convnextv2)</a>
@@ -1170,6 +1172,8 @@
 </li>
       <li><a href="api/foveation.arch.alexnet.html#foveation.arch.alexnet.get_backbone">get_backbone() (in module foveation.arch.alexnet)</a>
 </li>
+      <li><a href="api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_captured_activations">get_captured_activations() (foveation.saccadenet.SaccadeNet method)</a>
+</li>
       <li><a href="api/foveation.sensing.saliency.html#foveation.sensing.saliency.get_center_bias">get_center_bias() (in module foveation.sensing.saliency)</a>
 </li>
       <li><a href="api/foveation.visualizer.html#foveation.visualizer.get_first_conv_weights">get_first_conv_weights() (in module foveation.visualizer)</a>
@@ -1441,6 +1445,8 @@
       <li><a href="api/foveation.utils.lr_scheduling.html#foveation.utils.lr_scheduling.learning_schedule">learning_schedule() (in module foveation.utils.lr_scheduling)</a>
 </li>
       <li><a href="api/foveation.probes.html#foveation.probes.LinearProbe">LinearProbe (class in foveation.probes)</a>
+</li>
+      <li><a href="api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.list_available_layers">list_available_layers() (foveation.saccadenet.SaccadeNet method)</a>
 </li>
       <li><a href="api/foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.lms_to_lgrby">lms_to_lgrby() (in module foveation.utils.fastaugs.functional)</a>
 </li>
@@ -1913,10 +1919,10 @@
 </li>
       <li><a href="api/foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.sample_fixations">sample_fixations() (foveation.sensing.policies.BaseSaccadePolicy method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/foveation.sensing.saliency.html#foveation.sensing.saliency.sample_from_logdensity">sample_from_logdensity() (in module foveation.sensing.saliency)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/foveation.sensing.saliency.html#foveation.sensing.saliency.sample_from_logits_pc">sample_from_logits_pc() (in module foveation.sensing.saliency)</a>
 </li>
       <li><a href="api/foveation.utils.fastaugs.transforms.html#foveation.utils.fastaugs.transforms.ColorJitter.sample_params">sample_params() (foveation.utils.fastaugs.transforms.ColorJitter static method)</a>
@@ -1934,6 +1940,8 @@
       <li><a href="api/foveation.trainer.html#foveation.trainer.Trainer.save_checkpoint">save_checkpoint() (foveation.trainer.Trainer method)</a>
 </li>
       <li><a href="api/foveation.utils.fastaugs.functional.html#foveation.utils.fastaugs.functional.set_trace">set_trace() (in module foveation.utils.fastaugs.functional)</a>
+</li>
+      <li><a href="api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.setup_activation_hooks">setup_activation_hooks() (foveation.saccadenet.SaccadeNet method)</a>
 </li>
       <li><a href="api/foveation.trainer.html#foveation.trainer.Trainer.setup_distributed">setup_distributed() (foveation.trainer.Trainer method)</a>
 </li>
