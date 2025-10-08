@@ -7,7 +7,7 @@ foveation is a PyTorch library for implementing foveated vision. This library pr
    :maxdepth: 2
    :caption: Getting Started
 
-   readme
+   read_me
    quickstart
 
 .. toctree::
