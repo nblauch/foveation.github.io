@@ -235,7 +235,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.probes.SaccadeNetProbe.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_agg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/probes.html#SaccadeNetProbe.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.probes.SaccadeNetProbe.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dd><p>Initializes a SaccadeNetProbe module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_features</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of features in the input.</p></li>
+<li><p><strong>fix_agg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The aggregation method for fixations.</p></li>
+<li><p><strong>num_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of classes for classification.</p></li>
+<li><p><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – The dropout rate. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -247,15 +257,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.probes.SaccadeNetProbe.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/probes.html#SaccadeNetProbe.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.probes.SaccadeNetProbe.forward" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Forward pass of the SaccadeNetProbe.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> – tensor of shape (fixations, batch, features)</p>
+<dd class="field-odd"><p><strong>x</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Tensor of shape (batch, fixations, features).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>embeddings of shape (batch, features)</p>
+<dd class="field-even"><p>Embeddings of shape (batch, features).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>embeddings</p>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
 </dd>
 </dl>
 </dd></dl>

@@ -130,14 +130,13 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.samplers.html#foveation.sensing.samplers.BaseGridSampler._prep_grid_for_grid_sample">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_prep_grid_for_grid_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cartesian_grid</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        prepare grid for torch.nn.functional.grid_sample</span>
+<span class="sd">        Prepare grid for torch.nn.functional.grid_sample.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            cartesian_grid (torch.Tensor): (n,2) coordinates, where each 2-vector coordinate is specified in (x,y) in the typical math sense</span>
+<span class="sd">            cartesian_grid (torch.Tensor): (n,2) coordinates, where each 2-vector coordinate is specified in (x,y) in the typical math sense.</span>
 <span class="sd">            </span>
 <span class="sd">        Returns:</span>
-<span class="sd">            out_grid (torch.Tensor): (1,1,n,2) coordinates, where each 2-vector coordinate is specified in (x,-y) or (col, row) format for grid_sample</span>
-
+<span class="sd">            torch.Tensor: (1,1,n,2) coordinates, where each 2-vector coordinate is specified in (x,-y) or (col, row) format for grid_sample.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">out_grid</span> <span class="o">=</span> <span class="n">xy_to_colrow</span><span class="p">(</span><span class="n">cartesian_grid</span><span class="o">.</span><span class="n">clone</span><span class="p">(),</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;-11&#39;</span><span class="p">)</span>
         <span class="n">out_grid</span> <span class="o">=</span> <span class="n">out_grid</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -165,7 +164,7 @@
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">            fov (float): Field of view diameter in degrees.</span>
-<span class="sd">            cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller = stronger foveation</span>
+<span class="sd">            cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller = stronger foveation.</span>
 <span class="sd">            resolution (int): Resolution parameter.</span>
 <span class="sd">            device (str, optional): Device to run on. Defaults to &#39;cuda&#39;.</span>
 <span class="sd">            dtype (torch.dtype, optional): Data type. Defaults to torch.float.</span>
@@ -260,10 +259,10 @@
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">            fov (float): Field of view diameter in degrees.</span>
-<span class="sd">            cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller = stronger cmf_ation</span>
-<span class="sd">            resolution(int): Resolution parameter.</span>
+<span class="sd">            cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller = stronger foveation.</span>
+<span class="sd">            resolution (int): Resolution parameter.</span>
 <span class="sd">            res_mult (int, optional): Resolution multiplier for photoreceptor layer vs. rgc layer. Defaults to 3.</span>
-<span class="sd">            cmf_a_mult (int, optional): cmf_a multiplier for photoreceptor layer vs. rgc layer. Defaults to 1.</span>
+<span class="sd">            cmf_a_mult (int, optional): CMF_a multiplier for photoreceptor layer vs. rgc layer. Defaults to 1.</span>
 <span class="sd">            fixation_size (int, optional): Fixation size in pixels. Defaults to 3000.</span>
 <span class="sd">            k (int, optional): Number of nearest neighbors. Defaults to None.</span>
 <span class="sd">            style (str, optional): Sampling style. Defaults to &#39;isotropic&#39;.</span>
@@ -301,6 +300,17 @@
 <div class="viewcode-block" id="KNNGridSampler.forward">
 <a class="viewcode-back" href="../../../api/foveation.sensing.samplers.html#foveation.sensing.samplers.KNNGridSampler.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">fix_loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass for KNN grid sampling.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            img (torch.Tensor): Input image tensor.</span>
+<span class="sd">            fix_loc (torch.Tensor, optional): Fixation location. Defaults to None.</span>
+<span class="sd">            fixation_size (torch.Tensor, optional): Fixation size. Defaults to None.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Pooled samples from KNN grid sampling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
             <span class="n">img</span> <span class="o">=</span> <span class="n">TF</span><span class="o">.</span><span class="n">to_tensor</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
@@ -318,6 +328,15 @@
 <div class="viewcode-block" id="KNNGridSampler.all_coords">
 <a class="viewcode-back" href="../../../api/foveation.sensing.samplers.html#foveation.sensing.samplers.KNNGridSampler.all_coords">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">all_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all sampling coordinates.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            device (str, optional): Device to place coordinates on. Defaults to None.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: Cartesian, polar, and plotting coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">cartesian</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">polar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">plotting</span>
         <span class="k">else</span><span class="p">:</span>
@@ -325,6 +344,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;String representation of the KNNGridSampler.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;KNNGridSampler(fov=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="si">}</span><span class="s1">, cmf_a=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span><span class="si">}</span><span class="s1">, resolution=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s1">, num_coords=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_coords</span><span class="si">}</span><span class="s1">, fixation_size=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fixation_size</span><span class="si">}</span><span class="s1">, k=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="s1">, dtype=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s1">, device=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="si">}</span><span class="s1">, style=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="si">}</span><span class="s1">)&#39;</span></div>
 
     
@@ -334,11 +354,18 @@
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GaussianKNNGridSampler</span><span class="p">(</span><span class="n">KNNGridSampler</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Similar to KNNGridSampler, but uses Gaussian pooling rather than average</span>
+<span class="sd">    Similar to KNNGridSampler, but uses Gaussian pooling rather than average.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="GaussianKNNGridSampler.__init__">
 <a class="viewcode-back" href="../../../api/foveation.sensing.samplers.html#foveation.sensing.samplers.GaussianKNNGridSampler.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the GaussianKNNGridSampler.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            *args: Variable length argument list passed to parent class.</span>
+<span class="sd">            **kwargs: Arbitrary keyword arguments passed to parent class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># just adjust the pooler</span>

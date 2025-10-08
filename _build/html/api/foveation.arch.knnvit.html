@@ -106,12 +106,22 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of input channels</p></li>
-<li><p><strong>embed_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Embedding dimension for tokens</p></li>
-<li><p><strong>in_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Input sampling coordinates object</p></li>
-<li><p><strong>in_cart_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Resolution of input cartesian grid</p></li>
-<li><p><strong>downsample_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Factor to downsample coordinates by. Defaults to 16.</p></li>
-<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of nearest neighbors for KNN. Defaults to 16^2.</p></li>
+<li><p><strong>in_channels</strong> – Number of input channels</p></li>
+<li><p><strong>embed_dim</strong> – Embedding dimension for tokens</p></li>
+<li><p><strong>in_res</strong> – Input resolution</p></li>
+<li><p><strong>fov</strong> – Field of view parameter for foveated sampling</p></li>
+<li><p><strong>cmf_a</strong> – a parameter controlling foveated sampling via the CMF</p></li>
+<li><p><strong>style</strong> – Sampling style (‘isotropic’, etc.)</p></li>
+<li><p><strong>auto_match_cart_resources</strong> – Whether to automatically match cartesian resources</p></li>
+<li><p><strong>in_cart_res</strong> – Resolution of input cartesian grid</p></li>
+<li><p><strong>cart_patch_size</strong> – Size of cartesian patches</p></li>
+<li><p><strong>patch_overlap_factor</strong> – Factor for patch overlap</p></li>
+<li><p><strong>device</strong> – Device to run on</p></li>
+<li><p><strong>force_patches_less_than_matched</strong> – Whether to force patches to be less than matched</p></li>
+<li><p><strong>new_parameterization</strong> – Whether to use new parameterization</p></li>
+<li><p><strong>transposed</strong> – Whether to transpose output</p></li>
+<li><p><strong>max_coord_val</strong> – Maximum coordinate value</p></li>
+<li><p><strong>sample_cortex</strong> – Cortex sampling method</p></li>
 <li><p><strong>**kwargs</strong> – Additional arguments passed to parent class</p></li>
 </ul>
 </dd>
@@ -124,13 +134,13 @@
 <dd><p>Apply convolution using k-nearest neighbors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X_l</strong> – Node features from layer l [batch, d_l, N_l]</p>
+<dd class="field-odd"><p><strong>X_l</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Node features from layer l [batch, d_l, N_l]</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Node features from layer l+1 [batch, d_l+1, N_l+1]</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>X_out</p>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -148,22 +158,31 @@
 <dd><p>Bases: <a class="reference internal" href="#foveation.arch.knnvit.KNNPatchEmbedding" title="foveation.arch.knnvit.KNNPatchEmbedding"><code class="xref py py-class docutils literal notranslate"><span class="pre">KNNPatchEmbedding</span></code></a></p>
 <p>Partitioning patch embedding layer that replaces standard patch embedding in Vision Transformers.</p>
 <p>This layer divides a foveated manifold into non-overlapping neighborhoods to create patches.</p>
-<p>It turns these neighborhoods into KNNs with padding</p>
-<p>It then performs a standard KNNConv operation for the patch embedding.</p>
+<p>It turns these neighborhoods into KNNs with padding and then performs a standard KNNConv operation for the patch embedding.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.knnvit.PartitioningPatchEmbedding.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'isotropic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_match_cart_resources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_patches_less_than_matched</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_cart_res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">224</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cart_patch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transposed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_coord_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_frame_side_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'geodesic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arch_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knnvit.html#PartitioningPatchEmbedding.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knnvit.PartitioningPatchEmbedding.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize KNN tokenization layer.</p>
+<dd><p>Initialize partitioning patch embedding layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of input channels</p></li>
-<li><p><strong>embed_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Embedding dimension for tokens</p></li>
-<li><p><strong>in_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Input sampling coordinates object</p></li>
-<li><p><strong>in_cart_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Resolution of input cartesian grid</p></li>
-<li><p><strong>downsample_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Factor to downsample coordinates by. Defaults to 16.</p></li>
-<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of nearest neighbors for KNN. Defaults to 16^2.</p></li>
-<li><p><strong>**kwargs</strong> – Additional arguments passed to parent class</p></li>
+<li><p><strong>in_channels</strong> – Number of input channels</p></li>
+<li><p><strong>embed_dim</strong> – Embedding dimension for tokens</p></li>
+<li><p><strong>in_res</strong> – Input resolution</p></li>
+<li><p><strong>fov</strong> – Field of view parameter for foveated sampling</p></li>
+<li><p><strong>cmf_a</strong> – a parameter controlling foveated sampling via the CMF</p></li>
+<li><p><strong>style</strong> – Sampling style (‘isotropic’, etc.)</p></li>
+<li><p><strong>auto_match_cart_resources</strong> – Whether to automatically match cartesian resources</p></li>
+<li><p><strong>force_patches_less_than_matched</strong> – Whether to force patches to be less than matched</p></li>
+<li><p><strong>in_cart_res</strong> – Resolution of input cartesian grid</p></li>
+<li><p><strong>cart_patch_size</strong> – Size of cartesian patches</p></li>
+<li><p><strong>device</strong> – Device to run on</p></li>
+<li><p><strong>transposed</strong> – Whether to transpose output</p></li>
+<li><p><strong>max_coord_val</strong> – Maximum coordinate value</p></li>
+<li><p><strong>ref_frame_side_length</strong> – Reference frame side length</p></li>
+<li><p><strong>sample_cortex</strong> – Cortex sampling method</p></li>
+<li><p><strong>bias</strong> – Whether to use bias in linear layer</p></li>
+<li><p><strong>arch_flag</strong> – Architecture flag</p></li>
 </ul>
 </dd>
 </dl>
@@ -178,16 +197,24 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.knnvit.KNNPartitioningPatchEmbedding.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'isotropic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_match_cart_resources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_cart_res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">224</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cart_patch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_patches_less_than_matched</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transposed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_coord_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_cortex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'geodesic'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knnvit.html#KNNPartitioningPatchEmbedding.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knnvit.KNNPartitioningPatchEmbedding.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize KNN tokenization layer.</p>
+<dd><p>Initialize KNN partitioning patch embedding layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of input channels</p></li>
-<li><p><strong>embed_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Embedding dimension for tokens</p></li>
-<li><p><strong>in_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a>) – Input sampling coordinates object</p></li>
-<li><p><strong>in_cart_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Resolution of input cartesian grid</p></li>
-<li><p><strong>downsample_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Factor to downsample coordinates by. Defaults to 16.</p></li>
-<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of nearest neighbors for KNN. Defaults to 16^2.</p></li>
+<li><p><strong>in_channels</strong> – Number of input channels</p></li>
+<li><p><strong>embed_dim</strong> – Embedding dimension for tokens</p></li>
+<li><p><strong>in_res</strong> – Input resolution</p></li>
+<li><p><strong>fov</strong> – Field of view parameter for foveated sampling</p></li>
+<li><p><strong>cmf_a</strong> – a parameter controlling foveated sampling via the CMF</p></li>
+<li><p><strong>style</strong> – Sampling style (‘isotropic’, etc.)</p></li>
+<li><p><strong>auto_match_cart_resources</strong> – Whether to automatically match cartesian resources</p></li>
+<li><p><strong>in_cart_res</strong> – Resolution of input cartesian grid</p></li>
+<li><p><strong>cart_patch_size</strong> – Size of cartesian patches</p></li>
+<li><p><strong>device</strong> – Device to run on</p></li>
+<li><p><strong>force_patches_less_than_matched</strong> – Whether to force patches to be less than matched</p></li>
+<li><p><strong>transposed</strong> – Whether to transpose output</p></li>
+<li><p><strong>max_coord_val</strong> – Maximum coordinate value</p></li>
+<li><p><strong>sample_cortex</strong> – Cortex sampling method</p></li>
 <li><p><strong>**kwargs</strong> – Additional arguments passed to parent class</p></li>
 </ul>
 </dd>
@@ -228,7 +255,7 @@ in the foveated coordinate system.</p>
 <li><p><strong>arch_flag</strong> – Architecture flag</p></li>
 <li><p><strong>sample_cortex</strong> – Whether to sample in cortical space</p></li>
 <li><p><strong>pos_emb_type</strong> – Type of positional embedding (‘absolute’ or ‘rope’)</p></li>
-<li><p><strong>force_patches_less_than_matched</strong> – whether to force the number of patches to be less than a matched cartesian model, or just match as close as possible</p></li>
+<li><p><strong>force_patches_less_than_matched</strong> – Whether to force the number of patches to be less than a matched cartesian model, or just match as close as possible</p></li>
 </ul>
 </dd>
 </dl>
@@ -243,7 +270,7 @@ in the foveated coordinate system.</p>
 <dd class="field-odd"><p><strong>x</strong> – Input features [batch_size, in_channels, in_coords]</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Model output [batch_size, num_classes] or [batch_size, embed_dim]</p>
+<dd class="field-even"><p>Model output [batch_size, 1, embed_dim]</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>output</p>
@@ -265,21 +292,31 @@ in the foveated coordinate system.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.knnvit.DinoV3RoPE.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knnvit.html#DinoV3RoPE.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knnvit.DinoV3RoPE.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dd><p>Initialize DinoV3RoPE positional encoding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base</strong> – Base frequency for RoPE</p></li>
+<li><p><strong>head_dim</strong> – Dimension of attention head</p></li>
+<li><p><strong>coords</strong> – Coordinate tensor</p></li>
+<li><p><strong>device</strong> – Device to run on</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.knnvit.DinoV3RoPE.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pixel_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><span class="pre">Tensor</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/foveation/arch/knnvit.html#DinoV3RoPE.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knnvit.DinoV3RoPE.forward" title="Link to this definition"></a></dt>
-<dd><p>Define the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<dd><p>Forward pass for RoPE positional encoding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pixel_values</strong> – Input pixel values</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of cosine and sine values for RoPE</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

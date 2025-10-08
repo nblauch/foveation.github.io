@@ -99,17 +99,15 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SamplingCoords</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Object for storing multiple coordinate systems relevant to a set of visual field samples</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        fov (float): field-of-view in degrees</span>
-<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
-<span class="sd">        res (int): resolution, corresponding to the side length of a cartesian grid or the number of radii in polar (before any adjustments are made to match a target cartesian grid)</span>
-<span class="sd">        device (str): what device to operate on</span>
-<span class="sd">        style (str): what type of sampling</span>
-<span class="sd">        dtype (torch.dtype): what data type to use</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object for storing multiple coordinate systems relevant to a set of visual field samples.</span>
 <span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): Field-of-view in degrees.</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
+<span class="sd">        res (int): Resolution, corresponding to the side length of a cartesian grid or the number of radii in polar (before any adjustments are made to match a target cartesian grid).</span>
+<span class="sd">        device (str): What device to operate on.</span>
+<span class="sd">        style (str): What type of sampling.</span>
+<span class="sd">        dtype (torch.dtype): What data type to use.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="SamplingCoords.__init__">
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.__init__">[docs]</a>
@@ -163,8 +161,7 @@
 <div class="viewcode-block" id="SamplingCoords.pad_cartesian">
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.pad_cartesian">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">pad_cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">padding_distance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate additional cartesian coordinates for padding around the sampling grid.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate additional cartesian coordinates for padding around the sampling grid.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">            padding_distance (float): Distance to extend beyond the current sampling area.</span>
@@ -188,18 +185,20 @@
 <div class="viewcode-block" id="SamplingCoords.get_strided_coords">
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.get_strided_coords">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_strided_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">in_cart_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a strided version of the coordinates.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a strided version of the coordinates.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">            stride (int): Stride factor for downsampling coordinates.</span>
 <span class="sd">            auto_match_cart_resources (int): Automatic matching parameter for cartesian resources.</span>
 <span class="sd">            in_cart_res (int, optional): Input cartesian resolution. Required for &#39;fixn&#39; style.</span>
+<span class="sd">            force_less_than (bool, optional): Whether to force less than target resolution. Defaults to True.</span>
+<span class="sd">            max_val (float, optional): Maximum value for coordinates. Defaults to 1.</span>
 <span class="sd">            </span>
 <span class="sd">        Returns:</span>
-<span class="sd">            SamplingCoords: New SamplingCoords object with strided coordinates.</span>
-<span class="sd">            out_radii: # of output radii</span>
-<span class="sd">            out_cart_res: corresponding output cartesian resolution</span>
+<span class="sd">            tuple: A tuple containing:</span>
+<span class="sd">                - SamplingCoords: New SamplingCoords object with strided coordinates.</span>
+<span class="sd">                - int: Number of output radii.</span>
+<span class="sd">                - int: Corresponding output cartesian resolution.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">out_cart_res</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="s1">&#39;fixn&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">:</span> 
@@ -233,8 +232,7 @@
 <div class="viewcode-block" id="SamplingCoords.to">
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Move the SamplingCoords object to a different device and/or change data type.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Move the SamplingCoords object to a different device and/or change data type.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">            device (str, optional): Target device. Defaults to None.</span>
@@ -257,12 +255,10 @@
 <div class="viewcode-block" id="SamplingCoords.get_scatter_sizes">
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords.get_scatter_sizes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_scatter_sizes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate approximate size to be used for plotting in scatter plots.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate approximate size to be used for plotting in scatter plots.</span>
 
 <span class="sd">        Scales linearly with eccentricity, as occurs in KNN-sampling of the sensor manifold. </span>
-
-<span class="sd">        However, this is not precisely tuned to the particular warping parameters. </span>
+<span class="sd">        However, this is not precisely tuned to the particular warping parameters.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            torch.Tensor: Receptive field sizes for each sampling point.</span>
@@ -296,24 +292,23 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.get_isotropic_sampling_coords">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_isotropic_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">constant_num_angles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_norm_rad</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sample coordinates isotropically with the cortical magnification function of the complex log mapping w=log(z+a), where z=x+iy</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample coordinates isotropically with the cortical magnification function of the complex log mapping w=log(z+a), where z=x+iy.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        fov (float): Field of view diameter in degrees.</span>
-<span class="sd">        cmf_a (float): a parameter in the CMF controlling foveation; smaller = stronger foveation</span>
+<span class="sd">        cmf_a (float): A parameter in the CMF controlling foveation; smaller = stronger foveation.</span>
 <span class="sd">        res (int): Number of sampling points.</span>
 <span class="sd">        circular (bool, optional): If True, the sampling is circular, otherwise it is square. Defaults to True.</span>
 <span class="sd">        device (str, optional): Device to run the computation on. Defaults to &#39;cpu&#39;.</span>
 <span class="sd">        constant_num_angles (bool, optional): If True, the number of angles is constant for all radii, implementing log polar image sampling. Defaults to False.</span>
 <span class="sd">        force_n_points (int, optional): If not None, forces the number of points to exactly this value. Useful for controlled comparisons with other sensors. Defaults to None.</span>
+<span class="sd">        max_norm_rad (float, optional): Maximum normalized radius. Defaults to 1.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple:</span>
-<span class="sd">            - torch.Tensor: Sampling cartesian coordinates in visual space, normalized to (-1,1)</span>
-<span class="sd">            - torch.Tensor: Sampling polar coordinates in visual space</span>
-<span class="sd">            - torch.Tensor: Plotting coordinates in complex log space, useful for visualizing the sampling</span>
-<span class="sd">        </span>
+<span class="sd">        tuple: A tuple containing:</span>
+<span class="sd">            - torch.Tensor: Sampling cartesian coordinates in visual space, normalized to (-1,1).</span>
+<span class="sd">            - torch.Tensor: Sampling polar coordinates in visual space.</span>
+<span class="sd">            - torch.Tensor: Plotting coordinates in complex log space, useful for visualizing the sampling.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">force_n_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -394,24 +389,25 @@
 <div class="viewcode-block" id="get_logpolar_image_sampling_coords">
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.get_logpolar_image_sampling_coords">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_logpolar_image_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_norm_rad</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convenience wrapper for log polar image sampling. </span>
-<span class="sd">    Sample coordinates with the cortical magnification function of the complex log mapping w=log(z+a), where and z=x+iy</span>
-<span class="sd">    This is not isotropic, rather, it produces a square log polar image using an equal number of anglular samples for all radii. </span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_logpolar_image_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_norm_rad</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience wrapper for log polar image sampling.</span>
+<span class="sd">    </span>
+<span class="sd">    Sample coordinates with the cortical magnification function of the complex log mapping w=log(z+a), where z=x+iy.</span>
+<span class="sd">    This is not isotropic, rather, it produces a square log polar image using an equal number of angular samples for all radii.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">        fov (float): field of view diameter in degrees</span>
-<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
-<span class="sd">        res (int): number of sampling points</span>
-<span class="sd">        circular (bool): if True, the sampling is circular, otherwise it is square</span>
-<span class="sd">        device (str): device to run the computation on</span>
-<span class="sd">        force_n_points (int): if not None, the number of points is forced to be exactly this, useful for controlled comparisons with other sensors</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
+<span class="sd">        res (int): Number of sampling points.</span>
+<span class="sd">        device (str, optional): Device to run the computation on. Defaults to &#39;cpu&#39;.</span>
+<span class="sd">        force_n_points (int, optional): If not None, the number of points is forced to be exactly this, useful for controlled comparisons with other sensors. Defaults to None.</span>
+<span class="sd">        max_norm_rad (float, optional): Maximum normalized radius. Defaults to 1.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        coords (torch.Tensor): sampling cartesian coordinates in visual space, normalized to (-1,1)</span>
-<span class="sd">        polar_coords (torch.Tensor): sampling polar coordinates in visual space </span>
-<span class="sd">        plotting_coords (torch.Tensor): plotting coordinates in complex log space, useful for visualizing the sampling</span>
+<span class="sd">        tuple: A tuple containing:</span>
+<span class="sd">            - torch.Tensor: Sampling cartesian coordinates in visual space, normalized to (-1,1).</span>
+<span class="sd">            - torch.Tensor: Sampling polar coordinates in visual space.</span>
+<span class="sd">            - torch.Tensor: Plotting coordinates in complex log space, useful for visualizing the sampling.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_isotropic_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">constant_num_angles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="n">force_n_points</span><span class="p">,</span> <span class="n">max_norm_rad</span><span class="o">=</span><span class="n">max_norm_rad</span><span class="p">)</span></div>
 
@@ -420,20 +416,19 @@
 <div class="viewcode-block" id="_compute_isotropic_r_and_num_theta">
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords._compute_isotropic_r_and_num_theta">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_compute_isotropic_r_and_num_theta</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the radii and angles for isotropic logarithmic sampling.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the radii and angles for isotropic logarithmic sampling.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        fov (float): Field of view diameter in degrees.</span>
-<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
 <span class="sd">        res (int): Number of sampling radii.</span>
 <span class="sd">        circular (bool, optional): If True, use circular sampling. Defaults to True.</span>
 <span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
 <span class="sd">        </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple:</span>
-<span class="sd">            - torch.Tensor: Radii for each sampling ring</span>
-<span class="sd">            - torch.Tensor: Number of angles for each radius</span>
+<span class="sd">        tuple: A tuple containing:</span>
+<span class="sd">            - torch.Tensor: Radii for each sampling ring.</span>
+<span class="sd">            - torch.Tensor: Number of angles for each radius.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">res</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fov</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -476,14 +471,13 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.num_sampling_coords_isotropic">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">num_sampling_coords_isotropic</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Quickly compute the number of sampling coordinates for isotropic sampling.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Quickly compute the number of sampling coordinates for isotropic sampling.</span>
 
-<span class="sd">    Useful for optimizing the res (# of radii) to match a certain output n (# of points)</span>
+<span class="sd">    Useful for optimizing the res (# of radii) to match a certain output n (# of points).</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        fov (float): Field of view diameter in degrees.</span>
-<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
 <span class="sd">        res (int): Number of sampling radii.</span>
 <span class="sd">        circular (bool, optional): If True, use circular sampling. Defaults to True.</span>
 <span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
@@ -500,21 +494,22 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.find_desired_res">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_desired_res</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">n_points_desired</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1000</span><span class="p">),</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Find the resolution that gives the desired number of sampling points using binary search.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the resolution that gives the desired number of sampling points using binary search.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        fov (float): Field of view diameter in degrees.</span>
-<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
 <span class="sd">        n_points_desired (int): Desired number of sampling points.</span>
-<span class="sd">        style (str): which sampling style, e.g. &#39;isotropic&#39;</span>
+<span class="sd">        style (str): Which sampling style, e.g. &#39;isotropic&#39;.</span>
 <span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
 <span class="sd">        bounds (tuple, optional): Bounds for resolution search. Defaults to (1,1000).</span>
+<span class="sd">        force_less_than (bool, optional): Whether to force less than target resolution. Defaults to False.</span>
+<span class="sd">        quiet (bool, optional): Whether to suppress output. Defaults to False.</span>
 <span class="sd">        </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple:</span>
-<span class="sd">            - int: Resolution that gives the desired number of points</span>
-<span class="sd">            - int: Actual number of points achieved</span>
+<span class="sd">        tuple: A tuple containing:</span>
+<span class="sd">            - int: Resolution that gives the desired number of points.</span>
+<span class="sd">            - int: Actual number of points achieved.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Try a range of integer values directly instead of using minimize_scalar</span>
     <span class="n">best_res</span> <span class="o">=</span> <span class="kc">None</span>
@@ -559,22 +554,21 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.get_sampling_coords">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate sampling coordinates based on the specified style.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate sampling coordinates based on the specified style.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        fov (float): Field of view diameter in degrees.</span>
-<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
 <span class="sd">        res (int): Resolution parameter.</span>
 <span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
 <span class="sd">        style (str): Sampling style (&#39;isotropic&#39;, &#39;logpolar&#39;, &#39;isotropic_fixn&#39;, &#39;uniform&#39;, &#39;uniform_as_grid&#39;, &#39;logpolar_as_grid&#39;).</span>
-<span class="sd">        max_val (float, optional): maximum x/y value, defaults to 1</span>
+<span class="sd">        max_val (float, optional): Maximum x/y value. Defaults to 1.</span>
 <span class="sd">        </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple:</span>
-<span class="sd">            - torch.Tensor: Cartesian coordinates</span>
-<span class="sd">            - torch.Tensor: Polar coordinates</span>
-<span class="sd">            - torch.Tensor: Plotting coordinates</span>
+<span class="sd">        tuple: A tuple containing:</span>
+<span class="sd">            - torch.Tensor: Cartesian coordinates.</span>
+<span class="sd">            - torch.Tensor: Polar coordinates.</span>
+<span class="sd">            - torch.Tensor: Plotting coordinates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> <span class="s1">&#39;logpolar&#39;</span><span class="p">,</span> <span class="s1">&#39;isotropic_fixn&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform_as_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;logpolar_as_grid&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span> <span class="ow">or</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;uniform_as_grid&#39;</span><span class="p">:</span>
@@ -604,8 +598,7 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.rowcol_to_xy">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">rowcol_to_xy</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;01&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert row-column coordinates to xy coordinates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert row-column coordinates to xy coordinates.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        coords (torch.Tensor): Input coordinates in row-column format.</span>
@@ -638,8 +631,7 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.xy_to_rowcol">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">xy_to_rowcol</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;01&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert xy coordinates to row-column coordinates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert xy coordinates to row-column coordinates.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        coords (torch.Tensor): Input coordinates in xy format.</span>
@@ -672,6 +664,16 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.xy_to_colrow">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">xy_to_colrow</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;01&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert xy coordinates to column-row coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        coords (torch.Tensor): Input coordinates in xy format.</span>
+<span class="sd">        do_norm (bool, optional): Whether to normalize coordinates. Defaults to True.</span>
+<span class="sd">        format (str): Coordinate format (&#39;01&#39; for [0,1] or &#39;-11&#39; for [-1,1]). Defaults to &#39;01&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Coordinates in column-row format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rowcol</span> <span class="o">=</span> <span class="n">xy_to_rowcol</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">do_norm</span><span class="o">=</span><span class="n">do_norm</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
     <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">rowcol</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">rowcol</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">colrow</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -683,12 +685,11 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.num_sampling_coords">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">num_sampling_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculate the number of sampling coordinates for a given style.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the number of sampling coordinates for a given style.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        fov (float): Field of view diameter in degrees.</span>
-<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
 <span class="sd">        res (int): Resolution parameter.</span>
 <span class="sd">        style (str): Sampling style. Defaults to &#39;isotropic&#39;.</span>
 <span class="sd">        device (str, optional): Device to run computation on. Defaults to &#39;cpu&#39;.</span>
@@ -709,13 +710,12 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.transform_sampling_grid">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">transform_sampling_grid</span><span class="p">(</span><span class="n">sampling_grid</span><span class="p">,</span> <span class="n">fix_loc</span><span class="p">,</span> <span class="n">fixation_size</span><span class="p">,</span> <span class="n">image_size</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Transform sampling grid coordinates from fixation space to full image space.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform sampling grid coordinates from fixation space to full image space.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        sampling_grid (torch.Tensor): Sampling grid of shape (1, n_coords, 2) in [-1, 1] range. It is in (x,y) format.</span>
-<span class="sd">        fixation_location (tuple): Fixation center in normalized image coordinates (h, w), e.g., (0.5, 0.5).</span>
-<span class="sd">        fixation_size (tuple): Size of the fixation region in pixels (fix_h, fix_w).</span>
+<span class="sd">        fix_loc (tuple or torch.Tensor): Fixation center in normalized image coordinates (h, w), e.g., (0.5, 0.5).</span>
+<span class="sd">        fixation_size (tuple or torch.Tensor): Size of the fixation region in pixels (fix_h, fix_w).</span>
 <span class="sd">        image_size (tuple): Full image size (H, W).</span>
 
 <span class="sd">    Returns:</span>
@@ -769,6 +769,22 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.auto_match_num_coords">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">auto_match_num_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">cart_res</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Automatically match the number of coordinates to cartesian resolution.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
+<span class="sd">        cart_res (int): Cartesian resolution.</span>
+<span class="sd">        style (str): Sampling style.</span>
+<span class="sd">        auto_match_cart_resources (int): Auto-matching parameter (-1: auto-match in_res, 0: no auto-matching, &gt;0: auto-match everything).</span>
+<span class="sd">        device (str): Device to run computation on.</span>
+<span class="sd">        force_less_than (bool, optional): Whether to force less than target resolution. Defaults to True.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple containing:</span>
+<span class="sd">            - int: Input resolution.</span>
+<span class="sd">            - int: Cartesian resolution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;fixn&#39;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
         <span class="n">in_res</span> <span class="o">=</span> <span class="n">cart_res</span>
     <span class="k">elif</span> <span class="n">auto_match_cart_resources</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s1">&#39;fixn&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
@@ -785,14 +801,15 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.logpolar_radius">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">logpolar_radius</span><span class="p">(</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    utility for computing logpolar radius from normalized cartesian coordinates</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Utility for computing logpolar radius from normalized cartesian coordinates.</span>
+<span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">        cartesian: (nx2) cartesian coordinates normalized to (-1,1)</span>
-<span class="sd">        fov: field-of-view diameter in degrees</span>
-<span class="sd">        cmf_a (float): a parameter from the CMF: M(r)=1/(r+a). smaller a = stronger foveation</span>
+<span class="sd">        cartesian (torch.Tensor): (nx2) cartesian coordinates normalized to (-1,1).</span>
+<span class="sd">        fov (float): Field-of-view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
+<span class="sd">        </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        log_radius: (nx1) log radius as in logpolar mapping</span>
+<span class="sd">        torch.Tensor: (nx1) log radius as in logpolar mapping.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">radius</span> <span class="o">=</span> <span class="p">((</span><span class="n">cartesian</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">cartesian</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">.5</span><span class="p">)</span><span class="o">*</span><span class="n">fov</span><span class="o">/</span><span class="mi">2</span>
     <span class="n">cmf_a_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">)</span>
@@ -805,6 +822,14 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.cart_to_polar">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">cart_to_polar</span><span class="p">(</span><span class="n">cartesian</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert cartesian coordinates to polar coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        cartesian (torch.Tensor or array-like): Input cartesian coordinates.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Polar coordinates (radius, angle).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
         <span class="n">cartesian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">cartesian</span><span class="p">)</span>
     <span class="n">polar_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span>
@@ -819,6 +844,14 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.polar_to_cart">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">polar_to_cart</span><span class="p">(</span><span class="n">polar</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert polar coordinates to cartesian coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        polar (torch.Tensor or array-like): Input polar coordinates (radius, angle).</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Cartesian coordinates (x, y).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">polar</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
         <span class="n">polar</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">polar</span><span class="p">)</span>
     <span class="n">cartesian_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span>
@@ -833,6 +866,17 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.coords.html#foveation.sensing.coords.cart_to_complex_log">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">cart_to_complex_log</span><span class="p">(</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">postproc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert cartesian coordinates to complex log space coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        cartesian (torch.Tensor or array-like): Input cartesian coordinates.</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        cmf_a (float): A parameter from the CMF: M(r)=1/(r+a). Smaller a = stronger foveation.</span>
+<span class="sd">        postproc (bool, optional): Whether to apply post-processing for hemisphere separation. Defaults to True.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Complex log space coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cartesian</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
         <span class="n">cartesian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">cartesian</span><span class="p">)</span>
 

@@ -95,7 +95,9 @@
 <dt class="sig sig-object py" id="foveation.arch.mlp.LayerBlock">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.mlp.</span></span><span class="sig-name descname"><span class="pre">LayerBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/mlp.html#LayerBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.mlp.LayerBlock" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Sequential.html#torch.nn.Sequential" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequential</span></code></a></p>
-<p>Simple Wrapper that turns a list into a Sequential layer, dropping None’s</p>
+<p>Simple wrapper that turns a list into a Sequential layer, dropping None’s.</p>
+<p>This class filters out None values from the input arguments and creates
+a Sequential layer with the remaining valid layers.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.mlp.LayerBlock.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/mlp.html#LayerBlock.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.mlp.LayerBlock.__init__" title="Link to this definition"></a></dt>
@@ -107,30 +109,92 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.arch.mlp.get_mlp">
 <span class="sig-prename descclassname"><span class="pre">foveation.arch.mlp.</span></span><span class="sig-name descname"><span class="pre">get_mlp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repr_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9216</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mlp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'8192-8192-8192'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nn.Linear</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">act</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">partial(nn.ReLU,</span> <span class="pre">inplace=True)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nn.BatchNorm1d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">partial(nn.Dropout,</span> <span class="pre">p=.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proj_relu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/mlp.html#get_mlp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.mlp.get_mlp" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create a multi-layer perceptron (MLP) with configurable architecture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>repr_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Input representation size. Defaults to 9216.</p></li>
+<li><p><strong>mlp</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – MLP architecture specification as a string
+of layer sizes separated by dashes (e.g., ‘8192-8192-8192’) or
+a single integer. Defaults to ‘8192-8192-8192’.</p></li>
+<li><p><strong>inp</strong> (<em>callable</em><em>, </em><em>optional</em>) – Input layer function that takes (idx, is_output)
+and returns a layer or None. Defaults to None.</p></li>
+<li><p><strong>linear</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – Linear layer class to use. Defaults to nn.Linear.</p></li>
+<li><p><strong>act</strong> (<em>callable</em><em>, </em><em>optional</em>) – Activation function to use. Defaults to
+partial(nn.ReLU, inplace=True).</p></li>
+<li><p><strong>norm</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – Normalization layer class to use. Defaults to
+nn.BatchNorm1d.</p></li>
+<li><p><strong>dropout</strong> (<em>callable</em><em>, </em><em>optional</em>) – Dropout layer function. Defaults to
+partial(nn.Dropout, p=.5).</p></li>
+<li><p><strong>dropout_all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to apply dropout to all layers
+including the output layer. Defaults to False.</p></li>
+<li><p><strong>proj_relu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to apply ReLU to the projection
+(output) layer. Defaults to False.</p></li>
+<li><p><strong>output_bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use bias in the output layer.
+Defaults to False.</p></li>
+<li><p><strong>l2norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to apply L2 normalization to the output.
+Defaults to False.</p></li>
+<li><p><strong>out</strong> (<em>callable</em><em>, </em><em>optional</em>) – Output layer function that takes (idx, is_output)
+and returns a layer or None. Defaults to None.</p></li>
+<li><p><strong>offset_idx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Offset for block naming. Defaults to 5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A wrapped MLP module that can return embeddings and</dt><dd><p>intermediate layer outputs.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#foveation.arch.mlp.MLPWrapper" title="foveation.arch.mlp.MLPWrapper">MLPWrapper</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="foveation.arch.mlp.MLPWrapper">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.mlp.</span></span><span class="sig-name descname"><span class="pre">MLPWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mlp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/mlp.html#MLPWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.mlp.MLPWrapper" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Wrapper for MLP that provides additional functionality for layer outputs.</p>
+<p>This wrapper allows the MLP to return both the final embeddings and
+intermediate layer outputs for analysis or visualization purposes.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.mlp.MLPWrapper.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mlp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/mlp.html#MLPWrapper.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.mlp.MLPWrapper.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dd><p>Initialize the MLP wrapper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mlp</strong> (<em>nn.Module</em>) – The MLP module to wrap.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.mlp.MLPWrapper.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_layer_outputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/mlp.html#MLPWrapper.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.mlp.MLPWrapper.forward" title="Link to this definition"></a></dt>
-<dd><p>Define the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<dd><p>Forward pass through the MLP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Input tensor to process.</p></li>
+<li><p><strong>return_layer_outputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to return intermediate
+layer outputs along with the final embeddings. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>If return_layer_outputs is True, returns a tuple</dt><dd><p>of (embeddings, list_outputs) where embeddings is the final output
+and list_outputs contains all intermediate layer outputs. If False,
+returns only the final embeddings.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

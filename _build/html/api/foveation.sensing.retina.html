@@ -115,21 +115,50 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.retina.RetinalTransform.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'isotropic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'grid_nn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixation_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_match_cart_resources</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_transforms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_transforms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_color_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/retina.html#RetinalTransform.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.retina.RetinalTransform.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dd><p>Initialize the RetinalTransform module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>resolution</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Target resolution for the retinal transform.</p></li>
+<li><p><strong>start_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Starting resolution. Defaults to 256.</p></li>
+<li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Field of view diameter in degrees. Defaults to 16.</p></li>
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Cortical magnification factor parameter. Defaults to 0.5.</p></li>
+<li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Sampling style. Defaults to ‘isotropic’.</p></li>
+<li><p><strong>sampler</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Sampler type. Defaults to ‘grid_nn’.</p></li>
+<li><p><strong>fixation_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Fixation size in pixels. Defaults to None.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to use. Defaults to ‘cuda’.</p></li>
+<li><p><strong>dtype</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.dtype" title="(in PyTorch v2.8)"><em>torch.dtype</em></a><em>, </em><em>optional</em>) – Data type. Defaults to torch.float.</p></li>
+<li><p><strong>auto_match_cart_resources</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to auto-match cartesian resources. Defaults to True.</p></li>
+<li><p><strong>pre_transforms</strong> (<em>callable</em><em>, </em><em>optional</em>) – Pre-processing transforms. Defaults to None.</p></li>
+<li><p><strong>post_transforms</strong> (<em>callable</em><em>, </em><em>optional</em>) – Post-processing transforms. Defaults to None.</p></li>
+<li><p><strong>sigma</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Standard deviation for Gaussian color decay. Defaults to None.</p></li>
+<li><p><strong>no_color_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to disable color in eval mode. Defaults to False.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments passed to warping function.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.retina.RetinalTransform.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_loc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixation_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/retina.html#RetinalTransform.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.retina.RetinalTransform.forward" title="Link to this definition"></a></dt>
-<dd><p>Define the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<dd><p>Forward pass of the retinal transform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Input tensor.</p></li>
+<li><p><strong>fix_loc</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Fixation location.</p></li>
+<li><p><strong>fixation_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Fixation size. Defaults to None.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Transformed tensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -164,7 +193,7 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fixation_size</strong> – Fixation size specification (int, tuple, or None).</p></li>
+<li><p><strong>fixation_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, or </em><em>None</em>) – Fixation size specification.</p></li>
 <li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of samples in the batch.</p></li>
 </ul>
 </dd>
@@ -184,7 +213,7 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fix_loc</strong> – Fixation location specification (tuple, list, tensor, or None).</p></li>
+<li><p><strong>fix_loc</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>, </em><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a><em>, or </em><em>None</em>) – Fixation location specification.</p></li>
 <li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of samples in the batch.</p></li>
 </ul>
 </dd>
@@ -204,7 +233,7 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>aspect_ratio</strong> – Aspect ratio specification (float, list, or None).</p></li>
+<li><p><strong>aspect_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>, or </em><em>None</em>) – Aspect ratio specification.</p></li>
 <li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of samples in the batch.</p></li>
 </ul>
 </dd>
@@ -224,8 +253,8 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fixation_size</strong> – Current fixation size.</p></li>
-<li><p><strong>aspect_ratio</strong> – Aspect ratio to apply.</p></li>
+<li><p><strong>fixation_size</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Current fixation size.</p></li>
+<li><p><strong>aspect_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Aspect ratio to apply.</p></li>
 <li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of samples in the batch.</p></li>
 </ul>
 </dd>
@@ -243,7 +272,27 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.sensing.retina.min_diff_for_cmf_a">
 <span class="sig-prename descclassname"><span class="pre">foveation.sensing.retina.</span></span><span class="sig-name descname"><span class="pre">min_diff_for_cmf_a</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixation_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_n_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disallow_undersampling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_less_than</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/retina.html#min_diff_for_cmf_a"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.retina.min_diff_for_cmf_a" title="Link to this definition"></a></dt>
-<dd><p>Helper function that computes minimum difference between radii for a given cmf_a value</p>
+<dd><p>Helper function that computes minimum difference between radii for a given cmf_a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cortical magnification factor parameter.</p></li>
+<li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Field of view diameter in degrees.</p></li>
+<li><p><strong>output_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Output resolution.</p></li>
+<li><p><strong>fixation_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fixation size in pixels.</p></li>
+<li><p><strong>force_n_points</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Force number of points. Defaults to None.</p></li>
+<li><p><strong>disallow_undersampling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to disallow undersampling. Defaults to True.</p></li>
+<li><p><strong>force_less_than</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to force less than. Defaults to False.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to use. Defaults to ‘cuda’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Minimum difference between radii.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

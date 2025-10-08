@@ -265,7 +265,7 @@
 <dt class="sig sig-object py" id="foveation.sensing.policies.MultiRandomSaccadePolicy.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_fixations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixation_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/policies.html#MultiRandomSaccadePolicy.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.policies.MultiRandomSaccadePolicy.forward" title="Link to this definition"></a></dt>
 <dd><p>Forward pass for the MultiRandomSaccadePolicy.</p>
-<p>This method generates multiple random fixations for the input images and applies the retinal transform to each fixation. It returns the transformed images, the fixations</p>
+<p>This method generates multiple random fixations for the input images and applies the retinal transform to each fixation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -277,11 +277,19 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The transformed images.
-list: The fixation coordinates.</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionary containing:</dt><dd><ul class="simple">
+<li><p>x_fixs (torch.Tensor): The transformed images.</p></li>
+<li><p>fixations (torch.Tensor): The fixation coordinates.</p></li>
+<li><p>fixation_sizes (torch.Tensor): The fixation sizes.</p></li>
+<li><p>fix_deltas (torch.Tensor): The fixation deltas.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.tensor</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -317,20 +325,30 @@ list: The fixation coordinates.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.policies.NoSaccadePolicy.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_fixations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/policies.html#NoSaccadePolicy.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.policies.NoSaccadePolicy.forward" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Forward pass for the NoSaccadePolicy.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – The input image.</p></li>
 <li><p><strong>f1</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a><em>, </em><em>optional</em>) – The first fixation coordinates. If not provided, a random fixation will be generated.</p></li>
-<li><p><strong>**kwargs</strong> – Additional unused keyword arguments, for compatibility with other policies.</p></li>
+<li><p><strong>area_range</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Unused, for compatibility with other policies.</p></li>
+<li><p><strong>n_fixations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Unused, for compatibility with other policies.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The transformed image.
-None: The fixation coordinates.</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionary containing:</dt><dd><ul class="simple">
+<li><p>x_fixs (torch.Tensor): The transformed image.</p></li>
+<li><p>fixations (torch.Tensor): The fixation coordinates.</p></li>
+<li><p>fixation_sizes (torch.Tensor): The fixation sizes.</p></li>
+<li><p>fixation_deltas (torch.Tensor): The fixation deltas.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>

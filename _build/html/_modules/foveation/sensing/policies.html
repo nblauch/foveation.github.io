@@ -131,58 +131,58 @@
 <div class="viewcode-block" id="BaseSaccadePolicy.get_random_crop">
 <a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.BaseSaccadePolicy.get_random_crop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_random_crop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Generate a random crop with specified scale and aspect ratio.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a random crop with specified scale and aspect ratio.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            height (int): Image height.</span>
+<span class="sd">            width (int): Image width.</span>
+<span class="sd">            scale (float or tuple): Scale factor(s) for crop area.</span>
+<span class="sd">            ratio (float or tuple): Aspect ratio(s) for the crop.</span>
 <span class="sd">            </span>
-<span class="sd">            Args:</span>
-<span class="sd">                height (int): Image height.</span>
-<span class="sd">                width (int): Image width.</span>
-<span class="sd">                scale (float or tuple): Scale factor(s) for crop area.</span>
-<span class="sd">                ratio (float or tuple): Aspect ratio(s) for the crop.</span>
-<span class="sd">                </span>
-<span class="sd">            Returns:</span>
-<span class="sd">                tuple:</span>
-<span class="sd">                    - list: Normalized fixation center [y, x]</span>
-<span class="sd">                    - list: Fixation size [height, width]</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">area</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">width</span>
-            <span class="n">log_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
-                    <span class="n">target_area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">target_area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="n">scale</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
-                    <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">log_ratio</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">log_ratio</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">ratio</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target_area</span> <span class="o">*</span> <span class="n">aspect_ratio</span><span class="p">)))</span>
-                <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target_area</span> <span class="o">/</span> <span class="n">aspect_ratio</span><span class="p">)))</span>
-                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">w</span> <span class="o">&lt;=</span> <span class="n">width</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="n">height</span><span class="p">:</span>
-                    <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-                    <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">-</span> <span class="n">w</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-                    <span class="c1"># calculate normalized center of fixation</span>
-                    <span class="n">fixation</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">height</span><span class="p">,(</span><span class="n">j</span><span class="o">+</span><span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">]</span>
-                    <span class="n">fixation_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>
-                    <span class="k">return</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span>
-            <span class="n">in_ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">in_ratio</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="n">ratio</span><span class="p">):</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="n">width</span>
-                <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="nb">min</span><span class="p">(</span><span class="n">ratio</span><span class="p">)))</span>
-            <span class="k">elif</span> <span class="n">in_ratio</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">ratio</span><span class="p">):</span>
-                <span class="n">h</span> <span class="o">=</span> <span class="n">height</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">ratio</span><span class="p">)))</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple:</span>
+<span class="sd">                - list: Normalized fixation center [y, x]</span>
+<span class="sd">                - list: Fixation size [height, width]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">width</span>
+        <span class="n">log_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
+                <span class="n">target_area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="n">width</span>
-                <span class="n">h</span> <span class="o">=</span> <span class="n">height</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
-            <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="n">w</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+                <span class="n">target_area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="n">scale</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
+                <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">log_ratio</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">log_ratio</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">ratio</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target_area</span> <span class="o">*</span> <span class="n">aspect_ratio</span><span class="p">)))</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target_area</span> <span class="o">/</span> <span class="n">aspect_ratio</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">w</span> <span class="o">&lt;=</span> <span class="n">width</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="n">height</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">-</span> <span class="n">w</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="c1"># calculate normalized center of fixation</span>
+                <span class="n">fixation</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">height</span><span class="p">,(</span><span class="n">j</span><span class="o">+</span><span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">]</span>
+                <span class="n">fixation_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span>
+        <span class="n">in_ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">in_ratio</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="n">ratio</span><span class="p">):</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">width</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="nb">min</span><span class="p">(</span><span class="n">ratio</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="n">in_ratio</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">ratio</span><span class="p">):</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">height</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">ratio</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">width</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="n">w</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
 
-            <span class="c1"># calculate normalized center of fixation</span>
-            <span class="n">fixation</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">height</span><span class="p">,(</span><span class="n">j</span><span class="o">+</span><span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">]</span>
-            <span class="n">fixation_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>
+        <span class="c1"># calculate normalized center of fixation</span>
+        <span class="n">fixation</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">height</span><span class="p">,(</span><span class="n">j</span><span class="o">+</span><span class="n">w</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">]</span>
+        <span class="n">fixation_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>
 
-            <span class="k">return</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span></div>
+        <span class="k">return</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">fixation_size</span></div>
 
 
 <div class="viewcode-block" id="BaseSaccadePolicy.get_random_nearcenter_fixation">
@@ -311,7 +311,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Forward pass for the MultiRandomSaccadePolicy.</span>
 
-<span class="sd">        This method generates multiple random fixations for the input images and applies the retinal transform to each fixation. It returns the transformed images, the fixations</span>
+<span class="sd">        This method generates multiple random fixations for the input images and applies the retinal transform to each fixation.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x (torch.Tensor): The input images of shape (n, c, h, w), where n is the batch size, c is the number of channels, h is the height, and w is the width.</span>
@@ -321,8 +321,11 @@
 <span class="sd">            area_range (tuple, optional): The range of areas to sample from for the fixation size. Defaults to None.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            torch.tensor: The transformed images.</span>
-<span class="sd">            list: The fixation coordinates.</span>
+<span class="sd">            dict: Dictionary containing:</span>
+<span class="sd">                - x_fixs (torch.Tensor): The transformed images.</span>
+<span class="sd">                - fixations (torch.Tensor): The fixation coordinates.</span>
+<span class="sd">                - fixation_sizes (torch.Tensor): The fixation sizes.</span>
+<span class="sd">                - fix_deltas (torch.Tensor): The fixation deltas.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">n_fixations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">n_fixations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fixations</span>
@@ -686,14 +689,20 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.policies.html#foveation.sensing.policies.NoSaccadePolicy.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">f1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass for the NoSaccadePolicy.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            x (torch.Tensor): The input image.</span>
 <span class="sd">            f1 (torch.Tensor, optional): The first fixation coordinates. If not provided, a random fixation will be generated.</span>
-<span class="sd">            **kwargs: Additional unused keyword arguments, for compatibility with other policies.</span>
+<span class="sd">            area_range (tuple, optional): Unused, for compatibility with other policies.</span>
+<span class="sd">            n_fixations (int, optional): Unused, for compatibility with other policies.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            torch.Tensor: The transformed image.    </span>
-<span class="sd">            None: The fixation coordinates.</span>
+<span class="sd">            dict: Dictionary containing:</span>
+<span class="sd">                - x_fixs (torch.Tensor): The transformed image.</span>
+<span class="sd">                - fixations (torch.Tensor): The fixation coordinates.</span>
+<span class="sd">                - fixation_sizes (torch.Tensor): The fixation sizes.</span>
+<span class="sd">                - fixation_deltas (torch.Tensor): The fixation deltas.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">f1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">area_range</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_fixations</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="n">x_f1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retinal_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f1</span><span class="p">)</span>

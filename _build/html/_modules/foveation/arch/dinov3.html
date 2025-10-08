@@ -104,6 +104,16 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.dinov3.html#foveation.arch.dinov3.load_dinov3">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_dinov3</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">log_in</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a DinoV3 model and processor from Hugging Face.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path or model identifier for the DinoV3 model.</span>
+<span class="sd">        device (str, optional): Device to load the model on. Defaults to &#39;cuda&#39;.</span>
+<span class="sd">        log_in (bool, optional): Whether to log into Hugging Face. Defaults to True.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple containing (model, processor).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">log_in</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">login</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HUGGINGFACE_TOKEN&#39;</span><span class="p">])</span>
@@ -119,6 +129,16 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.dinov3.html#foveation.arch.dinov3.build_dinov3">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_dinov3</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">log_in</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a foveated DinoV3 model from configuration.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        cfg: Configuration object containing model and training parameters.</span>
+<span class="sd">        log_in (bool, optional): Whether to log into Hugging Face. Defaults to True.</span>
+<span class="sd">        device (str, optional): Device to build the model on. Defaults to &#39;cuda&#39;.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.nn.Module: The configured DinoV3 model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">model</span><span class="p">,</span> <span class="n">processor</span> <span class="o">=</span> <span class="n">load_dinov3</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">log_in</span><span class="o">=</span><span class="n">log_in</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 
@@ -213,6 +233,16 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.dinov3.html#foveation.arch.dinov3.prep_dinov3_finetuning">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">prep_dinov3_finetuning</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare a DinoV3 model for fine-tuning based on configuration.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        model: The DinoV3 model to prepare.</span>
+<span class="sd">        cfg: Configuration object containing fine-tuning parameters.</span>
+<span class="sd">        device (str, optional): Device to prepare the model on. Defaults to &#39;cuda&#39;.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.nn.Module: The prepared model with appropriate parameters frozen/unfrozen.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">pretrained_model</span><span class="o">.</span><span class="n">freeze_backbone</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
@@ -276,12 +306,24 @@
     <span class="n">align_corners</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">preserve_kernel_norm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Resample a patch-embedding Conv2d&#39;s kernels from (kH, kW) -&gt; target_hw and</span>
-<span class="sd">    return a NEW Conv2d with kernel_size=stride=target_hw. Supports both upsampling</span>
-<span class="sd">    and downsampling. Assumes:</span>
-<span class="sd">      - stride == kernel_size (patch embedding)</span>
-<span class="sd">      - padding == 0, groups == 1, dilation == 1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample a patch-embedding Conv2d&#39;s kernels to target size.</span>
+<span class="sd">    </span>
+<span class="sd">    Resamples a patch-embedding Conv2d&#39;s kernels from (kH, kW) -&gt; target_hw and</span>
+<span class="sd">    returns a NEW Conv2d with kernel_size=stride=target_hw. Supports both upsampling</span>
+<span class="sd">    and downsampling.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        conv (nn.Conv2d): The patch embedding convolution to resample.</span>
+<span class="sd">        target_hw (tuple, optional): Target height and width. Defaults to (8, 8).</span>
+<span class="sd">        mode (str, optional): Interpolation mode. Defaults to &quot;bicubic&quot;.</span>
+<span class="sd">        align_corners (bool, optional): Whether to align corners. Defaults to True.</span>
+<span class="sd">        preserve_kernel_norm (bool, optional): Whether to preserve kernel norm. Defaults to False.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        nn.Conv2d: A new Conv2d layer with resampled kernels.</span>
+<span class="sd">        </span>
+<span class="sd">    Note:</span>
+<span class="sd">        Assumes stride == kernel_size (patch embedding), padding == 0, groups == 1, dilation == 1.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">)</span>
     <span class="n">kH</span><span class="p">,</span> <span class="n">kW</span> <span class="o">=</span> <span class="n">conv</span><span class="o">.</span><span class="n">kernel_size</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">conv</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">)</span>

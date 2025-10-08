@@ -101,7 +101,10 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.GRN">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GRN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; GRN (Global Response Normalization) layer</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;GRN (Global Response Normalization) layer.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Number of input channels.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="GRN.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.GRN.__init__">[docs]</a>
@@ -125,10 +128,16 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.LayerNorm">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LayerNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; LayerNorm that supports two data formats: channels_last (default) or channels_first. </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;LayerNorm that supports two data formats: channels_last (default) or channels_first.</span>
+<span class="sd">    </span>
 <span class="sd">    The ordering of the dimensions in the inputs. channels_last corresponds to inputs with </span>
 <span class="sd">    shape (batch_size, locations, channels) while channels_first corresponds to inputs </span>
 <span class="sd">    with shape (batch_size, channels, locations).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        normalized_shape (int): Expected input size from the last dimension.</span>
+<span class="sd">        eps (float): A value added to the denominator for numerical stability. Default: 1e-6</span>
+<span class="sd">        data_format (str): The ordering of the dimensions. Default: &quot;channels_last&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="LayerNorm.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.LayerNorm.__init__">[docs]</a>
@@ -162,11 +171,16 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.Block">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Block</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; ConvNeXtV2 Block.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ConvNeXtV2 Block.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        dim (int): Number of input channels.</span>
+<span class="sd">        coords: Input/output coordinates for KNN operations.</span>
 <span class="sd">        drop_path (float): Stochastic depth rate. Default: 0.0</span>
+<span class="sd">        **kwargs: Additional keyword arguments.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Output tensor with same shape as input.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Block.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.Block.__init__">[docs]</a>
@@ -204,15 +218,26 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.ConvNeXtV2">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConvNeXtV2</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; ConvNeXt V2</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ConvNeXt V2.</span>
 <span class="sd">        </span>
 <span class="sd">    Args:</span>
+<span class="sd">        in_res (int): Input resolution.</span>
+<span class="sd">        fov (float): Field of view parameter.</span>
+<span class="sd">        cmf_a (float): CMF parameter.</span>
+<span class="sd">        style (str): Style parameter.</span>
+<span class="sd">        auto_match_cart_resources (int): Auto match cartesian resources. Default: 1</span>
+<span class="sd">        device (str): Device to use. Default: &#39;cuda&#39;</span>
 <span class="sd">        in_chans (int): Number of input image channels. Default: 3</span>
 <span class="sd">        num_classes (int): Number of classes for classification head. Default: 1000</span>
-<span class="sd">        depths (tuple(int)): Number of blocks at each stage. Default: [3, 3, 9, 3]</span>
-<span class="sd">        dims (int): Feature dimension at each stage. Default: [96, 192, 384, 768]</span>
+<span class="sd">        first_stride (int): First stride value. Default: 4</span>
+<span class="sd">        depths (list): Number of blocks at each stage. Default: [3, 3, 9, 3]</span>
+<span class="sd">        dims (list): Feature dimension at each stage. Default: [96, 192, 384, 768]</span>
 <span class="sd">        drop_path_rate (float): Stochastic depth rate. Default: 0.</span>
 <span class="sd">        head_init_scale (float): Init scaling value for classifier weights and biases. Default: 1.</span>
+<span class="sd">        **kwargs: Additional keyword arguments.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Classification logits or features.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ConvNeXtV2.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.ConvNeXtV2.__init__">[docs]</a>
@@ -301,6 +326,14 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_atto">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">knnconvnextv2_atto</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a KNN ConvNeXtV2 Atto model.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to ConvNeXtV2.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ConvNeXtV2: The model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">ConvNeXtV2</span><span class="p">(</span><span class="n">depths</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">320</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
@@ -310,6 +343,14 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_femto">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">knnconvnextv2_femto</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a KNN ConvNeXtV2 Femto model.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to ConvNeXtV2.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ConvNeXtV2: The model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">ConvNeXtV2</span><span class="p">(</span><span class="n">depths</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="mi">48</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">384</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
@@ -319,6 +360,14 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_pico">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">knnconvnextv2_pico</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a KNN ConvNeXtV2 Pico model.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to ConvNeXtV2.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ConvNeXtV2: The model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">ConvNeXtV2</span><span class="p">(</span><span class="n">depths</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
@@ -328,6 +377,14 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_nano">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">knnconvnextv2_nano</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a KNN ConvNeXtV2 Nano model.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to ConvNeXtV2.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ConvNeXtV2: The model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">ConvNeXtV2</span><span class="p">(</span><span class="n">depths</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">640</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
@@ -337,6 +394,14 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_tiny">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">knnconvnextv2_tiny</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a KNN ConvNeXtV2 Tiny model.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to ConvNeXtV2.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ConvNeXtV2: The model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">ConvNeXtV2</span><span class="p">(</span><span class="n">depths</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="mi">96</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">384</span><span class="p">,</span> <span class="mi">768</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
@@ -346,6 +411,14 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_base">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">knnconvnextv2_base</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a KNN ConvNeXtV2 Base model.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to ConvNeXtV2.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ConvNeXtV2: The model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">ConvNeXtV2</span><span class="p">(</span><span class="n">depths</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
@@ -355,6 +428,14 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_large">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">knnconvnextv2_large</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a KNN ConvNeXtV2 Large model.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to ConvNeXtV2.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ConvNeXtV2: The model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">ConvNeXtV2</span><span class="p">(</span><span class="n">depths</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="mi">192</span><span class="p">,</span> <span class="mi">384</span><span class="p">,</span> <span class="mi">768</span><span class="p">,</span> <span class="mi">1536</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
@@ -364,6 +445,14 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnconvnextv2.html#foveation.arch.knnconvnextv2.knnconvnextv2_huge">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">knnconvnextv2_huge</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a KNN ConvNeXtV2 Huge model.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to ConvNeXtV2.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ConvNeXtV2: The model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">ConvNeXtV2</span><span class="p">(</span><span class="n">depths</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="mi">352</span><span class="p">,</span> <span class="mi">704</span><span class="p">,</span> <span class="mi">1408</span><span class="p">,</span> <span class="mi">2816</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 

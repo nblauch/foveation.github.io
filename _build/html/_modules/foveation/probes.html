@@ -190,7 +190,15 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        for now, we implement average token pooling. which hopefully is fine given the attention. </span>
+<span class="sd">        Forward pass of the AttentionProbe.</span>
+<span class="sd">        </span>
+<span class="sd">        For now, we implement average token pooling, which hopefully is fine given the attention.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            inputs (torch.Tensor): The input tensor to the module.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: The output of the forward pass.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># reshaper = lambda x: x.reshape(x.shape[0], x.shape[1], self.num_features)</span>
         <span class="c1"># emb = reshaper(inputs)</span>
@@ -224,13 +232,15 @@
 <span class="sd">        Initializes an RNNProbe module.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            num_features (int): The number of features in the input</span>
-<span class="sd">            num_classes (int, optional): Number of output classes. Defaults to 1000</span>
-<span class="sd">            hidden_dim (int, optional): Hidden dimension of the RNN. Defaults to 128</span>
-<span class="sd">            rnn_type (str, optional): Type of RNN (&#39;gru&#39; or &#39;lstm&#39;). Defaults to &#39;gru&#39;</span>
-<span class="sd">            bidirectional (bool, optional): Whether to use bidirectional RNN. Defaults to True</span>
-<span class="sd">            dropout (float, optional): Dropout rate. Defaults to None</span>
-<span class="sd">            **kwargs: Additional arguments for the RNN layer</span>
+<span class="sd">            num_features (int): The number of features in the input.</span>
+<span class="sd">            num_classes (int, optional): Number of output classes. Defaults to 1000.</span>
+<span class="sd">            hidden_dim (int, optional): Hidden dimension of the RNN. Defaults to 128.</span>
+<span class="sd">            num_layers (int, optional): Number of RNN layers. Defaults to 1.</span>
+<span class="sd">            rnn_type (str, optional): Type of RNN (&#39;gru&#39;, &#39;lstm&#39;, or &#39;rnn&#39;). Defaults to &#39;gru&#39;.</span>
+<span class="sd">            bidirectional (bool, optional): Whether to use bidirectional RNN. Defaults to False.</span>
+<span class="sd">            dropout (float, optional): Dropout rate. Defaults to None.</span>
+<span class="sd">            softmax_inputs (bool, optional): Whether to apply softmax to inputs. Defaults to False.</span>
+<span class="sd">            **kwargs: Additional arguments for the RNN layer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
@@ -317,6 +327,15 @@
 <div class="viewcode-block" id="SaccadeNetProbe.__init__">
 <a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbe.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">fix_agg</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a SaccadeNetProbe module.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            num_features (int): The number of features in the input.</span>
+<span class="sd">            fix_agg (str): The aggregation method for fixations.</span>
+<span class="sd">            num_classes (int): The number of classes for classification.</span>
+<span class="sd">            dropout (float, optional): The dropout rate. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span> <span class="o">=</span> <span class="n">fix_agg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
@@ -349,10 +368,13 @@
 <a class="viewcode-back" href="../../api/foveation.probes.html#foveation.probes.SaccadeNetProbe.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass of the SaccadeNetProbe.</span>
+<span class="sd">        </span>
 <span class="sd">        Args:</span>
-<span class="sd">            x: tensor of shape (fixations, batch, features)</span>
+<span class="sd">            x (torch.Tensor): Tensor of shape (batch, fixations, features).</span>
+<span class="sd">            </span>
 <span class="sd">        Returns:</span>
-<span class="sd">            embeddings: embeddings of shape (batch, features)</span>
+<span class="sd">            torch.Tensor: Embeddings of shape (batch, features).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># we changed the input format, this is for compatibility with our probes here which expect fixations first</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;b f d -&gt; f b d&#39;</span><span class="p">)</span>

@@ -113,13 +113,34 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.saccadenet.SaccadeNet.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize internal Module state, shared by both nn.Module and ScriptModule.</p>
+<dd><p>Initialize SaccadeNet model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfg</strong> – Configuration object containing model and training parameters.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to run the model on. Defaults to ‘cuda’.</p></li>
+<li><p><strong>dtype</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.dtype" title="(in PyTorch v2.8)"><em>torch.dtype</em></a><em>, </em><em>optional</em>) – Data type for model parameters. Defaults to torch.float32.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.init_fixation_system">
 <span class="sig-name descname"><span class="pre">init_fixation_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixation_policy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setting</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'ssl'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'supervised'</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.init_fixation_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.saccadenet.SaccadeNet.init_fixation_system" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initialize the fixation system based on policy and setting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fixation_policy</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The fixation policy to use.</p></li>
+<li><p><strong>setting</strong> (<em>Literal</em><em>[</em><em>'ssl'</em><em>, </em><em>'supervised'</em><em>]</em>) – The training setting.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized fixation policy object.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.get_in_channels">
@@ -159,128 +180,80 @@ several attributes of the class:</p>
 </dl>
 </li>
 </ul>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>img_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The size of the input image. Defaults to 224.</p>
-</dd>
-</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method temporarily sets the model to evaluation mode and
-does not compute gradients.</p>
+<p>This method does not take any parameters and temporarily sets the model
+to evaluation mode without computing gradients.</p>
 </div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.to">
 <span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.saccadenet.SaccadeNet.to" title="Link to this definition"></a></dt>
-<dd><p>Move and/or cast the parameters and buffers.</p>
-<p>This can be called as</p>
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.channels_last</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.to"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
-
-<p>Its signature is similar to <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.8)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.Tensor.to()</span></code></a>, but only accepts
-floating point or complex <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>s. In addition, this method will
-only cast the floating point or complex parameters and buffers to <code class="xref py py-attr docutils literal notranslate"><span class="pre">dtype</span></code>
-(if given). The integral parameters and buffers will be moved
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">device</span></code>, if that is given, but with dtypes unchanged. When
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">non_blocking</span></code> is set, it tries to convert/move asynchronously
-with respect to the host if possible, e.g., moving CPU Tensors with
-pinned memory to CUDA devices.</p>
-<p>See below for examples.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This method modifies the module in-place.</p>
-</div>
+<dd><p>Move model to specified device.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>device</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.device</span></code></a>) – the desired device of the parameters
-and buffers in this module</p></li>
-<li><p><strong>dtype</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.dtype" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.dtype</span></code></a>) – the desired floating point or complex dtype of
-the parameters and buffers in this module</p></li>
-<li><p><strong>tensor</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Tensor whose dtype and device are the desired
-dtype and device for all parameters and buffers in this module</p></li>
-<li><p><strong>memory_format</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.memory_format" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.memory_format</span></code></a>) – the desired memory
-format for 4D parameters and buffers in this module (keyword
-only argument)</p></li>
+<li><p><strong>*args</strong> – Variable length argument list.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>self</p>
+<dd class="field-even"><p>The model moved to the specified device.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Module</p>
+<dd class="field-odd"><p>self</p>
 </dd>
 </dl>
-<p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +IGNORE_WANT(&quot;non-deterministic&quot;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
-<span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 0.1913, -0.3420],</span>
-<span class="go">        [-0.5113, -0.2325]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
-<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
-<span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 0.1913, -0.3420],</span>
-<span class="go">        [-0.5113, -0.2325]], dtype=torch.float64)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># xdoctest: +REQUIRES(env:TORCH_DOCTEST_CUDA1)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gpu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:1&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">gpu1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">half</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
-<span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 0.1914, -0.3420],</span>
-<span class="go">        [-0.5112, -0.2324]], dtype=torch.float16, device=&#39;cuda:1&#39;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cpu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">cpu</span><span class="p">)</span>
-<span class="go">Linear(in_features=2, out_features=2, bias=True)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
-<span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 0.1914, -0.3420],</span>
-<span class="go">        [-0.5112, -0.2324]], dtype=torch.float16)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cdouble</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span>
-<span class="go">Parameter containing:</span>
-<span class="go">tensor([[ 0.3741+0.j,  0.2382+0.j],</span>
-<span class="go">        [ 0.5593+0.j, -0.4443+0.j]], dtype=torch.complex128)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">cdouble</span><span class="p">))</span>
-<span class="go">tensor([[0.6122+0.j, 0.1150+0.j],</span>
-<span class="go">        [0.6122+0.j, 0.1150+0.j],</span>
-<span class="go">        [0.6122+0.j, 0.1150+0.j]], dtype=torch.complex128)</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.forward_ssl">
 <span class="sig-name descname"><span class="pre">forward_ssl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixation_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.forward_ssl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.saccadenet.SaccadeNet.forward_ssl" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward pass for self-supervised learning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> – Input images.</p></li>
+<li><p><strong>f1</strong> – First fixation (optional).</p></li>
+<li><p><strong>fixation_size</strong> – Size of fixations (optional).</p></li>
+<li><p><strong>area_range</strong> – Range of areas to sample (optional).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(embeddings, layer_outputs, x_fixs) containing the model outputs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.forward_supervised">
 <span class="sig-name descname"><span class="pre">forward_supervised</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_fixations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixation_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_postproc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixated_inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.forward_supervised"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.saccadenet.SaccadeNet.forward_supervised" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward pass for supervised learning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> – Input images.</p></li>
+<li><p><strong>n_fixations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of fixations to use.</p></li>
+<li><p><strong>fixation_size</strong> – Size of fixations (optional).</p></li>
+<li><p><strong>area_range</strong> – Range of areas to sample (optional).</p></li>
+<li><p><strong>fixations</strong> – Pre-computed fixations (optional).</p></li>
+<li><p><strong>do_postproc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to apply post-processing. Defaults to True.</p></li>
+<li><p><strong>fixated_inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether inputs are already fixated. Defaults to False.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(embeddings, layer_outputs, x_fixs) containing the model outputs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.forward">
@@ -295,11 +268,10 @@ only argument)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of embeddings from the model.
-list: A list of layer outputs from the model.</p>
+<dd class="field-even"><p>(embeddings, layer_outputs, x_fixs) containing the model outputs.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>

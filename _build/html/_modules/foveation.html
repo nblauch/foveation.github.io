@@ -100,13 +100,12 @@
 <span class="sd">    Get a Trainer instance based on a base filename and optional parameters.</span>
 
 <span class="sd">    This function loads a model configuration and optionally its weights from a specified directory,</span>
-<span class="sd">    creates an Trainer instance with the loaded configuration, and returns it.</span>
+<span class="sd">    creates a Trainer instance with the loaded configuration, and returns it.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        base_fn (str): The base filename to look for in the logs directory.</span>
 <span class="sd">        load (bool, optional): Whether to load the model weights. Defaults to True.</span>
 <span class="sd">        load_strict (bool, optional): Whether to strictly enforce matching keys when loading weights. Defaults to True.</span>
-<span class="sd">        probe_experiment (str, optional): Name of a specific probe experiment. Defaults to None.</span>
 <span class="sd">        quiet (bool, optional): Whether to suppress print statements. Defaults to False.</span>
 <span class="sd">        allow_distributed (bool, optional): Whether to allow distributed training configuration. Defaults to False.</span>
 <span class="sd">        **kwargs: Additional keyword arguments to override or add to the configuration.</span>
@@ -138,7 +137,7 @@
             <span class="n">prev_world_size</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">world_size</span>
             <span class="n">prev_ngpus</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">ngpus</span>
             <span class="n">prev_nodes</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">nodes</span>
-            <span class="n">cfg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="n">prev_num_workers</span> <span class="o">//</span>    <span class="n">prev_world_size</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="n">prev_num_workers</span> <span class="o">//</span> <span class="n">prev_world_size</span>
             <span class="n">cfg</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">world_size</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">cfg</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">ngpus</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">cfg</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="mi">1</span>
@@ -185,7 +184,7 @@
 <span class="sd">        load (bool, optional): Whether to load the model weights. Defaults to True.</span>
 <span class="sd">        load_strict (bool, optional): Whether to strictly enforce matching keys when loading weights. Defaults to True.</span>
 <span class="sd">        quiet (bool, optional): Whether to suppress print statements. Defaults to False.</span>
-<span class="sd">        allow_distributed (bool, optional): Whether to allow distributed training configuration. Defaults to False.</span>
+<span class="sd">        device (str, optional): Device to load the model on. Defaults to &#39;cuda&#39;.</span>
 <span class="sd">        **kwargs: Additional keyword arguments to override or add to the configuration.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>

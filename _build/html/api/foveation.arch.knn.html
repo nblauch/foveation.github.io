@@ -153,14 +153,11 @@ visual or cortical space, supporting various pooling modes.</p>
 <dd><p>Compute Gaussian weights for local pooling based on distances between
 output nodes and their input neighbors.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sigma</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Standard deviation of Gaussian kernel</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Gaussian weights of shape (k, num_output_nodes)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Gaussian weights of shape (k, num_output_nodes)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -265,13 +262,13 @@ visual or cortical space, with learnable filters aligned to spatial kernels.</p>
 <dd><p>Apply convolution using k-nearest neighbors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X_l</strong> – Node features from layer l [batch, d_l, N_l]</p>
+<dd class="field-odd"><p><strong>X_l</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Node features from layer l [batch, d_l, N_l]</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Node features from layer l+1 [batch, d_l+1, N_l+1]</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>X_out</p>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -286,19 +283,17 @@ visual or cortical space, with learnable filters aligned to spatial kernels.</p>
 - The first neighborhood of coordinates (foveal reference)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>arch_flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Architecture flag indicating reference coordinate style. Checks for containing:
+<dd class="field-odd"><p><strong>arch_flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Architecture flag indicating reference coordinate style. Checks for containing:
 - ‘fovref’: Use first neighborhood as reference (not typically used)
 - ‘circref’: Use circular reference grid (not typically used)
-- ‘doubleres’: Double the resolution of reference grid (smoother alignment)</p></li>
-<li><p><strong>default</strong> (<em>-</em>) – Use square reference grid of same total number of elemenets as the neighborhood</p></li>
-</ul>
+- ‘doubleres’: Double the resolution of reference grid (smoother alignment)
+- default: Use square reference grid of same total number of elements as the neighborhood</p>
 </dd>
 </dl>
-<dl class="simple">
-<dt>Sets:</dt><dd><p>self.ref_coords (torch.Tensor): Reference coordinates tensor of shape [num_ref_coords, 2]</p>
-</dd>
-</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sets self.ref_coords (torch.Tensor): Reference coordinates tensor of shape [num_ref_coords, 2]</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -373,13 +368,13 @@ which reduces computational complexity compared to standard KNN convolution.</p>
 <dd><p>Apply convolution using k-nearest neighbors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X_l</strong> – Node features from layer l [batch, d_l, N_l]</p>
+<dd class="field-odd"><p><strong>X_l</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Node features from layer l [batch, d_l, N_l]</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Node features from layer l+1 [batch, d_l+1, N_l+1]</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>X_out</p>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -426,13 +421,13 @@ where each input channel is convolved separately.</p>
 <dd><p>Apply convolution using k-nearest neighbors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X_l</strong> – Node features from layer l [batch, d_l, N_l]</p>
+<dd class="field-odd"><p><strong>X_l</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Node features from layer l [batch, d_l, N_l]</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Node features from layer l+1 [batch, d_l+1, N_l+1]</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>X_out</p>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -446,14 +441,18 @@ where each input channel is convolved separately.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>knn_indices_list</strong> – List of <cite>knn_indices</cite> matrices for each layer.</p></li>
-<li><p><strong>layer_of_interest</strong> – Index of the layer where the unit of interest resides.</p></li>
-<li><p><strong>unit_of_interest</strong> – Index of the unit of interest in the layer of interest.</p></li>
-<li><p><strong>input_size</strong> – Total number of units in the input space.</p></li>
+<li><p><strong>knn_indices_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of <cite>knn_indices</cite> matrices for each layer.</p></li>
+<li><p><strong>layer_of_interest</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Index of the layer where the unit of interest resides.</p></li>
+<li><p><strong>unit_of_interest</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Index of the unit of interest in the layer of interest.</p></li>
+<li><p><strong>input_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Total number of units in the input space.</p></li>
+<li><p><strong>plot_layer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Layer to plot from. Defaults to 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Counter array of shape (input_size,) indicating the occurrence count of input units.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -461,18 +460,22 @@ where each input channel is convolved separately.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.arch.knn.compute_binary_receptive_field">
 <span class="sig-prename descclassname"><span class="pre">foveation.arch.knn.</span></span><span class="sig-name descname"><span class="pre">compute_binary_receptive_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knn_indices_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_of_interest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_of_interest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/knn.html#compute_binary_receptive_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.knn.compute_binary_receptive_field" title="Link to this definition"></a></dt>
-<dd><p>Compute the receptive field of all units that contribute whatsoever to the unit of interest</p>
+<dd><p>Compute the receptive field of all units that contribute whatsoever to the unit of interest.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>knn_indices_list</strong> – List of <cite>knn_indices</cite> matrices for each layer.</p></li>
-<li><p><strong>layer_of_interest</strong> – Index of the layer where the unit of interest resides.</p></li>
-<li><p><strong>unit_of_interest</strong> – Index of the unit of interest in the layer of interest.</p></li>
-<li><p><strong>input_size</strong> – Total number of units in the input space.</p></li>
+<li><p><strong>knn_indices_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of <cite>knn_indices</cite> matrices for each layer.</p></li>
+<li><p><strong>layer_of_interest</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Index of the layer where the unit of interest resides.</p></li>
+<li><p><strong>unit_of_interest</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Index of the unit of interest in the layer of interest.</p></li>
+<li><p><strong>input_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Total number of units in the input space.</p></li>
+<li><p><strong>plot_layer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Layer to plot from. Defaults to 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Counter array of shape (input_size,) indicating the occurrence count of input units.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -486,22 +489,26 @@ where each input channel is convolved separately.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>in_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input resolution.</p></li>
 <li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Field of view diameter in degrees.</p></li>
-<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – a parameter in CMF: M(r) = 1/(r+a). Smaller = stronger foveation</p></li>
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – a parameter in CMF: M(r) = 1/(r+a). Smaller = stronger foveation.</p></li>
 <li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Stride factor for downsampling.</p></li>
 <li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Sampling style. Defaults to ‘isotropic’.</p></li>
 <li><p><strong>auto_match_cart_resources</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Auto-match parameter. Defaults to 1.</p></li>
 <li><p><strong>in_cart_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Input cartesian resolution. Defaults to None.</p></li>
 <li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – PyTorch device. Defaults to ‘cuda’.</p></li>
 <li><p><strong>in_coords</strong> (<a class="reference internal" href="foveation.sensing.coords.html#foveation.sensing.coords.SamplingCoords" title="foveation.sensing.coords.SamplingCoords"><em>SamplingCoords</em></a><em>, </em><em>optional</em>) – Pre-computed input coordinates. Defaults to None.</p></li>
-<li><p><strong>force_out_match_less_than</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – if auto_match_cart_resources, this determines whether the output number is constrained to not be greater than the target cartesian resolution (if false, chooses the closest match, which could be greater)</p></li>
+<li><p><strong>force_out_match_less_than</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If auto_match_cart_resources, this determines whether the output number is constrained to not be greater than the target cartesian resolution (if false, chooses the closest match, which could be greater). Defaults to True.</p></li>
+<li><p><strong>max_out_coord_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Maximum output coordinate value. Defaults to 1.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing:</dt><dd><ul class="simple">
 <li><p>SamplingCoords: Input coordinates</p></li>
 <li><p>SamplingCoords: Output coordinates</p></li>
-<li><p>int: output cartesian resolution</p></li>
+<li><p>int: Output cartesian resolution</p></li>
 </ul>
+</dd>
+</dl>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>

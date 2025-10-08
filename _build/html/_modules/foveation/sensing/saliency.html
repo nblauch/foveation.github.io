@@ -174,6 +174,16 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">get_center_bias</span><span class="p">(</span><span class="n">res_in</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
     <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/n/home12/nblauch/git/saccadenet-private/submodules/DeepGaze/centerbias_mit1003.npy&#39;</span>
 <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get center bias template for saliency prediction.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        res_in (int): Input resolution for rescaling (default: 256)</span>
+<span class="sd">        device (str): Device to place tensor on (default: &#39;cuda&#39;)</span>
+<span class="sd">        path (str): Path to center bias template file</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.Tensor: Center bias tensor of shape (1, res_in, res_in)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">centerbias_template</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="c1"># rescale to match image size</span>
     <span class="n">centerbias</span> <span class="o">=</span> <span class="n">zoom</span><span class="p">(</span><span class="n">centerbias_template</span><span class="p">,</span> <span class="p">(</span><span class="n">res_in</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="n">res_in</span><span class="o">/</span><span class="mi">1024</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
@@ -188,21 +198,22 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.saliency.html#foveation.sensing.saliency.sample_from_logits_pc">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_from_logits_pc</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tmp_scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounding_coords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Sample from log probabilities (robust to many bins and small probabilities).</span>
-<span class="sd">        +-inf and nan will be interpreted as zero probability</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample from log probabilities (robust to many bins and small probabilities).</span>
+<span class="sd">    </span>
+<span class="sd">    +-inf and nan will be interpreted as zero probability</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        logits (torch.Tensor): Tensor of shape (batch_size, num_points)</span>
+<span class="sd">        coords (torch.Tensor): Tensor of shape (batch_size, num_points, 2) containing x,y coordinates</span>
+<span class="sd">        size (int): Number of samples per batch item (default: 1)</span>
+<span class="sd">        tmp_scale (float, optional): Scale parameter for exponential distribution</span>
+<span class="sd">        bounding_coords (tuple, optional): Bounding coordinates for fixations</span>
+<span class="sd">        deterministic (bool): Whether to sample deterministically as the argmax over logits (default: False)</span>
 <span class="sd">        </span>
-<span class="sd">        Args:</span>
-<span class="sd">            logits: Tensor of shape (batch_size, num_points)</span>
-<span class="sd">            coords: Tensor of shape (batch_size, num_points, 2) containing x,y coordinates</span>
-<span class="sd">            size: Number of samples per batch item</span>
-<span class="sd">            tmp_scale: Scale parameter for exponential distribution</span>
-<span class="sd">            bounding_coords: Bounding coordinates for fixations</span>
-<span class="sd">            deterministic: Whether to sample deterministically as the argmax over logits</span>
-<span class="sd">            </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            Tuple of (sampled_indices, updated_logits) where:</span>
-<span class="sd">                sampled_indices: Tensor of shape (batch_size, size) containing sampled point indices</span>
-<span class="sd">                updated_logits: Tensor of shape (batch_size, num_points) with IOR applied</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Tuple of (sampled_indices, updated_logits) where:</span>
+<span class="sd">            sampled_indices (torch.Tensor): Tensor of shape (batch_size, size) containing sampled point indices</span>
+<span class="sd">            updated_logits (torch.Tensor): Tensor of shape (batch_size, num_points) with IOR applied</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">batch_size</span><span class="p">,</span> <span class="n">num_points</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">shape</span>
     <span class="k">if</span> <span class="n">deterministic</span><span class="p">:</span>

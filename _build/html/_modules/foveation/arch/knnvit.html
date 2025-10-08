@@ -105,15 +105,13 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">KNNPatchEmbedding</span><span class="p">(</span><span class="n">KNNConvLayer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    KNN-based patch embedding layer that replaces standard patch embedding in Vision Transformers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;KNN-based patch embedding layer that replaces standard patch embedding in Vision Transformers.</span>
 <span class="sd">    </span>
 <span class="sd">    Instead of dividing the image into uniform non-overlapping patches, this layer divides a foveated manifold into nearly non-overlapping KNNs to create patches. </span>
 
 <span class="sd">    It then performs a standard KNNConv operation for the patch embedding.</span>
 
-<span class="sd">    We typically prefer KNNPartitioningPatchEmbedding, which builds on this, as it provides an optimal tiling of patches without any visual inspection. </span>
-
+<span class="sd">    We typically prefer KNNPartitioningPatchEmbedding, which builds on this, as it provides an optimal tiling of patches without any visual inspection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="KNNPatchEmbedding.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNPatchEmbedding.__init__">[docs]</a>
@@ -136,16 +134,25 @@
                  <span class="n">sample_cortex</span><span class="o">=</span><span class="s1">&#39;geodesic&#39;</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
                  <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize KNN tokenization layer.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize KNN tokenization layer.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
-<span class="sd">            in_channels (int): Number of input channels</span>
-<span class="sd">            embed_dim (int): Embedding dimension for tokens</span>
-<span class="sd">            in_coords (SamplingCoords): Input sampling coordinates object</span>
-<span class="sd">            in_cart_res (int): Resolution of input cartesian grid</span>
-<span class="sd">            downsample_factor (int, optional): Factor to downsample coordinates by. Defaults to 16.</span>
-<span class="sd">            k (int, optional): Number of nearest neighbors for KNN. Defaults to 16^2.</span>
+<span class="sd">            in_channels: Number of input channels</span>
+<span class="sd">            embed_dim: Embedding dimension for tokens</span>
+<span class="sd">            in_res: Input resolution</span>
+<span class="sd">            fov: Field of view parameter for foveated sampling</span>
+<span class="sd">            cmf_a: a parameter controlling foveated sampling via the CMF</span>
+<span class="sd">            style: Sampling style (&#39;isotropic&#39;, etc.)</span>
+<span class="sd">            auto_match_cart_resources: Whether to automatically match cartesian resources</span>
+<span class="sd">            in_cart_res: Resolution of input cartesian grid</span>
+<span class="sd">            cart_patch_size: Size of cartesian patches</span>
+<span class="sd">            patch_overlap_factor: Factor for patch overlap</span>
+<span class="sd">            device: Device to run on</span>
+<span class="sd">            force_patches_less_than_matched: Whether to force patches to be less than matched</span>
+<span class="sd">            new_parameterization: Whether to use new parameterization</span>
+<span class="sd">            transposed: Whether to transpose output</span>
+<span class="sd">            max_coord_val: Maximum coordinate value</span>
+<span class="sd">            sample_cortex: Cortex sampling method</span>
 <span class="sd">            **kwargs: Additional arguments passed to parent class</span>
 <span class="sd">        &quot;&quot;&quot;</span>    
 
@@ -201,15 +208,11 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.PartitioningPatchEmbedding">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PartitioningPatchEmbedding</span><span class="p">(</span><span class="n">KNNPatchEmbedding</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Partitioning patch embedding layer that replaces standard patch embedding in Vision Transformers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Partitioning patch embedding layer that replaces standard patch embedding in Vision Transformers.</span>
 <span class="sd">    </span>
 <span class="sd">    This layer divides a foveated manifold into non-overlapping neighborhoods to create patches. </span>
 
-<span class="sd">    It turns these neighborhoods into KNNs with padding</span>
-
-<span class="sd">    It then performs a standard KNNConv operation for the patch embedding.</span>
-
+<span class="sd">    It turns these neighborhoods into KNNs with padding and then performs a standard KNNConv operation for the patch embedding.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="PartitioningPatchEmbedding.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.PartitioningPatchEmbedding.__init__">[docs]</a>
@@ -232,17 +235,26 @@
                  <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">arch_flag</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
                  <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize KNN tokenization layer.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize partitioning patch embedding layer.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
-<span class="sd">            in_channels (int): Number of input channels</span>
-<span class="sd">            embed_dim (int): Embedding dimension for tokens</span>
-<span class="sd">            in_coords (SamplingCoords): Input sampling coordinates object</span>
-<span class="sd">            in_cart_res (int): Resolution of input cartesian grid</span>
-<span class="sd">            downsample_factor (int, optional): Factor to downsample coordinates by. Defaults to 16.</span>
-<span class="sd">            k (int, optional): Number of nearest neighbors for KNN. Defaults to 16^2.</span>
-<span class="sd">            **kwargs: Additional arguments passed to parent class</span>
+<span class="sd">            in_channels: Number of input channels</span>
+<span class="sd">            embed_dim: Embedding dimension for tokens</span>
+<span class="sd">            in_res: Input resolution</span>
+<span class="sd">            fov: Field of view parameter for foveated sampling</span>
+<span class="sd">            cmf_a: a parameter controlling foveated sampling via the CMF</span>
+<span class="sd">            style: Sampling style (&#39;isotropic&#39;, etc.)</span>
+<span class="sd">            auto_match_cart_resources: Whether to automatically match cartesian resources</span>
+<span class="sd">            force_patches_less_than_matched: Whether to force patches to be less than matched</span>
+<span class="sd">            in_cart_res: Resolution of input cartesian grid</span>
+<span class="sd">            cart_patch_size: Size of cartesian patches</span>
+<span class="sd">            device: Device to run on</span>
+<span class="sd">            transposed: Whether to transpose output</span>
+<span class="sd">            max_coord_val: Maximum coordinate value</span>
+<span class="sd">            ref_frame_side_length: Reference frame side length</span>
+<span class="sd">            sample_cortex: Cortex sampling method</span>
+<span class="sd">            bias: Whether to use bias in linear layer</span>
+<span class="sd">            arch_flag: Architecture flag</span>
 <span class="sd">        &quot;&quot;&quot;</span>    
 
         <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -331,18 +343,25 @@
                 <span class="n">transposed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">max_coord_val</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
                 <span class="n">sample_cortex</span><span class="o">=</span><span class="s1">&#39;geodesic&#39;</span><span class="p">,</span>
-                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-                <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize KNN tokenization layer.</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                 <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize KNN partitioning patch embedding layer.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
-<span class="sd">            in_channels (int): Number of input channels</span>
-<span class="sd">            embed_dim (int): Embedding dimension for tokens</span>
-<span class="sd">            in_coords (SamplingCoords): Input sampling coordinates object</span>
-<span class="sd">            in_cart_res (int): Resolution of input cartesian grid</span>
-<span class="sd">            downsample_factor (int, optional): Factor to downsample coordinates by. Defaults to 16.</span>
-<span class="sd">            k (int, optional): Number of nearest neighbors for KNN. Defaults to 16^2.</span>
+<span class="sd">            in_channels: Number of input channels</span>
+<span class="sd">            embed_dim: Embedding dimension for tokens</span>
+<span class="sd">            in_res: Input resolution</span>
+<span class="sd">            fov: Field of view parameter for foveated sampling</span>
+<span class="sd">            cmf_a: a parameter controlling foveated sampling via the CMF</span>
+<span class="sd">            style: Sampling style (&#39;isotropic&#39;, etc.)</span>
+<span class="sd">            auto_match_cart_resources: Whether to automatically match cartesian resources</span>
+<span class="sd">            in_cart_res: Resolution of input cartesian grid</span>
+<span class="sd">            cart_patch_size: Size of cartesian patches</span>
+<span class="sd">            device: Device to run on</span>
+<span class="sd">            force_patches_less_than_matched: Whether to force patches to be less than matched</span>
+<span class="sd">            transposed: Whether to transpose output</span>
+<span class="sd">            max_coord_val: Maximum coordinate value</span>
+<span class="sd">            sample_cortex: Cortex sampling method</span>
 <span class="sd">            **kwargs: Additional arguments passed to parent class</span>
 <span class="sd">        &quot;&quot;&quot;</span>    
 
@@ -382,8 +401,7 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNViT">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span> 
 <span class="k">class</span><span class="w"> </span><span class="nc">KNNViT</span><span class="p">(</span><span class="n">VisionTransformer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Vision Transformer that uses KNN-based tokenization instead of patch embedding.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Vision Transformer that uses KNN-based tokenization instead of patch embedding.</span>
 <span class="sd">    </span>
 <span class="sd">    This model inherits from VisionTransformer and only overrides the patch embedding</span>
 <span class="sd">    to use KNN-based tokenization that creates tokens based on spatial relationships </span>
@@ -412,8 +430,7 @@
                  <span class="n">pos_emb_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;absolute&#39;</span><span class="p">,</span>
                  <span class="n">force_patches_less_than_matched</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize KNNViT model.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize KNNViT model.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">            fov: Field of view parameter for foveated sampling</span>
@@ -433,7 +450,7 @@
 <span class="sd">            arch_flag: Architecture flag</span>
 <span class="sd">            sample_cortex: Whether to sample in cortical space</span>
 <span class="sd">            pos_emb_type: Type of positional embedding (&#39;absolute&#39; or &#39;rope&#39;)</span>
-<span class="sd">            force_patches_less_than_matched: whether to force the number of patches to be less than a matched cartesian model, or just match as close as possible</span>
+<span class="sd">            force_patches_less_than_matched: Whether to force the number of patches to be less than a matched cartesian model, or just match as close as possible</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Store KNN-specific parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="n">fov</span>
@@ -484,14 +501,13 @@
 <div class="viewcode-block" id="KNNViT.forward">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.KNNViT.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Forward pass through KNNViT.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through KNNViT.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input features [batch_size, in_channels, in_coords]</span>
 <span class="sd">            </span>
 <span class="sd">        Returns:</span>
-<span class="sd">            output: Model output [batch_size, num_classes] or [batch_size, embed_dim]</span>
+<span class="sd">            output: Model output [batch_size, 1, embed_dim]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Use parent class forward method</span>
         <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -516,6 +532,14 @@
 <div class="viewcode-block" id="DinoV3RoPE.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.DinoV3RoPE.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">head_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">coords</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize DinoV3RoPE positional encoding.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            base: Base frequency for RoPE</span>
+<span class="sd">            head_dim: Dimension of attention head</span>
+<span class="sd">            coords: Coordinate tensor</span>
+<span class="sd">            device: Device to run on</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
@@ -530,6 +554,14 @@
 <div class="viewcode-block" id="DinoV3RoPE.forward">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnvit.html#foveation.arch.knnvit.DinoV3RoPE.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pixel_values</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass for RoPE positional encoding.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            pixel_values: Input pixel values</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple of cosine and sine values for RoPE</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">pixel_values</span><span class="o">.</span><span class="n">device</span>
         <span class="n">device_type</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;mps&quot;</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
 

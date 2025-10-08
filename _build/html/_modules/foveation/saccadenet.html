@@ -113,6 +113,13 @@
 <div class="viewcode-block" id="SaccadeNet.__init__">
 <a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize SaccadeNet model.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            cfg: Configuration object containing model and training parameters.</span>
+<span class="sd">            device (str, optional): Device to run the model on. Defaults to &#39;cuda&#39;.</span>
+<span class="sd">            dtype (torch.dtype, optional): Data type for model parameters. Defaults to torch.float32.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">architectures</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">arch</span><span class="p">](</span><span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>     
@@ -169,6 +176,15 @@
 <div class="viewcode-block" id="SaccadeNet.init_fixation_system">
 <a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.init_fixation_system">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_fixation_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixation_policy</span><span class="p">,</span> <span class="n">setting</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;ssl&#39;</span><span class="p">,</span> <span class="s1">&#39;supervised&#39;</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the fixation system based on policy and setting.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            fixation_policy (str): The fixation policy to use.</span>
+<span class="sd">            setting (Literal[&#39;ssl&#39;, &#39;supervised&#39;]): The training setting.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The initialized fixation policy object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rand_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">add_aspect_variation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">add_aspect_variation</span><span class="p">,</span> 
             <span class="n">crop_area_range</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size_min_frac</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">fixation_size_max_frac</span><span class="p">],</span>
@@ -238,12 +254,9 @@
 <span class="sd">        - self.mlp_spec: A string representation of the sizes of all layer outputs,</span>
 <span class="sd">                         joined by hyphens.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            img_size (int): The size of the input image. Defaults to 224.</span>
-
 <span class="sd">        Note:</span>
-<span class="sd">            This method temporarily sets the model to evaluation mode and</span>
-<span class="sd">            does not compute gradients.</span>
+<span class="sd">            This method does not take any parameters and temporarily sets the model </span>
+<span class="sd">            to evaluation mode without computing gradients.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Store the initial training mode</span>
         <span class="n">initial_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span>
@@ -295,6 +308,15 @@
 <div class="viewcode-block" id="SaccadeNet.to">
 <a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Move model to specified device.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            *args: Variable length argument list.</span>
+<span class="sd">            **kwargs: Additional keyword arguments.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The model moved to the specified device.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># if specifying a device, it is the first unnamed argument</span>
         <span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
@@ -310,6 +332,17 @@
 <div class="viewcode-block" id="SaccadeNet.forward_ssl">
 <a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.forward_ssl">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_ssl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">f1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass for self-supervised learning.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            inputs: Input images.</span>
+<span class="sd">            f1: First fixation (optional).</span>
+<span class="sd">            fixation_size: Size of fixations (optional).</span>
+<span class="sd">            area_range: Range of areas to sample (optional).</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: (embeddings, layer_outputs, x_fixs) containing the model outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">fix_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssl_fixator</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">f1</span><span class="o">=</span><span class="n">f1</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="n">fixation_size</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="n">area_range</span><span class="p">,</span> <span class="n">f1_only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">control_model</span><span class="p">)</span>
 
@@ -331,6 +364,21 @@
 <div class="viewcode-block" id="SaccadeNet.forward_supervised">
 <a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.forward_supervised">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_supervised</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">do_postproc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fixated_inputs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass for supervised learning.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            inputs: Input images.</span>
+<span class="sd">            n_fixations (int, optional): Number of fixations to use.</span>
+<span class="sd">            fixation_size: Size of fixations (optional).</span>
+<span class="sd">            area_range: Range of areas to sample (optional).</span>
+<span class="sd">            fixations: Pre-computed fixations (optional).</span>
+<span class="sd">            do_postproc (bool, optional): Whether to apply post-processing. Defaults to True.</span>
+<span class="sd">            fixated_inputs (bool, optional): Whether inputs are already fixated. Defaults to False.</span>
+<span class="sd">            **kwargs: Additional keyword arguments.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: (embeddings, layer_outputs, x_fixs) containing the model outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">fixated_inputs</span><span class="p">:</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sup_fixator</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="n">fixation_size</span><span class="p">,</span> <span class="n">area_range</span><span class="o">=</span><span class="n">area_range</span><span class="p">,</span> <span class="n">n_fixations</span><span class="o">=</span><span class="n">n_fixations</span><span class="p">,</span> <span class="n">fixations</span><span class="o">=</span><span class="n">fixations</span><span class="p">)</span>
             <span class="n">x_fixs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;x_fixs&#39;</span><span class="p">]</span>
@@ -373,8 +421,7 @@
 <span class="sd">            **kwargs: Additional keyword arguments.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: A list of embeddings from the model.</span>
-<span class="sd">            list: A list of layer outputs from the model.</span>
+<span class="sd">            tuple: (embeddings, layer_outputs, x_fixs) containing the model outputs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">setting</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">setting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_setting</span>

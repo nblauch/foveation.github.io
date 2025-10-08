@@ -98,7 +98,11 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.mlp.html#foveation.arch.mlp.LayerBlock">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LayerBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;Simple Wrapper that turns a list into a Sequential layer, dropping None&#39;s&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple wrapper that turns a list into a Sequential layer, dropping None&#39;s.</span>
+<span class="sd">    </span>
+<span class="sd">    This class filters out None values from the input arguments and creates</span>
+<span class="sd">    a Sequential layer with the remaining valid layers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="LayerBlock.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.mlp.html#foveation.arch.mlp.LayerBlock.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
@@ -126,6 +130,38 @@
             <span class="n">l2norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">offset_idx</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a multi-layer perceptron (MLP) with configurable architecture.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        repr_size (int, optional): Input representation size. Defaults to 9216.</span>
+<span class="sd">        mlp (str or int, optional): MLP architecture specification as a string</span>
+<span class="sd">            of layer sizes separated by dashes (e.g., &#39;8192-8192-8192&#39;) or</span>
+<span class="sd">            a single integer. Defaults to &#39;8192-8192-8192&#39;.</span>
+<span class="sd">        inp (callable, optional): Input layer function that takes (idx, is_output)</span>
+<span class="sd">            and returns a layer or None. Defaults to None.</span>
+<span class="sd">        linear (nn.Module, optional): Linear layer class to use. Defaults to nn.Linear.</span>
+<span class="sd">        act (callable, optional): Activation function to use. Defaults to</span>
+<span class="sd">            partial(nn.ReLU, inplace=True).</span>
+<span class="sd">        norm (nn.Module, optional): Normalization layer class to use. Defaults to</span>
+<span class="sd">            nn.BatchNorm1d.</span>
+<span class="sd">        dropout (callable, optional): Dropout layer function. Defaults to</span>
+<span class="sd">            partial(nn.Dropout, p=.5).</span>
+<span class="sd">        dropout_all (bool, optional): Whether to apply dropout to all layers</span>
+<span class="sd">            including the output layer. Defaults to False.</span>
+<span class="sd">        proj_relu (bool, optional): Whether to apply ReLU to the projection</span>
+<span class="sd">            (output) layer. Defaults to False.</span>
+<span class="sd">        output_bias (bool, optional): Whether to use bias in the output layer.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        l2norm (bool, optional): Whether to apply L2 normalization to the output.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        out (callable, optional): Output layer function that takes (idx, is_output)</span>
+<span class="sd">            and returns a layer or None. Defaults to None.</span>
+<span class="sd">        offset_idx (int, optional): Offset for block naming. Defaults to 5.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        MLPWrapper: A wrapped MLP module that can return embeddings and</span>
+<span class="sd">            intermediate layer outputs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">mlp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">mlp</span><span class="p">)</span>
@@ -173,9 +209,20 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.mlp.html#foveation.arch.mlp.MLPWrapper">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MLPWrapper</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper for MLP that provides additional functionality for layer outputs.</span>
+<span class="sd">    </span>
+<span class="sd">    This wrapper allows the MLP to return both the final embeddings and</span>
+<span class="sd">    intermediate layer outputs for analysis or visualization purposes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
 <div class="viewcode-block" id="MLPWrapper.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.mlp.html#foveation.arch.mlp.MLPWrapper.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mlp</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the MLP wrapper.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            mlp (nn.Module): The MLP module to wrap.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MLPWrapper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">mlp</span></div>
@@ -184,6 +231,19 @@
 <div class="viewcode-block" id="MLPWrapper.forward">
 <a class="viewcode-back" href="../../../api/foveation.arch.mlp.html#foveation.arch.mlp.MLPWrapper.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">return_layer_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through the MLP.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): Input tensor to process.</span>
+<span class="sd">            return_layer_outputs (bool, optional): Whether to return intermediate</span>
+<span class="sd">                layer outputs along with the final embeddings. Defaults to True.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor or tuple: If return_layer_outputs is True, returns a tuple</span>
+<span class="sd">                of (embeddings, list_outputs) where embeddings is the final output</span>
+<span class="sd">                and list_outputs contains all intermediate layer outputs. If False,</span>
+<span class="sd">                returns only the final embeddings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">list_outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">detach</span><span class="p">()]</span>
         <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
@@ -201,12 +261,31 @@
 
     
 <span class="k">class</span><span class="w"> </span><span class="nc">LPNormalize</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lp normalization layer.</span>
+<span class="sd">    </span>
+<span class="sd">    This module normalizes input tensors using Lp normalization along the</span>
+<span class="sd">    feature dimension (dimension 1).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Lp normalization layer.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            power (int, optional): The power for Lp normalization. Defaults to 2</span>
+<span class="sd">                (L2 normalization).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LPNormalize</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply Lp normalization to the input tensor.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): Input tensor to normalize.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Lp normalized tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">norm</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span>

@@ -119,30 +119,50 @@ log_probs: Tensor of shape (batch_size, height, width) containing final log prob
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.sensing.saliency.get_center_bias">
 <span class="sig-prename descclassname"><span class="pre">foveation.sensing.saliency.</span></span><span class="sig-name descname"><span class="pre">get_center_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/n/home12/nblauch/git/saccadenet-private/submodules/DeepGaze/centerbias_mit1003.npy'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/saliency.html#get_center_bias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.saliency.get_center_bias" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get center bias template for saliency prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res_in</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Input resolution for rescaling (default: 256)</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Device to place tensor on (default: ‘cuda’)</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to center bias template file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Center bias tensor of shape (1, res_in, res_in)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.sensing.saliency.sample_from_logits_pc">
 <span class="sig-prename descclassname"><span class="pre">foveation.sensing.saliency.</span></span><span class="sig-name descname"><span class="pre">sample_from_logits_pc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding_coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/saliency.html#sample_from_logits_pc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.saliency.sample_from_logits_pc" title="Link to this definition"></a></dt>
-<dd><p>Sample from log probabilities (robust to many bins and small probabilities).
-+-inf and nan will be interpreted as zero probability</p>
+<dd><p>Sample from log probabilities (robust to many bins and small probabilities).</p>
+<p>+-inf and nan will be interpreted as zero probability</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>logits</strong> – Tensor of shape (batch_size, num_points)</p></li>
-<li><p><strong>coords</strong> – Tensor of shape (batch_size, num_points, 2) containing x,y coordinates</p></li>
-<li><p><strong>size</strong> – Number of samples per batch item</p></li>
-<li><p><strong>tmp_scale</strong> – Scale parameter for exponential distribution</p></li>
-<li><p><strong>bounding_coords</strong> – Bounding coordinates for fixations</p></li>
-<li><p><strong>deterministic</strong> – Whether to sample deterministically as the argmax over logits</p></li>
+<li><p><strong>logits</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Tensor of shape (batch_size, num_points)</p></li>
+<li><p><strong>coords</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Tensor of shape (batch_size, num_points, 2) containing x,y coordinates</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of samples per batch item (default: 1)</p></li>
+<li><p><strong>tmp_scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Scale parameter for exponential distribution</p></li>
+<li><p><strong>bounding_coords</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Bounding coordinates for fixations</p></li>
+<li><p><strong>deterministic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to sample deterministically as the argmax over logits (default: False)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>sampled_indices: Tensor of shape (batch_size, size) containing sampled point indices
-updated_logits: Tensor of shape (batch_size, num_points) with IOR applied</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>Tuple of (sampled_indices, updated_logits) where:</dt><dd><p>sampled_indices (torch.Tensor): Tensor of shape (batch_size, size) containing sampled point indices
+updated_logits (torch.Tensor): Tensor of shape (batch_size, num_points) with IOR applied</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple of (sampled_indices, updated_logits) where</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>

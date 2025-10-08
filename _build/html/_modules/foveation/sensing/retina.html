@@ -134,6 +134,26 @@
                  <span class="n">no_color_val</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="c1"># passed to warping function</span>
                  <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the RetinalTransform module.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            resolution (int): Target resolution for the retinal transform.</span>
+<span class="sd">            start_res (int, optional): Starting resolution. Defaults to 256.</span>
+<span class="sd">            fov (float, optional): Field of view diameter in degrees. Defaults to 16.</span>
+<span class="sd">            cmf_a (float, optional): Cortical magnification factor parameter. Defaults to 0.5.</span>
+<span class="sd">            style (str, optional): Sampling style. Defaults to &#39;isotropic&#39;.</span>
+<span class="sd">            sampler (str, optional): Sampler type. Defaults to &#39;grid_nn&#39;.</span>
+<span class="sd">            fixation_size (int, optional): Fixation size in pixels. Defaults to None.</span>
+<span class="sd">            device (str, optional): Device to use. Defaults to &#39;cuda&#39;.</span>
+<span class="sd">            dtype (torch.dtype, optional): Data type. Defaults to torch.float.</span>
+<span class="sd">            auto_match_cart_resources (bool, optional): Whether to auto-match cartesian resources. Defaults to True.</span>
+<span class="sd">            pre_transforms (callable, optional): Pre-processing transforms. Defaults to None.</span>
+<span class="sd">            post_transforms (callable, optional): Post-processing transforms. Defaults to None.</span>
+<span class="sd">            sigma (float, optional): Standard deviation for Gaussian color decay. Defaults to None.</span>
+<span class="sd">            no_color_val (bool, optional): Whether to disable color in eval mode. Defaults to False.</span>
+<span class="sd">            **kwargs: Additional arguments passed to warping function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cmf_a</span> <span class="o">=</span> <span class="n">cmf_a</span>
@@ -194,6 +214,18 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.retina.html#foveation.sensing.retina.RetinalTransform.forward">[docs]</a>
     <span class="nd">@torch</span><span class="o">.</span><span class="n">autocast</span><span class="p">(</span><span class="n">device_type</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">fix_loc</span><span class="p">,</span> <span class="n">fixation_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass of the retinal transform.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): Input tensor.</span>
+<span class="sd">            fix_loc (torch.Tensor or tuple): Fixation location.</span>
+<span class="sd">            fixation_size (int, optional): Fixation size. Defaults to None.</span>
+<span class="sd">            **kwargs: Additional arguments.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Transformed tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># check fixation_size</span>
         <span class="n">fixation_size</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_fixation_size</span><span class="p">(</span><span class="n">fixation_size</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
@@ -252,7 +284,7 @@
 <span class="sd">        Validate and format fixation size for batch processing.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
-<span class="sd">            fixation_size: Fixation size specification (int, tuple, or None).</span>
+<span class="sd">            fixation_size (int, tuple, or None): Fixation size specification.</span>
 <span class="sd">            batch_size (int): Number of samples in the batch.</span>
 <span class="sd">            </span>
 <span class="sd">        Returns:</span>
@@ -285,7 +317,7 @@
 <span class="sd">        Validate and format fixation location for batch processing.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
-<span class="sd">            fix_loc: Fixation location specification (tuple, list, tensor, or None).</span>
+<span class="sd">            fix_loc (tuple, list, torch.Tensor, or None): Fixation location specification.</span>
 <span class="sd">            batch_size (int): Number of samples in the batch.</span>
 <span class="sd">            </span>
 <span class="sd">        Returns:</span>
@@ -316,7 +348,7 @@
 <span class="sd">        Validate and format aspect ratio for batch processing.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
-<span class="sd">            aspect_ratio: Aspect ratio specification (float, list, or None).</span>
+<span class="sd">            aspect_ratio (float, list, or None): Aspect ratio specification.</span>
 <span class="sd">            batch_size (int): Number of samples in the batch.</span>
 <span class="sd">            </span>
 <span class="sd">        Returns:</span>
@@ -349,8 +381,8 @@
 <span class="sd">        Apply aspect ratio to fixation size while preserving area.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
-<span class="sd">            fixation_size: Current fixation size.</span>
-<span class="sd">            aspect_ratio: Aspect ratio to apply.</span>
+<span class="sd">            fixation_size (torch.Tensor): Current fixation size.</span>
+<span class="sd">            aspect_ratio (float): Aspect ratio to apply.</span>
 <span class="sd">            batch_size (int): Number of samples in the batch.</span>
 <span class="sd">            </span>
 <span class="sd">        Returns:</span>
@@ -375,7 +407,22 @@
 <a class="viewcode-back" href="../../../api/foveation.sensing.retina.html#foveation.sensing.retina.min_diff_for_cmf_a">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">min_diff_for_cmf_a</span><span class="p">(</span><span class="n">cmf_a</span><span class="p">,</span> <span class="n">fov</span><span class="p">,</span> <span class="n">output_res</span><span class="p">,</span> <span class="n">fixation_size</span><span class="p">,</span> <span class="n">force_n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">disallow_undersampling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function that computes minimum difference between radii for a given cmf_a value&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function that computes minimum difference between radii for a given cmf_a value.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        cmf_a (float): Cortical magnification factor parameter.</span>
+<span class="sd">        fov (float): Field of view diameter in degrees.</span>
+<span class="sd">        output_res (int): Output resolution.</span>
+<span class="sd">        fixation_size (int): Fixation size in pixels.</span>
+<span class="sd">        force_n_points (int, optional): Force number of points. Defaults to None.</span>
+<span class="sd">        disallow_undersampling (bool, optional): Whether to disallow undersampling. Defaults to True.</span>
+<span class="sd">        force_less_than (bool, optional): Whether to force less than. Defaults to False.</span>
+<span class="sd">        device (str, optional): Device to use. Defaults to &#39;cuda&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Minimum difference between radii.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">force_n_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">output_res</span> <span class="o">=</span> <span class="n">find_desired_res</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">force_n_points</span><span class="p">,</span> <span class="s1">&#39;isotropic&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="n">force_less_than</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 

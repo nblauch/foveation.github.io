@@ -17,6 +17,8 @@
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -97,145 +99,376 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>3-D cortical sensor manifold based on Rovamu and Virsu (1984) (see also Motter (2009)).
 Relevant coordinate systems:</p>
-<blockquote>
-<div><p>(x, y) -&gt; visual cartesian coordiantes
-(r,     heta) -&gt; visual polar coordinates
-(</p>
-</div></blockquote>
-<dl class="simple">
-<dt>ho, z, phi) -&gt; cortical cylindrical coordinates</dt><dd><p>(x, y, z) -&gt; cortical cartesian coordinates</p>
-</dd>
-</dl>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((x, y)\)</span> -&gt; visual cartesian coordinates</p></li>
+<li><p><span class="math notranslate nohighlight">\((r, \theta)\)</span> -&gt; visual polar coordinates</p></li>
+<li><p><span class="math notranslate nohighlight">\((\rho, z, \phi)\)</span> -&gt; cortical cylindrical coordinates</p></li>
+<li><p><span class="math notranslate nohighlight">\((x_c, y_c, z)\)</span> -&gt; cortical cartesian coordinates</p></li>
+</ul>
+<p>We use the magnification function: <span class="math notranslate nohighlight">\(M(r)=\frac{k}{r+a}\)</span>, where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(k\)</span>: scaling factor that gives a good match to cortical mm. irrelevant for foveated sampling.</p></li>
+<li><p><span class="math notranslate nohighlight">\(a\)</span>: critical parameter controlling magnification. smaller == stronger magnification / foveation</p></li>
+</ul>
+<p>Due to our choice of magnification function, this is essentially a 3d extension of the complex logarithmic map (Schwartz, 1980), where both preserve local isotropy unlike the Schwartz (1980) model, our 3D version also preserves global/meridional isotropy, since there is no warping due to flattening</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cmf_a</strong> – a parameter in cortical magnification function (CMF)</p></li>
-<li><p><strong>fov</strong> – visual field size in degrees</p></li>
-<li><p><strong>k</strong> – scaling factor that gives a good match to cortical mm.</p></li>
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – a parameter in cortical magnification function (CMF), in degrees</p></li>
+<li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – visual field size in degrees</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – scaling factor that gives a good match to cortical mm. irrelevant for foveated sampling.</p></li>
 </ul>
 </dd>
 </dl>
-<p>cortical magnification is given by: k/(cmf_a + eccentricity)
-due to our choice of magnification function, this is essentially a 3d extension of the complex logarithmic map (Schwartz, 1980), where both preserve local isotropy
-unlike the Schwartz (1980) model, our 3D version also preserves global/meridional isotropy, since there is no warping due to flattening</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.m">
 <span class="sig-name descname"><span class="pre">m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.m" title="Link to this definition"></a></dt>
 <dd><p>cortical magnification as a function of eccentricity r</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – visual radius</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>cortical magnification in mm/deg, evaluated at r</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.rho_3d">
 <span class="sig-name descname"><span class="pre">rho_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.rho_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.rho_3d" title="Link to this definition"></a></dt>
-<dd><p>compute cortical radius in 3d cylindrical coordinates: m(r)*sin(r)
-it is somewhat confusing from the equation, but the units are mm rather than mm/rad
-this is because there is a left over radian term from the derivation
-r=m(r)*sin(r)*d heta/dphi. While d     heta and dphi cancel out, d    heta is is radians while dphi is unitless.
-dphi is unitless because it is part of an infinitesimal distance r*dphi along the cortical surface that is in units mm. r keeps the mm units and dphi is unitless.
-We use m(r) in mm/deg: thus m(r)*sin(r) -&gt; mm*rad/deg, so we convert to mm by multiplying by 180 deg/pi rad.</p>
+<dd><p>compute cortical radius in 3d cylindrical coordinates: <span class="math notranslate nohighlight">\(m(r)*\sin(r)\)</span></p>
+<p>Counterintuitively from the equation, the units are mm rather than mm/rad:</p>
+<ul class="simple">
+<li><p>this is because there is a left over radian term from the derivation</p></li>
+<li><p><span class="math notranslate nohighlight">\(r=m(r)*\sin(r)*d\theta/d\phi\)</span>. While <span class="math notranslate nohighlight">\(d\theta\)</span> and <span class="math notranslate nohighlight">\(d\phi\)</span> cancel out, <span class="math notranslate nohighlight">\(d\theta\)</span> is in radians while <span class="math notranslate nohighlight">\(d\phi\)</span> is unitless.</p></li>
+<li><p><span class="math notranslate nohighlight">\(d\phi\)</span> is unitless because it is part of an infinitesimal distance <span class="math notranslate nohighlight">\(r*d\phi\)</span> along the cortical surface that is in units mm. r keeps the mm units and <span class="math notranslate nohighlight">\(d\phi\)</span> is unitless.</p></li>
+<li><p>We use <span class="math notranslate nohighlight">\(m(r)\)</span> in mm/deg: thus <span class="math notranslate nohighlight">\(m(r)*\sin(r)\)</span> -&gt; mm*rad/deg, so we convert to mm by multiplying by 180 deg/pi rad.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – visual radius</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>cortical radius in mm</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.phi_3d">
 <span class="sig-name descname"><span class="pre">phi_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.phi_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.phi_3d" title="Link to this definition"></a></dt>
-<dd><p>cortical phi in 3d cylindrical coordinates. phi=       heta (theta is visual polar angle)</p>
+<dd><p>cortical phi in 3d cylindrical coordinates. <span class="math notranslate nohighlight">\(\phi=\theta\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Visual polar angle (in radians).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Cortical cylindrical coordinate <span class="math notranslate nohighlight">\(\phi\)</span> (in radians).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.dm_dr">
 <span class="sig-name descname"><span class="pre">dm_dr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.dm_dr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.dm_dr" title="Link to this definition"></a></dt>
-<dd><p>derivative of cortical magnification function</p>
+<dd><p>derivative of cortical magnification function with respect to radius (<span class="math notranslate nohighlight">\(dm/dr\)</span>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Visual radius in degrees</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="math notranslate nohighlight">\(dm/dr\)</span> in mm/deg^2</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.drho_dr">
 <span class="sig-name descname"><span class="pre">drho_dr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.drho_dr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.drho_dr" title="Link to this definition"></a></dt>
-<dd><p>derivative of cortical radius in 3d cylindrical coordinates</p>
+<dd><p>derivative of cortical cylindrical radius with respect to visual field radius (<span class="math notranslate nohighlight">\(d\rho/dr\)</span>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Visual radius in degrees</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="math notranslate nohighlight">\(d\rho/dr\)</span> in mm/deg</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.z_integrand">
 <span class="sig-name descname"><span class="pre">z_integrand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.z_integrand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.z_integrand" title="Link to this definition"></a></dt>
-<dd><p>integrand for cortical z in 3d cylindrical coordinates.</p>
+<dd><p>integrand for cortical z in 3d cylindrical coordinates: <span class="math notranslate nohighlight">\((m(r)^2 - (d\rho/dr)^2)^{0.5}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Visual radius in degrees</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="math notranslate nohighlight">\((m(r)^2 - (d\rho/dr)^2)^{0.5}\)</span> in mm/deg</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.z_3d">
 <span class="sig-name descname"><span class="pre">z_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.z_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.z_3d" title="Link to this definition"></a></dt>
-<dd><p>cortical z in 3d cylindrical coordinates computed with numerical integration via interpolation of precomputed values</p>
+<dd><p>cortical z in 3d cylindrical coordinates computed with numerical integration via interpolation of fine mesh of precomputed values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Visual radius in degrees</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>cortical z in mm</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.map_3d">
 <span class="sig-name descname"><span class="pre">map_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.map_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.map_3d" title="Link to this definition"></a></dt>
-<dd><p>map cartesian (x,y) coordinates to 3D cortical cylindrical coordinates (r,z,phi)</p>
+<dd><p>map cartesian <span class="math notranslate nohighlight">\((x,y)\)</span> coordinates to 3D cortical cylindrical coordinates <span class="math notranslate nohighlight">\((\rho,z,\phi)\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – visual cartesian x coordinate</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – visual cartesian y coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>3D cortical cylindrical coordinates <span class="math notranslate nohighlight">\((\rho, z, \phi)\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rho_z_phi (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>])</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.map_to_xyz">
 <span class="sig-name descname"><span class="pre">map_to_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_z_phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.map_to_xyz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.map_to_xyz" title="Link to this definition"></a></dt>
 <dd><p>map 3d cortical cylindrical coordinates to cortical cartesian coordinates for plotting convenience</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rho_z_phi</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – 3D cortical cylindrical coordinates</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing:</dt><dd><ul class="simple">
+<li><p>x_c (float): cortical cartesian x coordinate</p></li>
+<li><p>y_c (float): cortical cartesian y coordinate</p></li>
+<li><p>z (float): cortical cartesian z coordinate</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>result (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.normalize_coords">
 <span class="sig-name descname"><span class="pre">normalize_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.normalize_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.normalize_coords" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>normalize coordinates to lie between -1 and 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>coords</strong> (<em>np.ndarray</em>) – un-normalized coordinates (n, d)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>normalized coordinates (n, d)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.cort_cartesian_to_cort_cylindrical">
 <span class="sig-name descname"><span class="pre">cort_cartesian_to_cort_cylindrical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_y_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.cort_cartesian_to_cort_cylindrical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.cort_cartesian_to_cort_cylindrical" title="Link to this definition"></a></dt>
-<dd><p>map cortical cartesian coordinates to cortical cylindrical coordinates for reverse mapping</p>
+<dd><p>Map cortical cartesian coordinates to cortical cylindrical coordinates for reverse mapping</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x_y_z</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – cortical cartesian coordinates <span class="math notranslate nohighlight">\((x_c, y_c, z)\)</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing:</dt><dd><ul class="simple">
+<li><p>rho (float): r in cortical cylindrical coordinates</p></li>
+<li><p>z (float): z in cortical cylindrical coordinates</p></li>
+<li><p>phi (float): <span class="math notranslate nohighlight">\(\phi\)</span> in cortical cylindrical coordinates</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>result (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.vis_cartesian_to_cort_cartesian">
 <span class="sig-name descname"><span class="pre">vis_cartesian_to_cort_cartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.vis_cartesian_to_cort_cartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.vis_cartesian_to_cort_cartesian" title="Link to this definition"></a></dt>
-<dd><p>map visual cartesian coordinates to cortical cartesian coordinates</p>
+<dd><p>Map visual cartesian coordinates to cortical cartesian coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x_y</strong> (<em>np.ndarray</em>) – visual cartesian coordinates <span class="math notranslate nohighlight">\((x,y)\)</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>cortical cartesian coordinates <span class="math notranslate nohighlight">\((x_c, y_c, z)\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.r_from_z">
 <span class="sig-name descname"><span class="pre">r_from_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.r_from_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.r_from_z" title="Link to this definition"></a></dt>
 <dd><p>Use a numerical root-finding method to determine eccentricity from the cortical z coordinate</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.r_from_phi">
-<span class="sig-name descname"><span class="pre">r_from_phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.r_from_phi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.r_from_phi" title="Link to this definition"></a></dt>
-<dd><p>Use a numerical root-finding method to determine eccentricity from the cortical phi coordinate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – cortical z coordinate in mm</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>visual eccentricity (radius) in degrees</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.cylindrical_to_visual_polar">
 <span class="sig-name descname"><span class="pre">cylindrical_to_visual_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_z_phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.cylindrical_to_visual_polar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.cylindrical_to_visual_polar" title="Link to this definition"></a></dt>
 <dd><p>reverse map from cortical cylindrical coordinates to visual polar coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rho_z_phi</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – tuple <span class="math notranslate nohighlight">\((\rho, z, \phi)\)</span> of cortical cylindrical coordinates</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing:</dt><dd><ul class="simple">
+<li><p>r (float): visual eccentricity (radius) in degrees</p></li>
+<li><p>phi (float): visual polar angle in radians</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>result (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.init_visual_mesh">
 <span class="sig-name descname"><span class="pre">init_visual_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.init_visual_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.init_visual_mesh" title="Link to this definition"></a></dt>
-<dd><p>initialize a grid of visual points to specify the bounds of the 3d mesh</p>
+<dd><p>initialize a grid of visual points to specify the bounds of the 3d mesh before sampling points on it</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rs</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – array of r values to test.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing:</dt><dd><ul class="simple">
+<li><p>grid_pts_3d_xyz (np.ndarray): (n, 3) array of cortical cartesian coordinates</p></li>
+<li><p>grid_pts_polar (np.ndarray): (n, 2) array of visual polar coordinates</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>result (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.init_cortical_mesh">
 <span class="sig-name descname"><span class="pre">init_cortical_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_pts_3d_xyz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.init_cortical_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.init_cortical_mesh" title="Link to this definition"></a></dt>
-<dd><p>initialize a 3d mesh of cortical points</p>
-<p>this is not evenly-spaced enough to be useful, but we keep it around for reference</p>
-<p>we might be able to do a better job of equal sampling directly in cortical space</p>
-<p>for now, we rely on isotropic sampling in visual space, and use the cortical space for receptive field sampling</p>
+<dd><p>initialize a 3d mesh of approximately evenly spaced cortical points</p>
+<p>NOTE:</p>
+<ul class="simple">
+<li><p>this is not evenly-spaced enough to be useful, but we keep it around for reference</p></li>
+<li><p>instead, we define the mesh by sampling visual radii according to the CMF, and performing locally isotropic sampling of angles.</p></li>
+<li><p>this is equivalent to uniform sampling on the cortical sensor manifold</p></li>
+<li><p>the sensor manifold is thus used primarily for receptive field sampling once the mesh has been defined</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid_pts_3d_xyz</strong> (<em>np.ndarray</em>) – (n,3) array of cortical cartesian coordinates used as a starting point to determine bounds</p></li>
+<li><p><strong>num_coords</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – number of coordinates to generate on the surface</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(n,3) array of cortical cartesian coordinates that are approximately evenly spaced</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.CorticalSensorManifold.reverse_map">
 <span class="sig-name descname"><span class="pre">reverse_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_points_xyz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#CorticalSensorManifold.reverse_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.CorticalSensorManifold.reverse_map" title="Link to this definition"></a></dt>
 <dd><p>reverse map from cortical cartesian coordinates to visual cartesian and polar coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mesh_points_xyz</strong> (<em>np.ndarray</em>) – (n,3) cortical cartesian mesh pts</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing:</dt><dd><ul class="simple">
+<li><p>cartesian_visual (np.ndarray): (n, 2) visual cartesian mesh pts</p></li>
+<li><p>polar_visual (np.ndarray): (n, 2) visual polar mesh pts</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>result (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -243,23 +476,81 @@ We use m(r) in mm/deg: thus m(r)*sin(r) -&gt; mm*rad/deg, so we convert to mm by
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.vis_cartesian_to_cortical_cartesian_coords">
 <span class="sig-prename descclassname"><span class="pre">foveation.sensing.manifold.</span></span><span class="sig-name descname"><span class="pre">vis_cartesian_to_cortical_cartesian_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cartesian_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#vis_cartesian_to_cortical_cartesian_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.vis_cartesian_to_cortical_cartesian_coords" title="Link to this definition"></a></dt>
-<dd><p>Map visual cartesian coordinates to 3d cortical cartesian coordinates using the 3D cortical model.
-We use this when coordinates are sampled elsewhere, and we want to map them into the 3d model for receptive field sampling.
-This is the main function we use to implement the cortical sensor manifold, in combination with isotropically magnified visual field sampling</p>
+<dd><ul class="simple">
+<li><p>Map visual cartesian coordinates to 3d cortical cartesian coordinates using the 3D cortical model.</p></li>
+<li><p>We use this when coordinates are sampled elsewhere, and we want to map them into the 3d model for receptive field sampling.</p></li>
+<li><p>This is the main function we use to implement the cortical sensor manifold, in combination with isotropically magnified visual field sampling</p></li>
+</ul>
+<p>Note, the CMF is <span class="math notranslate nohighlight">\(M(r)=\frac{k}{r+a}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cartesian_coords</strong> (<em>np.ndarray</em>) – (n,2) visual cartesian coordinates in (x,y) format</p></li>
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(a\)</span> value in the CMF, in degrees</p></li>
+<li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – field-of-view in degrees</p></li>
+<li><p><strong>as_tensor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to return as a tensor. Defaults to False.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>torch.Device</em><em>, </em><em>optional</em>) – if as_tensor=True, which device to use</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – scaling value for CMF</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(n, 3) array of cortical cartesian points <span class="math notranslate nohighlight">\((x_c, y_c, z)\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray or <a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.vis_cartesian_to_cortical_cylindrical">
 <span class="sig-prename descclassname"><span class="pre">foveation.sensing.manifold.</span></span><span class="sig-name descname"><span class="pre">vis_cartesian_to_cortical_cylindrical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cartesian_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#vis_cartesian_to_cortical_cylindrical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.vis_cartesian_to_cortical_cylindrical" title="Link to this definition"></a></dt>
-<dd><p>map visual cartesian coordinates to cortical cylindrical coordinates using the 3D cortical model.
-We use this when coordinates are sampled elsewhere, and we want to map them into the 3D model for receptive field sampling.
-Not usually used, since the cortical cartesian coordinates are more useful typically</p>
+<dd><p>Map visual cartesian coordinates to cortical cylindrical coordinates using the 3D cortical model.</p>
+<ul class="simple">
+<li><p>This is not usually used, since the cortical cartesian coordinates are more useful typically</p></li>
+<li><p>We use this when coordinates are sampled elsewhere, and we want to map them into the 3D model for receptive field sampling.</p></li>
+</ul>
+<p>Note, the CMF is <span class="math notranslate nohighlight">\(M(r)=\frac{k}{r+a}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cartesian_coords</strong> (<em>np.ndarray</em>) – (n,2) visual cartesian coordinates in (x,y) format</p></li>
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(a\)</span> value in the CMF, in degrees</p></li>
+<li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – field-of-view in degrees</p></li>
+<li><p><strong>as_tensor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to return as a tensor. Defaults to False.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>torch.Device</em><em>, </em><em>optional</em>) – if as_tensor=True, which device to use</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – scaling value for CMF</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(n, 3) array of cortical cylindrical points <span class="math notranslate nohighlight">\((\rho, z, \phi)\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray or <a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.sensing.manifold.cortical_cylindrical_to_cortical_cartesian">
 <span class="sig-prename descclassname"><span class="pre">foveation.sensing.manifold.</span></span><span class="sig-name descname"><span class="pre">cortical_cylindrical_to_cortical_cartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_z_phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmf_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/manifold.html#cortical_cylindrical_to_cortical_cartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.manifold.cortical_cylindrical_to_cortical_cartesian" title="Link to this definition"></a></dt>
 <dd><p>map cortical cylindrical coordinates to cortical cartesian coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_z_phi</strong> (<em>np.ndarray</em>) – (n, 3) array of cortical cylindrical points <span class="math notranslate nohighlight">\((\rho, z, \phi)\)</span></p></li>
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – <span class="math notranslate nohighlight">\(a\)</span> value in CMF</p></li>
+<li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – field-of-view in degrees</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – scaling value for CMF</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(n,3) array of cortical cartesian coordinates <span class="math notranslate nohighlight">\((x_c, y_c, z)\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

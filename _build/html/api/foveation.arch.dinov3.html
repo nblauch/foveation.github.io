@@ -94,30 +94,94 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.arch.dinov3.load_dinov3">
 <span class="sig-prename descclassname"><span class="pre">foveation.arch.dinov3.</span></span><span class="sig-name descname"><span class="pre">load_dinov3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/dinov3.html#load_dinov3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.dinov3.load_dinov3" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Load a DinoV3 model and processor from Hugging Face.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path or model identifier for the DinoV3 model.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to load the model on. Defaults to ‘cuda’.</p></li>
+<li><p><strong>log_in</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to log into Hugging Face. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing (model, processor).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.arch.dinov3.build_dinov3">
 <span class="sig-prename descclassname"><span class="pre">foveation.arch.dinov3.</span></span><span class="sig-name descname"><span class="pre">build_dinov3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/dinov3.html#build_dinov3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.dinov3.build_dinov3" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Build a foveated DinoV3 model from configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfg</strong> – Configuration object containing model and training parameters.</p></li>
+<li><p><strong>log_in</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to log into Hugging Face. Defaults to True.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to build the model on. Defaults to ‘cuda’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The configured DinoV3 model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.8)">torch.nn.Module</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.arch.dinov3.prep_dinov3_finetuning">
 <span class="sig-prename descclassname"><span class="pre">foveation.arch.dinov3.</span></span><span class="sig-name descname"><span class="pre">prep_dinov3_finetuning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/dinov3.html#prep_dinov3_finetuning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.dinov3.prep_dinov3_finetuning" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Prepare a DinoV3 model for fine-tuning based on configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – The DinoV3 model to prepare.</p></li>
+<li><p><strong>cfg</strong> – Configuration object containing fine-tuning parameters.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to prepare the model on. Defaults to ‘cuda’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The prepared model with appropriate parameters frozen/unfrozen.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.8)">torch.nn.Module</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.arch.dinov3.resample_patch_embed_conv">
 <span class="sig-prename descclassname"><span class="pre">foveation.arch.dinov3.</span></span><span class="sig-name descname"><span class="pre">resample_patch_embed_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="(in PyTorch v2.8)"><span class="pre">Conv2d</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_hw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(8,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'bicubic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_corners</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_kernel_norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="(in PyTorch v2.8)"><span class="pre">Conv2d</span></a></span></span><a class="reference internal" href="../_modules/foveation/arch/dinov3.html#resample_patch_embed_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.dinov3.resample_patch_embed_conv" title="Link to this definition"></a></dt>
-<dd><p>Resample a patch-embedding Conv2d’s kernels from (kH, kW) -&gt; target_hw and
-return a NEW Conv2d with kernel_size=stride=target_hw. Supports both upsampling
-and downsampling. Assumes:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>stride == kernel_size (patch embedding)</p></li>
-<li><p>padding == 0, groups == 1, dilation == 1</p></li>
+<dd><p>Resample a patch-embedding Conv2d’s kernels to target size.</p>
+<p>Resamples a patch-embedding Conv2d’s kernels from (kH, kW) -&gt; target_hw and
+returns a NEW Conv2d with kernel_size=stride=target_hw. Supports both upsampling
+and downsampling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conv</strong> (<em>nn.Conv2d</em>) – The patch embedding convolution to resample.</p></li>
+<li><p><strong>target_hw</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Target height and width. Defaults to (8, 8).</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Interpolation mode. Defaults to “bicubic”.</p></li>
+<li><p><strong>align_corners</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to align corners. Defaults to True.</p></li>
+<li><p><strong>preserve_kernel_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to preserve kernel norm. Defaults to False.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new Conv2d layer with resampled kernels.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.Conv2d</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Assumes stride == kernel_size (patch embedding), padding == 0, groups == 1, dilation == 1.</p>
+</div>
 </dd></dl>
 
 </section>

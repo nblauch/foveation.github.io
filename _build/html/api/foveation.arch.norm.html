@@ -96,6 +96,15 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.norm.</span></span><span class="sig-name descname"><span class="pre">KNNChannelNorm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNChannelNorm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNChannelNorm" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html#torch.nn.LayerNorm" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerNorm</span></code></a></p>
 <p>Simple wrapper to perform normalization over the channel dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_coords</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of coordinates (unused but required for interface).</p></li>
+<li><p><strong>num_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of channels to normalize over.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to place the layer on. Defaults to ‘cuda’.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.norm.KNNChannelNorm.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNChannelNorm.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNChannelNorm.__init__" title="Link to this definition"></a></dt>
@@ -122,7 +131,16 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="foveation.arch.norm.KNNBatchNorm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.norm.</span></span><span class="sig-name descname"><span class="pre">KNNBatchNorm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNBatchNorm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNBatchNorm" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.BatchNorm1d.html#torch.nn.BatchNorm1d" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm1d</span></code></a></p>
-<p>Simple wrapper to perform normalization over the batch dimension</p>
+<p>Simple wrapper to perform normalization over the batch dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_coords</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of coordinates (unused but required for interface).</p></li>
+<li><p><strong>num_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of channels to normalize over.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to place the layer on. Defaults to ‘cuda’.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.norm.KNNBatchNorm.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNBatchNorm.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNBatchNorm.__init__" title="Link to this definition"></a></dt>
@@ -135,7 +153,16 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="foveation.arch.norm.KNNCoordNorm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.norm.</span></span><span class="sig-name descname"><span class="pre">KNNCoordNorm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNCoordNorm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNCoordNorm" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html#torch.nn.LayerNorm" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerNorm</span></code></a></p>
-<p>Simple wrapper to perform normalization over the coordinate dimension</p>
+<p>Simple wrapper to perform normalization over the coordinate dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_coords</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of coordinates to normalize over.</p></li>
+<li><p><strong>num_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of channels (unused but required for interface).</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to place the layer on. Defaults to ‘cuda’.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.norm.KNNCoordNorm.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNCoordNorm.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNCoordNorm.__init__" title="Link to this definition"></a></dt>
@@ -148,7 +175,16 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="foveation.arch.norm.KNNLayerNorm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.norm.</span></span><span class="sig-name descname"><span class="pre">KNNLayerNorm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNLayerNorm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNLayerNorm" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html#torch.nn.LayerNorm" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LayerNorm</span></code></a></p>
-<p>Simple wrapper to perform normalization over both coordinate and channel dimensions</p>
+<p>Simple wrapper to perform normalization over both coordinate and channel dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_coords</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of coordinates to normalize over.</p></li>
+<li><p><strong>num_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of channels to normalize over.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to place the layer on. Defaults to ‘cuda’.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.norm.KNNLayerNorm.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNLayerNorm.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNLayerNorm.__init__" title="Link to this definition"></a></dt>
@@ -161,6 +197,18 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="foveation.arch.norm.KNNGroupNorm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.arch.norm.</span></span><span class="sig-name descname"><span class="pre">KNNGroupNorm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_channels_per_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNGroupNorm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNGroupNorm" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.GroupNorm.html#torch.nn.GroupNorm" title="(in PyTorch v2.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupNorm</span></code></a></p>
+<p>Simple wrapper to perform group normalization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_coords</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of coordinates (unused but required for interface).</p></li>
+<li><p><strong>num_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of channels to normalize over.</p></li>
+<li><p><strong>base_groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Base number of groups. Defaults to 32.</p></li>
+<li><p><strong>min_channels_per_group</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum channels per group. Defaults to 4.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to place the layer on. Defaults to ‘cuda’.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.arch.norm.KNNGroupNorm.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_channels_per_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#KNNGroupNorm.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.KNNGroupNorm.__init__" title="Link to this definition"></a></dt>
@@ -172,12 +220,50 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.arch.norm.find_valid_num_groups">
 <span class="sig-prename descclassname"><span class="pre">foveation.arch.norm.</span></span><span class="sig-name descname"><span class="pre">find_valid_num_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_channels_per_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#find_valid_num_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.find_valid_num_groups" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Find a valid number of groups for group normalization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Total number of channels.</p></li>
+<li><p><strong>base_groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Desired base number of groups.</p></li>
+<li><p><strong>min_channels_per_group</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum channels per group. Defaults to 4.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Valid number of groups that divides num_channels evenly.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="foveation.arch.norm.get_norm">
 <span class="sig-prename descclassname"><span class="pre">foveation.arch.norm.</span></span><span class="sig-name descname"><span class="pre">get_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">norm_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_channels_per_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/arch/norm.html#get_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.arch.norm.get_norm" title="Link to this definition"></a></dt>
-<dd><p>Get a normalization for a KNN layer with shape (batch, num_channels, num_coords)</p>
+<dd><p>Get a normalization layer for a KNN layer with shape (batch, num_channels, num_coords).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>norm_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Type of normalization (‘layer_chan’, ‘channel’, ‘layer_space’,
+‘coord’, ‘layer_all’, ‘layer’, ‘group’, ‘batch’, or ‘none’).</p></li>
+<li><p><strong>num_coords</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of coordinates.</p></li>
+<li><p><strong>num_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of channels.</p></li>
+<li><p><strong>base_groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Base number of groups for group norm. Defaults to 32.</p></li>
+<li><p><strong>min_channels_per_group</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum channels per group. Defaults to 4.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to place the layer on. Defaults to ‘cuda’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Normalization layer or None if norm_type is ‘none’.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.Module or None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.14)"><strong>NotImplementedError</strong></a> – If norm_type is not implemented.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

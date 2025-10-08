@@ -101,8 +101,35 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNetBlock">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">KNNAlexNetBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A block combining KNN convolution, optional pooling, normalization and nonlinearity.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A block combining KNN convolution, optional pooling, normalization and nonlinearity.</span>
+<span class="sd">    </span>
+<span class="sd">    This module implements a complete processing block that can include:</span>
+<span class="sd">    - KNN convolution layer</span>
+<span class="sd">    - Normalization (batch, layer, etc.)</span>
+<span class="sd">    - Activation function</span>
+<span class="sd">    - Optional pooling layer</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        in_channels (int): Number of input channels.</span>
+<span class="sd">        out_channels (int): Number of output channels.</span>
+<span class="sd">        k (int): Number of nearest neighbors for KNN operations.</span>
+<span class="sd">        fov (float): Field of view parameter.</span>
+<span class="sd">        cmf_a (float): Cortical magnification factor parameter.</span>
+<span class="sd">        in_res (int): Input resolution.</span>
+<span class="sd">        stride (int): Stride for the convolution operation.</span>
+<span class="sd">        style (str, optional): Style of coordinate system. Defaults to &#39;isotropic&#39;.</span>
+<span class="sd">        conv_layer (class, optional): Convolution layer class to use. Defaults to KNNConvLayer.</span>
+<span class="sd">        cart_res (int, optional): Cartesian resolution. Defaults to None.</span>
+<span class="sd">        pool (bool, optional): Whether to include pooling layer. Defaults to True.</span>
+<span class="sd">        pool_mode (str, optional): Pooling mode (&#39;max&#39;, &#39;avg&#39;). Defaults to &#39;max&#39;.</span>
+<span class="sd">        pool_k (int, optional): Number of neighbors for pooling. Defaults to 9.</span>
+<span class="sd">        pool_stride (int, optional): Stride for pooling. Defaults to 2.</span>
+<span class="sd">        norm_type (str, optional): Type of normalization. Defaults to &#39;batch&#39;.</span>
+<span class="sd">        arch_flag (str, optional): Architecture flag. Defaults to &#39;&#39;.</span>
+<span class="sd">        activation (class, optional): Activation function class. Defaults to nn.ReLU.</span>
+<span class="sd">        sample_cortex (bool, optional): Whether to sample cortex. Defaults to True.</span>
+<span class="sd">        device (str, optional): Device to use. Defaults to &#39;cuda&#39;.</span>
+<span class="sd">        auto_match_cart_resources (int, optional): Auto-match cartesian resources. Defaults to 0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="KNNAlexNetBlock.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNetBlock.__init__">[docs]</a>
@@ -162,6 +189,14 @@
 <div class="viewcode-block" id="KNNAlexNetBlock.forward">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNetBlock.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through the block.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): Input tensor.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Output tensor after processing through conv, norm, activation, and pooling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -180,6 +215,30 @@
 <a class="viewcode-back" href="../../../api/foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNet">[docs]</a>
 <span class="nd">@add_to_all</span><span class="p">(</span><span class="n">__all__</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">KNNAlexNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;KNN-based AlexNet architecture with foveated processing.</span>
+<span class="sd">    </span>
+<span class="sd">    This class implements a complete KNN-based AlexNet architecture that processes</span>
+<span class="sd">    input through multiple KNN convolution blocks with optional pooling layers.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        in_res (int): Input resolution.</span>
+<span class="sd">        in_channels (int): Number of input channels.</span>
+<span class="sd">        features_per_layer (list[int]): List of feature dimensions for each layer.</span>
+<span class="sd">        stride_per_layer (list[int]): List of stride values for each layer.</span>
+<span class="sd">        pool_after (list[int]): List of layer indices after which to apply pooling.</span>
+<span class="sd">        k_per_layer (list[int]): List of k values (nearest neighbors) for each layer.</span>
+<span class="sd">        n_classes (int, optional): Number of output classes. If None, no classifier is added. Defaults to None.</span>
+<span class="sd">        out_res (int, optional): Output resolution. If None, no output pooling is applied. Defaults to None.</span>
+<span class="sd">        auto_match_cart_resources (int, optional): Auto-match cartesian resources. Defaults to 0.</span>
+<span class="sd">        style (str, optional): Style of coordinate system. Defaults to &#39;isotropic&#39;.</span>
+<span class="sd">        layer_cls (class, optional): Convolution layer class to use. Defaults to KNNConvLayer.</span>
+<span class="sd">        norm_type (str, optional): Type of normalization. Defaults to &#39;batch&#39;.</span>
+<span class="sd">        arch_flag (str, optional): Architecture flag. Defaults to &#39;&#39;.</span>
+<span class="sd">        fov (float, optional): Field of view parameter. Defaults to 16.</span>
+<span class="sd">        cmf_a (float, optional): Cortical magnification factor parameter. Defaults to 0.5.</span>
+<span class="sd">        device (str, optional): Device to use. Defaults to &#39;cuda&#39;.</span>
+<span class="sd">        sample_cortex (bool, optional): Whether to sample cortex. Defaults to True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="KNNAlexNet.__init__">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNet.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_res</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">features_per_layer</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">stride_per_layer</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">pool_after</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">k_per_layer</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> 
@@ -246,6 +305,16 @@
 <div class="viewcode-block" id="KNNAlexNet.forward">
 <a class="viewcode-back" href="../../../api/foveation.arch.knnalexnet.html#foveation.arch.knnalexnet.KNNAlexNet.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through the entire network.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): Input tensor of shape (batch_size, in_channels, in_res, in_res).</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Output tensor. If n_classes is specified, returns logits of shape </span>
+<span class="sd">                (batch_size, n_classes). Otherwise, returns features of shape </span>
+<span class="sd">                (batch_size, out_channels, out_coords.shape[0]).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">):</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

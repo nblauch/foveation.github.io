@@ -60,3 +60,4 @@ The documentation is configured in `conf.py` with:
 - **API Reference**: Complete API documentation
 - **Examples**: Jupyter notebook tutorials
 - **Developer Guide**: Contributing and development setup
+

@@ -121,16 +121,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.samplers.BaseGridSampler._prep_grid_for_grid_sample">
 <span class="sig-name descname"><span class="pre">_prep_grid_for_grid_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cartesian_grid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/samplers.html#BaseGridSampler._prep_grid_for_grid_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.samplers.BaseGridSampler._prep_grid_for_grid_sample" title="Link to this definition"></a></dt>
-<dd><p>prepare grid for torch.nn.functional.grid_sample</p>
+<dd><p>Prepare grid for torch.nn.functional.grid_sample.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cartesian_grid</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – (n,2) coordinates, where each 2-vector coordinate is specified in (x,y) in the typical math sense</p>
+<dd class="field-odd"><p><strong>cartesian_grid</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – (n,2) coordinates, where each 2-vector coordinate is specified in (x,y) in the typical math sense.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(1,1,n,2) coordinates, where each 2-vector coordinate is specified in (x,-y) or (col, row) format for grid_sample</p>
+<dd class="field-even"><p>(1,1,n,2) coordinates, where each 2-vector coordinate is specified in (x,-y) or (col, row) format for grid_sample.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>out_grid (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a>)</p>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -152,7 +152,7 @@ to sample from the foveated sampling grid.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Field of view diameter in degrees.</p></li>
-<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – a parameter from the CMF: M(r)=1/(r+a). smaller = stronger foveation</p></li>
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – A parameter from the CMF: M(r)=1/(r+a). Smaller = stronger foveation.</p></li>
 <li><p><strong>resolution</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Resolution parameter.</p></li>
 <li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to run on. Defaults to ‘cuda’.</p></li>
 <li><p><strong>dtype</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.dtype" title="(in PyTorch v2.8)"><em>torch.dtype</em></a><em>, </em><em>optional</em>) – Data type. Defaults to torch.float.</p></li>
@@ -221,10 +221,10 @@ to sample from the foveated sampling grid.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Field of view diameter in degrees.</p></li>
-<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – a parameter from the CMF: M(r)=1/(r+a). smaller = stronger cmf_ation</p></li>
+<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – A parameter from the CMF: M(r)=1/(r+a). Smaller = stronger foveation.</p></li>
 <li><p><strong>resolution</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Resolution parameter.</p></li>
 <li><p><strong>res_mult</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Resolution multiplier for photoreceptor layer vs. rgc layer. Defaults to 3.</p></li>
-<li><p><strong>cmf_a_mult</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – cmf_a multiplier for photoreceptor layer vs. rgc layer. Defaults to 1.</p></li>
+<li><p><strong>cmf_a_mult</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – CMF_a multiplier for photoreceptor layer vs. rgc layer. Defaults to 1.</p></li>
 <li><p><strong>fixation_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Fixation size in pixels. Defaults to 3000.</p></li>
 <li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of nearest neighbors. Defaults to None.</p></li>
 <li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Sampling style. Defaults to ‘isotropic’.</p></li>
@@ -239,21 +239,40 @@ to sample from the foveated sampling grid.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.samplers.KNNGridSampler.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_loc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixation_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/samplers.html#KNNGridSampler.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.samplers.KNNGridSampler.forward" title="Link to this definition"></a></dt>
-<dd><p>Define the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<dd><p>Forward pass for KNN grid sampling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Input image tensor.</p></li>
+<li><p><strong>fix_loc</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a><em>, </em><em>optional</em>) – Fixation location. Defaults to None.</p></li>
+<li><p><strong>fixation_size</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a><em>, </em><em>optional</em>) – Fixation size. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pooled samples from KNN grid sampling.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor">torch.Tensor</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.samplers.KNNGridSampler.all_coords">
 <span class="sig-name descname"><span class="pre">all_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/samplers.html#KNNGridSampler.all_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.samplers.KNNGridSampler.all_coords" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get all sampling coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to place coordinates on. Defaults to None.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Cartesian, polar, and plotting coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -261,25 +280,16 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="foveation.sensing.samplers.GaussianKNNGridSampler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">foveation.sensing.samplers.</span></span><span class="sig-name descname"><span class="pre">GaussianKNNGridSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/samplers.html#GaussianKNNGridSampler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.samplers.GaussianKNNGridSampler" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#foveation.sensing.samplers.KNNGridSampler" title="foveation.sensing.samplers.KNNGridSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">KNNGridSampler</span></code></a></p>
-<p>Similar to KNNGridSampler, but uses Gaussian pooling rather than average</p>
+<p>Similar to KNNGridSampler, but uses Gaussian pooling rather than average.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="foveation.sensing.samplers.GaussianKNNGridSampler.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/sensing/samplers.html#GaussianKNNGridSampler.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.sensing.samplers.GaussianKNNGridSampler.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize the KNNGridSampler.</p>
+<dd><p>Initialize the GaussianKNNGridSampler.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fov</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Field of view diameter in degrees.</p></li>
-<li><p><strong>cmf_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – a parameter from the CMF: M(r)=1/(r+a). smaller = stronger cmf_ation</p></li>
-<li><p><strong>resolution</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Resolution parameter.</p></li>
-<li><p><strong>res_mult</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Resolution multiplier for photoreceptor layer vs. rgc layer. Defaults to 3.</p></li>
-<li><p><strong>cmf_a_mult</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – cmf_a multiplier for photoreceptor layer vs. rgc layer. Defaults to 1.</p></li>
-<li><p><strong>fixation_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Fixation size in pixels. Defaults to 3000.</p></li>
-<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of nearest neighbors. Defaults to None.</p></li>
-<li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Sampling style. Defaults to ‘isotropic’.</p></li>
-<li><p><strong>sample_cortex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to sample from cortex. Defaults to True.</p></li>
-<li><p><strong>dtype</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.dtype" title="(in PyTorch v2.8)"><em>torch.dtype</em></a><em>, </em><em>optional</em>) – Data type. Defaults to torch.float.</p></li>
-<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Device to run on. Defaults to ‘cuda’.</p></li>
+<li><p><strong>*args</strong> – Variable length argument list passed to parent class.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments passed to parent class.</p></li>
 </ul>
 </dd>
 </dl>
