@@ -143,8 +143,6 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">avgpool</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool2d</span><span class="p">((</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">final_grid_size</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">final_grid_size</span><span class="p">))</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">kernels</span><span class="p">)</span>
-
     <span class="n">polar</span><span class="o">=</span><span class="s1">&#39;polar&#39;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span> <span class="ow">and</span> <span class="s1">&#39;comp&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">mode</span>
     <span class="n">network</span> <span class="o">=</span> <span class="n">alexnet2023_baseline</span><span class="p">(</span><span class="n">mlp_kwargs</span><span class="o">=</span><span class="n">mlp_kwargs</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span>
                                             <span class="n">avgpool</span><span class="o">=</span><span class="n">avgpool</span><span class="p">,</span>
@@ -163,19 +161,6 @@
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">k_mult</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kernels</span><span class="p">)):</span>
             <span class="n">kernels</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">k_mult</span><span class="o">*</span><span class="n">kernels</span><span class="p">[</span><span class="n">ii</span><span class="p">][</span><span class="mi">1</span><span class="p">])])</span>
-
-    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span> <span class="n">dropout_all</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout_all</span><span class="p">,)</span>
-
-    <span class="n">num_groups</span> <span class="o">=</span> <span class="mi">32</span>
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;force_batch&#39;</span><span class="p">:</span>
-            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="n">kernels</span><span class="p">)</span>
 
     <span class="c1"># (channels, k_neighbors, stride, padding, groups)</span>
     <span class="c1"># padding and groups are ignored</span>
@@ -203,20 +188,8 @@
         <span class="n">sample_cortex</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">saccades</span><span class="o">.</span><span class="n">sample_cortex</span><span class="p">,</span>
         <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
         <span class="p">)</span>
-
-    <span class="c1"># full MLP for learning over space</span>
-    <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
-    <span class="c1"># position-wise MLP for SSL</span>
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="o">!=</span> <span class="s1">&#39;supervised&#39;</span><span class="p">:</span>
-        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">with</span> <span class="n">HiddenPrints</span><span class="p">():</span>
-        <span class="n">network</span> <span class="o">=</span> <span class="n">BackboneProjectorWrapper</span><span class="p">(</span><span class="n">knn</span><span class="p">,</span> <span class="n">mlp</span><span class="p">,</span> <span class="n">mlp_ssl</span><span class="p">)</span>
-    <span class="n">network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">network</span></div>
+    
+    <span class="k">return</span> <span class="n">arch_wrapper</span><span class="p">(</span><span class="n">knn</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span></div>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">saccadenet_resnet_baseline</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
@@ -286,16 +259,6 @@
                         <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
                         <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
                         <span class="p">):</span>
-    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span> <span class="n">dropout_all</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout_all</span><span class="p">)</span>
-    <span class="n">num_groups</span> <span class="o">=</span> <span class="mi">32</span>
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;force_batch&#39;</span><span class="p">:</span>
-            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">rescale_fov</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 
     <span class="n">knn</span> <span class="o">=</span> <span class="n">KNNResNet</span><span class="p">(</span>
@@ -315,19 +278,7 @@
                  <span class="n">num_classes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="c1"># full MLP for learning over space</span>
-    <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
-    <span class="c1"># position-wise MLP for SSL</span>
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="o">!=</span> <span class="s1">&#39;supervised&#39;</span><span class="p">:</span>
-        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">with</span> <span class="n">HiddenPrints</span><span class="p">():</span>
-        <span class="n">network</span> <span class="o">=</span> <span class="n">BackboneProjectorWrapper</span><span class="p">(</span><span class="n">knn</span><span class="p">,</span> <span class="n">mlp</span><span class="p">,</span> <span class="n">mlp_ssl</span><span class="p">)</span>
-    <span class="n">network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">network</span></div>
+    <span class="k">return</span> <span class="n">arch_wrapper</span><span class="p">(</span><span class="n">knn</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="saccadenet_knnresnet9">
@@ -397,17 +348,6 @@
 <span class="sd">    This model uses KNN-based tokenization instead of standard patch embedding,</span>
 <span class="sd">    creating tokens based on spatial relationships in the foveated coordinate system.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">mlp_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mlp</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mlp</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span> <span class="n">dropout_all</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">dropout_all</span><span class="p">)</span>
-    <span class="n">num_groups</span> <span class="o">=</span> <span class="mi">32</span>
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm_mlp</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;force_batch&#39;</span><span class="p">:</span>
-            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-
     <span class="c1"># Adjust FOV based on fixation size</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">rescale_fov</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
     
@@ -433,20 +373,7 @@
         <span class="n">force_patches_less_than_matched</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vit</span><span class="o">.</span><span class="n">force_patches_less_than_matched</span><span class="p">,</span>
     <span class="p">)</span>
     
-    <span class="c1"># full MLP for learning over space</span>
-    <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
-    <span class="c1"># position-wise MLP for SSL</span>
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">loss</span> <span class="o">!=</span> <span class="s1">&#39;supervised&#39;</span><span class="p">:</span>
-        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mlp_ssl</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">with</span> <span class="n">HiddenPrints</span><span class="p">():</span>
-        <span class="n">network</span> <span class="o">=</span> <span class="n">BackboneProjectorWrapper</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="n">mlp</span><span class="p">,</span> <span class="n">mlp_ssl</span><span class="p">)</span>
-    <span class="n">network</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">network</span></div>
-
+    <span class="k">return</span> <span class="n">arch_wrapper</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="saccadenet_knnvit_base">
@@ -552,6 +479,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    pre-trained dinov3 -- architectural differences in the dinov3 model are specified via cfg.pretrained_model.path</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Adjust FOV based on fixation size</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">rescale_fov</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
     <span class="n">network</span> <span class="o">=</span> <span class="n">build_dinov3</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
     <span class="n">network</span> <span class="o">=</span> <span class="n">arch_wrapper</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">network</span></div>
@@ -575,9 +504,6 @@
             <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">mlp_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-
-    <span class="c1"># Adjust FOV based on fixation size</span>
-    <span class="n">cfg</span> <span class="o">=</span> <span class="n">rescale_fov</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
     
     <span class="c1"># full MLP for learning over space</span>
     <span class="n">mlp</span> <span class="o">=</span> <span class="n">get_mlp</span><span class="p">(</span><span class="n">repr_size</span><span class="o">=</span><span class="s1">&#39;lazy&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mlp_kwargs</span><span class="p">)</span>

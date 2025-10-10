@@ -391,7 +391,7 @@ KNNAlexNet(
 <p>You may have noticed that we have only worked with fake data thus far. Our KNN architectures are designed to work with outputs formatted on the sensor manifold. To get this from images, we need to use a <code class="docutils literal notranslate"><span class="pre">RetinalTransform</span></code> object, or more simply, a <code class="docutils literal notranslate"><span class="pre">SaccadePolicy</span></code> which will also determine our fixations for us. If you forget about these, go back to <code class="docutils literal notranslate"><span class="pre">step1_sampling.ipynb</span></code>.</p>
 <p>The last piece of the puzzle is the <code class="docutils literal notranslate"><span class="pre">SaccadeNet</span></code> class which combines a fixation policy with a processing network. Since there are a lot of hyperparameters, here, we specify them all in a neat hierarchical <code class="docutils literal notranslate"><span class="pre">config</span></code>. This is typically specified as a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file, and we use <code class="docutils literal notranslate"><span class="pre">hydra</span></code> and <code class="docutils literal notranslate"><span class="pre">omega</span></code> to handle these in our training scripts. Because the config uses inheritance, we initialize and compose it with <code class="docutils literal notranslate"><span class="pre">hydra</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">foveation.saccadenet</span><span class="w"> </span><span class="kn">import</span> <span class="n">SaccadeNet</span>
@@ -443,6 +443,8 @@ pre_transforms: Compose(
     NormalizeGPU(mean=tensor([0.4850, 0.4560, 0.4060], dtype=torch.float64), std=tensor([0.2290, 0.2240, 0.2250], dtype=torch.float64), inplace=True)
 )
 post_transforms: None
+found resolution 53 giving 4085 points (desired: 4096)
+Auto-matched resolution to 53 (4085 sampling coordinates) to best match 4096 cartesian pixels.
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -450,9 +452,9 @@ post_transforms: None
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/Users/nblauch/git/foveation/foveation/sensing/coords.py:332: RuntimeWarning: divide by zero encountered in scalar divide
+/Users/nblauch/git/foveation-private/foveation/sensing/coords.py:327: RuntimeWarning: divide by zero encountered in scalar divide
   w_delta = (w_max - w_min)/(res-1)
-/Users/nblauch/git/foveation/foveation/sensing/retina.py:106: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+/Users/nblauch/git/foveation-private/foveation/sensing/retina.py:138: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
   fix_loc = torch.tensor(self._check_fix_loc(fix_loc, x.shape[0]), dtype=self.dtype, device=self.device)
 /opt/homebrew/Caskroom/miniforge/base/envs/knnconv1/lib/python3.13/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of &#39;cuda&#39;, but CUDA is not available. Disabling
   warnings.warn(
@@ -463,8 +465,6 @@ post_transforms: None
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-found resolution 53 giving 4085 points (desired: 4096)
-Auto-matched resolution to 53 (4085 sampling coordinates) to best match 4096 cartesian pixels.
 ssl_fixator:
 NoSaccadePolicy(retinal_transform=RetinalTransform(
   (foveal_color): GaussianColorDecay(sigma=None)
@@ -477,11 +477,11 @@ MultiRandomSaccadePolicy(retinal_transform=RetinalTransform(
   (sampler): GridSampler(fov=16.0, cmf_a=0.5, style=isotropic, resolution=53, mode=nearest, n=4085)
 ), n_fixations=4)
 
-LINEAR PROBE NUM CLASSES: 100
+LINEAR PROBE NUM CLASSES: 1000
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">saccadenet</span>
@@ -489,7 +489,7 @@ LINEAR PROBE NUM CLASSES: 100
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -618,7 +618,7 @@ SaccadeNet(
   (head): SaccadeNetProbe(
     (fix_projector): LinearProbe(
       (dropout): Dropout(p=0.5, inplace=False)
-      (probe): Linear(in_features=1024, out_features=100, bias=True)
+      (probe): Linear(in_features=1024, out_features=1000, bias=True)
     )
   )
 )
@@ -654,7 +654,7 @@ torch.Size([1, 3, 256, 256])
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/Users/nblauch/git/foveation/foveation/sensing/retina.py:106: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
+/Users/nblauch/git/foveation-private/foveation/sensing/retina.py:138: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
   fix_loc = torch.tensor(self._check_fix_loc(fix_loc, x.shape[0]), dtype=self.dtype, device=self.device)
 </pre></div></div>
 </div>
@@ -678,22 +678,22 @@ torch.Size([1, 3, 256, 256])
 <div class="highlight"><pre>
 torch.Size([1, 4, 256])
 torch.Size([1, 4, 1024])
-torch.Size([1, 100])
+torch.Size([1, 1000])
 </pre></div></div>
 </div>
 </section>
 <section id="load-a-pre-trained-model">
 <h1>load a pre-trained model<a class="headerlink" href="#load-a-pre-trained-model" title="Link to this heading"></a></h1>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">foveation</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
 
-<span class="n">base_fn</span> <span class="o">=</span> <span class="s1">&#39;XxepnJ0AQo&#39;</span>
+<span class="n">base_fn</span> <span class="o">=</span> <span class="s1">&#39;fovknnalexnet_a-1_res-64_in1k&#39;</span>
 <span class="n">config</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">,</span> <span class="n">model_key</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">base_fn</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;../models&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">SaccadeNet</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
-<span class="c1"># model.load_state_dict(state_dict[model_key])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="n">model_key</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -702,7 +702,6 @@ torch.Size([1, 100])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-loading non-final weights
 [[96, 11, 2, 5, 1], [256, 5, 1, 2, 1], [384, 3, 1, 1, 1], [384, 3, 1, 1, 1], [256, 3, 1, 1, 1]]
 adjusting FOV for fixation: 16.0 (full: 16.0)
 found resolution 53 giving 4085 points (desired: 4096)
@@ -743,15 +742,13 @@ Auto-matched resolution to 53 (4085 sampling coordinates) to best match 4096 car
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/Users/nblauch/git/foveation/foveation/sensing/coords.py:332: RuntimeWarning: divide by zero encountered in scalar divide
+/Users/nblauch/git/foveation-private/foveation/sensing/coords.py:327: RuntimeWarning: divide by zero encountered in scalar divide
   w_delta = (w_max - w_min)/(res-1)
-/Users/nblauch/git/foveation/foveation/sensing/retina.py:106: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  fix_loc = torch.tensor(self._check_fix_loc(fix_loc, x.shape[0]), dtype=self.dtype, device=self.device)
 /opt/homebrew/Caskroom/miniforge/base/envs/knnconv1/lib/python3.13/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of &#39;cuda&#39;, but CUDA is not available. Disabling
   warnings.warn(
 </pre></div></div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -769,6 +766,15 @@ MultiRandomSaccadePolicy(retinal_transform=RetinalTransform(
 ), n_fixations=4)
 
 LINEAR PROBE NUM CLASSES: 1000
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;All keys matched successfully&gt;
 </pre></div></div>
 </div>
 </section>

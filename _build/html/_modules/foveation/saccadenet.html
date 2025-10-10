@@ -98,6 +98,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.probes</span><span class="w"> </span><span class="kn">import</span> <span class="n">SaccadeNetProbe</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils.std_transforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_std_transforms</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.arch</span><span class="w"> </span><span class="kn">import</span> <span class="n">architectures</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.arch.knn</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNBaseLayer</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SaccadeNet&#39;</span><span class="p">]</span>
 
@@ -161,16 +162,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">get_repr_sizes</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ssl_fixator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_fixation_system</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ssl_fixation_policy</span><span class="p">,</span> <span class="s1">&#39;ssl&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ssl_fixator:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ssl_fixator</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sup_fixator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_fixation_system</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sup_fixation_policy</span><span class="p">,</span> <span class="s1">&#39;supervised&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;sup_fixator:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sup_fixator</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="n">head_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">SaccadeNetProbe</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mlp_spec</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_agg</span><span class="p">,</span> <span class="n">head_outputs</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dropout</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">total_embed_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">total_embed_dim</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_embed_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">backbone</span><span class="o">.</span><span class="n">total_embed_dim</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_coords</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of coords per layer: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_coords</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SaccadeNet.init_fixation_system">
@@ -452,9 +454,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">where</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">flip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">color_jitter</span><span class="p">,</span> 
             <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">blur</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">pointcloud_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;loader_transforms: </span><span class="si">{</span><span class="n">loader_transforms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>   
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;pre_transforms: </span><span class="si">{</span><span class="n">pre_transforms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;post_transforms: </span><span class="si">{</span><span class="n">post_transforms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">loader_transforms</span><span class="p">},</span> <span class="n">pre_transforms</span><span class="p">,</span> <span class="n">post_transforms</span></div>
 
@@ -498,14 +497,16 @@
             <span class="c1"># List available layer names for debugging</span>
             <span class="n">available_layers</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;bias&#39;</span><span class="p">):</span>  <span class="c1"># Only actual layers</span>
-                    <span class="n">available_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="c1"># if hasattr(module, &#39;weight&#39;) or hasattr(module, &#39;bias&#39;):  # Only actual layers</span>
+                <span class="n">available_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Layer &#39;</span><span class="si">{</span><span class="n">layer_name</span><span class="si">}</span><span class="s2">&#39; not found. Available layers: </span><span class="si">{</span><span class="n">available_layers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         
         <span class="c1"># Define hook function to capture activations</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">hook_fn</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
             <span class="c1"># Store the output after this layer (this matches what MLPWrapper does)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">captured_activations</span><span class="p">[</span><span class="s1">&#39;activation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
         
         <span class="c1"># Register the hook</span>
@@ -561,11 +562,99 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">available_layers</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;bias&#39;</span><span class="p">):</span>  <span class="c1"># Only actual layers</span>
-                <span class="n">available_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">available_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">available_layers</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNet.get_activations">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_activations">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_activations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">layer_names</span><span class="p">,</span> <span class="n">setting</span><span class="o">=</span><span class="s1">&#39;supervised&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get activations from multiple layers in a single forward pass.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            inputs (torch.Tensor): Input tensor(s) to process</span>
+<span class="sd">            layer_names (list): List of layer names to capture activations from</span>
+<span class="sd">            setting (str, optional): Forward pass setting (&#39;supervised&#39; or &#39;ssl&#39;). </span>
+<span class="sd">                                   Defaults to &#39;supervised&#39;.</span>
+<span class="sd">            **kwargs: Additional arguments passed to the forward method</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Dictionary mapping layer names to their activations</span>
+<span class="sd">        </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; model = SaccadeNet(cfg)</span>
+<span class="sd">            &gt;&gt;&gt; inputs = torch.randn(2, 3, 224, 224)</span>
+<span class="sd">            &gt;&gt;&gt; activations = model.get_multiple_layer_activations(</span>
+<span class="sd">            ...     inputs, </span>
+<span class="sd">            ...     layer_names=[&#39;fc_block_5&#39;, &#39;fc_block_6&#39;]</span>
+<span class="sd">            ... )</span>
+<span class="sd">            &gt;&gt;&gt; print(activations[&#39;fc_block_5&#39;].shape)</span>
+<span class="sd">            &gt;&gt;&gt; print(activations[&#39;fc_block_6&#39;].shape)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set up hooks for all layers</span>
+        <span class="n">hooks_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">layer_name</span> <span class="ow">in</span> <span class="n">layer_names</span><span class="p">:</span>
+            <span class="n">hooks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup_activation_hooks</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+            <span class="n">hooks_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">layer_name</span><span class="p">,</span> <span class="n">hooks</span><span class="p">))</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Ensure model is in eval mode for consistent activations</span>
+            <span class="n">was_training</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+            
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">batch_size</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="c1"># Forward pass - hooks will capture activations automatically</span>
+                <span class="n">outputs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span>
+                    <span class="n">inputs</span><span class="p">,</span> <span class="n">setting</span><span class="o">=</span><span class="n">setting</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+                <span class="p">)</span>
+                
+                <span class="c1"># Get captured activations from all hooks</span>
+                <span class="n">activations</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">hooks</span> <span class="ow">in</span> <span class="n">hooks_list</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_captured_activations</span><span class="p">(</span><span class="n">hooks</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">)</span>
+                    <span class="c1"># unflatten batch and fixation dimensions</span>
+                    <span class="n">num_fixations</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="n">batch_size</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                        <span class="n">activations</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;(f b) d n -&gt; b f d n&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">num_fixations</span><span class="p">)</span>
+                        <span class="n">activations</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">activations</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">activations</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;(f b) d -&gt; b f d&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">num_fixations</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unexpected shape&#39;</span><span class="p">)</span>
+                
+                <span class="k">return</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">activations</span>
+                
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Clean up all hooks</span>
+            <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">hooks</span> <span class="ow">in</span> <span class="n">hooks_list</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_activation_hooks</span><span class="p">(</span><span class="n">hooks</span><span class="p">)</span>
+            
+            <span class="c1"># Restore original training mode</span>
+            <span class="k">if</span> <span class="n">was_training</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNet.list_knn_layers">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.list_knn_layers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_knn_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">knn_layers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">KNNBaseLayer</span><span class="p">):</span>
+                <span class="n">knn_layers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">module</span>
+        <span class="k">return</span> <span class="n">knn_layers</span></div>
+
+
+<div class="viewcode-block" id="SaccadeNet.get_num_coords">
+<a class="viewcode-back" href="../../api/foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_num_coords">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_num_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_knn_layers</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">num_coords</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">in_coords</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">out_coords</span><span class="p">)</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">num_coords</span></div>
 </div>
 
+    
 </pre></div>
 
            </div>

@@ -250,7 +250,7 @@
                  <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">in_res</span><span class="p">,</span> <span class="n">cart_res</span> <span class="o">=</span> <span class="n">auto_match_num_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">in_res</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+        <span class="n">in_res</span><span class="p">,</span> <span class="n">cart_res</span> <span class="o">=</span> <span class="n">auto_match_num_coords</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">in_res</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">auto_match_cart_resources</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features_per_layer</span><span class="p">)):</span>
 

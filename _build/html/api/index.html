@@ -584,7 +584,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html">foveation.arch.knn</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_distances"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_distances()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_knns"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_knns()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_geodesic_distances"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_geodesic_distances()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_euclidean_distances_batched"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_euclidean_distances_batched()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer"><code class="docutils literal notranslate"><span class="pre">KNNPoolingLayer</span></code></a><ul>
@@ -886,6 +888,9 @@
 <li class="toctree-l4"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_captured_activations"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.get_captured_activations()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.cleanup_activation_hooks"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.cleanup_activation_hooks()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.list_available_layers"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.list_available_layers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_activations"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.get_activations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.list_knn_layers"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.list_knn_layers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_num_coords"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.get_num_coords()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1487,16 +1492,12 @@
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.__init__"><code class="docutils literal notranslate"><span class="pre">Visualizer.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.multi_fixation_accuracy"><code class="docutils literal notranslate"><span class="pre">Visualizer.multi_fixation_accuracy()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.visualize_filters"><code class="docutils literal notranslate"><span class="pre">Visualizer.visualize_filters()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.visualize_fixation_sampling_density"><code class="docutils literal notranslate"><span class="pre">Visualizer.visualize_fixation_sampling_density()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.visualize_filter"><code class="docutils literal notranslate"><span class="pre">Visualizer.visualize_filter()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.visualize_filter_over_space"><code class="docutils literal notranslate"><span class="pre">Visualizer.visualize_filter_over_space()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_coordinates"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_coordinates()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_spatial_rf_from_multi_layers"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_spatial_rf_from_multi_layers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_sampling_grids"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_sampling_grids()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.get_activations"><code class="docutils literal notranslate"><span class="pre">Visualizer.get_activations()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_rf_diameters"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_rf_diameters()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_fixations"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_fixations()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.get_num_coords"><code class="docutils literal notranslate"><span class="pre">Visualizer.get_num_coords()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.print_all_functions"><code class="docutils literal notranslate"><span class="pre">Visualizer.print_all_functions()</span></code></a></li>
 </ul>
 </li>
@@ -1723,7 +1724,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html">foveation.arch.knn</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_distances"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_distances()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_knns"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_knns()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_geodesic_distances"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_geodesic_distances()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_euclidean_distances_batched"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_euclidean_distances_batched()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer"><code class="docutils literal notranslate"><span class="pre">KNNPoolingLayer</span></code></a><ul>
@@ -1991,6 +1994,9 @@
 <li class="toctree-l3"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_captured_activations"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.get_captured_activations()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.cleanup_activation_hooks"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.cleanup_activation_hooks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.list_available_layers"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.list_available_layers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_activations"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.get_activations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.list_knn_layers"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.list_knn_layers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.saccadenet.html#foveation.saccadenet.SaccadeNet.get_num_coords"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.get_num_coords()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -2078,16 +2084,12 @@
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.__init__"><code class="docutils literal notranslate"><span class="pre">Visualizer.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.multi_fixation_accuracy"><code class="docutils literal notranslate"><span class="pre">Visualizer.multi_fixation_accuracy()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.visualize_filters"><code class="docutils literal notranslate"><span class="pre">Visualizer.visualize_filters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.visualize_fixation_sampling_density"><code class="docutils literal notranslate"><span class="pre">Visualizer.visualize_fixation_sampling_density()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.visualize_filter"><code class="docutils literal notranslate"><span class="pre">Visualizer.visualize_filter()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.visualize_filter_over_space"><code class="docutils literal notranslate"><span class="pre">Visualizer.visualize_filter_over_space()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_coordinates"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_coordinates()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_spatial_rf_from_multi_layers"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_spatial_rf_from_multi_layers()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_sampling_grids"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_sampling_grids()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.get_activations"><code class="docutils literal notranslate"><span class="pre">Visualizer.get_activations()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_rf_diameters"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_rf_diameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.plot_fixations"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_fixations()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.get_num_coords"><code class="docutils literal notranslate"><span class="pre">Visualizer.get_num_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="foveation.visualizer.html#foveation.visualizer.Visualizer.print_all_functions"><code class="docutils literal notranslate"><span class="pre">Visualizer.print_all_functions()</span></code></a></li>
 </ul>
 </li>
@@ -2180,7 +2182,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="foveation.arch.knn.html">foveation.arch.knn</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_distances"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_distances()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_knns"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_knns()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_geodesic_distances"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_geodesic_distances()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNBaseLayer._compute_euclidean_distances_batched"><code class="docutils literal notranslate"><span class="pre">KNNBaseLayer._compute_euclidean_distances_batched()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="foveation.arch.knn.html#foveation.arch.knn.KNNPoolingLayer"><code class="docutils literal notranslate"><span class="pre">KNNPoolingLayer</span></code></a><ul>

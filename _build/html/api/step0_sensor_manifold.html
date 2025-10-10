@@ -99,7 +99,7 @@
 <p><span class="math notranslate nohighlight">\(M(r)=\frac{1}{r+a}\)</span></p>
 <p>Where <span class="math notranslate nohighlight">\(r\)</span> is the radius or eccentricity, and <span class="math notranslate nohighlight">\(a\)</span> is a hyperparameter that controls the degree of foveation (smaller = stronger foveation). We will visualize a range of CMFs across <span class="math notranslate nohighlight">\(a\)</span> values later.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
@@ -174,20 +174,11 @@
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-The autoreload extension is already loaded. To reload it, use:
-  %reload_ext autoreload
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/api_step0_sensor_manifold_1_1.png" src="../_images/api_step0_sensor_manifold_1_1.png" />
+<img alt="../_images/api_step0_sensor_manifold_1_0.png" src="../_images/api_step0_sensor_manifold_1_0.png" />
 </div>
 </div>
 </section>
@@ -196,7 +187,7 @@ The autoreload extension is already loaded. To reload it, use:
 <p>We can create a spectrum of foveated sensors by varying the foveal diameter <span class="math notranslate nohighlight">\(a\)</span> given fixed total resources.</p>
 <p>Here, we normalize the CMF using a constant <span class="math notranslate nohighlight">\(k_a\)</span>, where <span class="math notranslate nohighlight">\(k_a = \left(\int_0^{r_{\text{max}}} \frac{1}{r+a}\,dr\right)^{-1}\)</span>, in order to normalize the area-under-the-curve across models.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -259,7 +250,7 @@ The autoreload extension is already loaded. To reload it, use:
 <h2>2. Locally isotropic sampling of angles<a class="headerlink" href="#2.-Locally-isotropic-sampling-of-angles" title="Link to this heading"></a></h2>
 <p>We just showed how to sample eccentricity values. The next step is to sample some number of angles at each eccentricity, such that the distance between angular points is approximately the same as the distance between eccentricity points. This satisfies our desire for locally isotropic sampling.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
@@ -300,7 +291,7 @@ The autoreload extension is already loaded. To reload it, use:
 </div>
 <p>Given the number of angles at each radius, we can now create our sampling grid</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
@@ -315,7 +306,7 @@ The autoreload extension is already loaded. To reload it, use:
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.5</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
@@ -336,7 +327,7 @@ The autoreload extension is already loaded. To reload it, use:
 <p>Normally, we would just use the SamplingCoords class for this. We will highlight this more in the next notebook.</p>
 <p>Note that the Cartesian coordinates from SamplingCoords are normalized to lie between -1 and 1</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">foveation.sensing.coords</span><span class="w"> </span><span class="kn">import</span> <span class="n">SamplingCoords</span>
@@ -376,7 +367,7 @@ The autoreload extension is already loaded. To reload it, use:
 <p>Diving into the math of the sensor manifold is beyond the scope of this notebook. However, if you are curious, I encourage you to check out the references as well a the <code class="docutils literal notranslate"><span class="pre">SensorManifold</span></code> class in <code class="docutils literal notranslate"><span class="pre">foveation.sensing.manifold</span></code> to see how this works in more detail. We use numerical methods to solve the equations for our particular cortical magnification function.</p>
 <p>For now, we’ll plot the manifold, and later, we’ll learn how to do convolution on its surface</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.mplot3d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes3D</span>
@@ -411,7 +402,7 @@ The autoreload extension is already loaded. To reload it, use:
 </div>
 <p>Last, we’ll provide some visual intuition for how the sensor manifold transforms from non-uniform density and no magnification, to uniform density with magnification</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">blend</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>

@@ -67,6 +67,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#foveation.saccadenet.SaccadeNet.get_captured_activations"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.get_captured_activations()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#foveation.saccadenet.SaccadeNet.cleanup_activation_hooks"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.cleanup_activation_hooks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#foveation.saccadenet.SaccadeNet.list_available_layers"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.list_available_layers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.saccadenet.SaccadeNet.get_activations"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.get_activations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.saccadenet.SaccadeNet.list_knn_layers"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.list_knn_layers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#foveation.saccadenet.SaccadeNet.get_num_coords"><code class="docutils literal notranslate"><span class="pre">SaccadeNet.get_num_coords()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -361,6 +364,50 @@ or just the layer name like ‘fc_block_6’</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.get_activations">
+<span class="sig-name descname"><span class="pre">get_activations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'supervised'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.get_activations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.saccadenet.SaccadeNet.get_activations" title="Link to this definition"></a></dt>
+<dd><p>Get activations from multiple layers in a single forward pass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<a class="reference internal" href="foveation.utils.fastaugs.functional_tensor.html#foveation.utils.fastaugs.functional_tensor.Tensor" title="torch.Tensor"><em>torch.Tensor</em></a>) – Input tensor(s) to process</p></li>
+<li><p><strong>layer_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of layer names to capture activations from</p></li>
+<li><p><strong>setting</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Forward pass setting (‘supervised’ or ‘ssl’).
+Defaults to ‘supervised’.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments passed to the forward method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping layer names to their activations</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">SaccadeNet</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">activations</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_multiple_layer_activations</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">inputs</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">layer_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fc_block_5&#39;</span><span class="p">,</span> <span class="s1">&#39;fc_block_6&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">activations</span><span class="p">[</span><span class="s1">&#39;fc_block_5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">activations</span><span class="p">[</span><span class="s1">&#39;fc_block_6&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.list_knn_layers">
+<span class="sig-name descname"><span class="pre">list_knn_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.list_knn_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.saccadenet.SaccadeNet.list_knn_layers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="foveation.saccadenet.SaccadeNet.get_num_coords">
+<span class="sig-name descname"><span class="pre">get_num_coords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/foveation/saccadenet.html#SaccadeNet.get_num_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#foveation.saccadenet.SaccadeNet.get_num_coords" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

@@ -132,7 +132,7 @@
                  <span class="n">pre_transforms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">post_transforms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">sigma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">no_color_val</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="c1"># passed to warping function</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="c1"># passed to the sampler</span>
                  <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the RetinalTransform module.</span>
@@ -172,8 +172,7 @@
                 <span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># otherwise we determine it now</span>
-                <span class="n">resolution</span><span class="p">,</span> <span class="n">num_coords</span> <span class="o">=</span> <span class="n">find_desired_res</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Auto-matched resolution to </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">num_coords</span><span class="si">}</span><span class="s1"> sampling coordinates) to best match </span><span class="si">{</span><span class="n">in_resolution</span><span class="o">**</span><span class="mi">2</span><span class="si">}</span><span class="s1"> cartesian pixels.&#39;</span><span class="p">)</span>
+                <span class="n">resolution</span><span class="p">,</span> <span class="n">num_coords</span> <span class="o">=</span> <span class="n">find_desired_res</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cmf_a</span><span class="p">,</span> <span class="n">num_coords</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">force_less_than</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
